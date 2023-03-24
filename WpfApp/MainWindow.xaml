@@ -1,0 +1,104 @@
+﻿<Window x:Class="WpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp"
+        xmlns:viewmodels="clr-namespace:WpfApp.ViewModel"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Icon="/image/icon/simple_library.ico" Height="567"
+        Title="{x:Static local:AppConstant.APP_TITLE}">
+
+    
+    <Border BorderThickness="3">
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="1,1" EndPoint="1,0">
+                <GradientStop Color="#2c3e50" Offset="0"/>
+                <GradientStop Color="#34495e" Offset="0.80"/>
+                <GradientStop Color="#34495e" Offset="0.40"/>
+                <GradientStop Color="White" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <DockPanel>
+            
+            <!-- Info Bar Up -->
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_Home" Click="HomeView_Click"/>
+                <MenuItem Header="_Backup">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Load" />
+                </MenuItem>
+                <MenuItem Header="_?">
+                    <MenuItem Header="_about" Click="MenuItemAbout_Click" />
+                </MenuItem>
+            </Menu>
+
+            <!-- Info System Down -->
+            <StackPanel DockPanel.Dock="Bottom" 
+                    Orientation="Horizontal"
+                    Height="20"
+                    Background="#FFEAEAEA">
+                <TextBlock 
+                    VerticalAlignment="Center" 
+                    Text="[ Simple Library : version "
+                    FontSize="11"
+                    Margin="2,0,0,0"/>
+                <TextBlock 
+                    VerticalAlignment="Center" 
+                    FontSize="11"
+                    Margin="2,0,0,0"/>
+            </StackPanel>
+
+            <!-- Left Menu Bar -->
+            <StackPanel DockPanel.Dock="Left" Margin="10,20,10,10" VerticalAlignment="Center">
+                <StackPanel.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin" Value="0,5,0,5"/>
+                    </Style>
+                </StackPanel.Resources>
+                <StackPanel>
+                    <Button x:Name="But" Width="45" BorderThickness="0" Click="PublicationViewButton_Click">
+                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
+                    </Button>
+                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
+                    Publications
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel>
+                    <Button x:Name="But1" Width="45" BorderThickness="0" Click="AuthorViewButton_Click">
+                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
+                    </Button>
+                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
+                    Authors
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel>
+                    <Button x:Name="But2" Width="45" BorderThickness="0" Click="ShelfView_Click">
+                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
+                    </Button>
+                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
+                    Shelfs
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel>
+                    <Button x:Name="But3" Width="45" BorderThickness="0">
+                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
+                    </Button>
+                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
+                    Copies
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Main Views -->
+            <ContentControl x:Name="CurrentViewPlaceHolder" DockPanel.Dock="Right"></ContentControl>
+        </DockPanel>
+        
+    </Border>
+
+</Window>

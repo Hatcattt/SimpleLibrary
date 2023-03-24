@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="WpfApp.View.Shelf.ShelfView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ShelfViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="720" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Height" Value="30"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <GroupBox>
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="20" Source="../../image/icon/32/publication_search_menu.png"/>
+                    <Label FontSize="18" Content="Shelf View"/>
+                </StackPanel>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+
+                <ListView Margin="10" ItemsSource="{Binding Shelves}" SelectedItem="{Binding SelectedShelf}" SelectionChanged="ListView_SelectionChanged_1" BorderBrush="#FF828790">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="120" Header="Shelf name" DisplayMemberBinding="{Binding Path=ShelfName}"/>
+                            <GridViewColumn Header="Themes count" Width="120" DisplayMemberBinding="{Binding Path=ShelfCompositions.Count}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="160" Header="Theme(s) of selected shelf" DisplayMemberBinding="{Binding Path=ThemeName}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="20" Source="../../image/icon/32/publication_search_menu.png"/>
+                    <Label FontSize="18" Content="Manage"/>
+                </StackPanel>
+            </GroupBox.Header>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--Shelves Management-->
+                <ScrollViewer Grid.Row="0">
+                    <StackPanel Margin="5">
+                        <Label Content="Add a new shelf" FontSize="14"/>
+                        <TextBox Text="{Binding ShelfAddInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Content="Add" Click="AddShelfButton_Click"></Button>
+
+                        <Label Content="Rename or delete a Shelf" FontSize="14"/>
+                        <ComboBox ItemsSource="{Binding Shelves}" DisplayMemberPath="ShelfName" SelectedItem="{Binding SelectedShelf, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0"/>
+                        <TextBox Text="{Binding ShelfRenameInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Button Content="Rename" Click="ShelfRenameButtonClick"></Button>
+                        <Button Content="Delete" Click="DeleteButton_Click"></Button>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!--Themes Management-->
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel Margin="5">
+                        <Label Content="Add a new theme" FontSize="14"/>
+                        <ComboBox ItemsSource="{Binding Shelves}" DisplayMemberPath="ShelfName" SelectedItem="{Binding SelectedShelf, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0"/>
+                        <TextBox Text="{Binding ThemeAddInputText}"/>
+                        <Button Content="Add" Click="ThemeAddButton_Click"></Button>
+
+                        <Label Content="Rename or delete a theme" FontSize="14"/>
+                        <ComboBox ItemsSource="{Binding Shelves}" DisplayMemberPath="ShelfName" SelectedItem="{Binding SelectedShelf, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0"/>
+                        <ComboBox ItemsSource="{Binding Themes}" DisplayMemberPath="ThemeName" SelectedItem="{Binding SelectedTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0"/>
+
+                        <TextBox Text="{Binding ThemeRenameInputText}"/>
+                        <Button Content="Rename" Click="ThemeRenameButton_Click"></Button>
+                        <Button Content="Delete" Click="DeleteButton_Click"></Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>
