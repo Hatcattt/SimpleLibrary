@@ -1,4 +1,6 @@
-﻿using DAL.DB;
+﻿using BU.Enums;
+using DAL.DB;
+using Microsoft.EntityFrameworkCore;
 
 namespace BU.Services
 {
@@ -7,14 +9,6 @@ namespace BU.Services
     /// </summary>
     public class PublicationService
     {
-
-        public static int GetCopieCount(int id)
-        {
-            using var DB = new SimpleLibraryContext();
-            var lib = DB.Publications.SingleOrDefault(x => x.PublicationId == id);
-            return lib.PublicationCopies.Count();
-
-        }
 
         /// <summary>
         /// Get a publication by his id.
@@ -25,17 +19,6 @@ namespace BU.Services
         {
             using var DB = new SimpleLibraryContext();
             return DB.Publications.SingleOrDefault(x => x.PublicationId == id);
-        }
-
-        /// <summary>
-        /// Get a publication by his title.
-        /// </summary>
-        /// <param name="title">The title to search</param>
-        /// <returns>The publication</returns>
-        public static Publication GetPublication(string title)
-        {
-            using var DB = new SimpleLibraryContext();
-            return DB.Publications.SingleOrDefault(x => x.Title == title);
         }
 
         public static void CreatePublication(Publication publication) { }
@@ -50,20 +33,28 @@ namespace BU.Services
         public static List<Publication> GetPublications()
         {
             using var DB = new SimpleLibraryContext();
-            return DB.Publications.ToList();
+            return DB.Publications
+                .Include("LocationNavigation.Shelf")
+                .Include("LocationNavigation.Theme")
+                .Include("PublicationCopies")
+                .ToList();
         }
 
-        public static int GetCopyCountOfPublication(Publication p)
+        public static List<AuthorPublication> GetAuthorsOf(Publication publication)
         {
             using var DB = new SimpleLibraryContext();
-            var publication = DB.Publications.Where(P => P.PublicationId == p.PublicationId).SingleOrDefault();
+            return DB.AuthorPublications
+                .Where(AP => AP.Publication.PublicationId == publication.PublicationId)
+                .Include("Author")
+                .ToList();
+        }
 
-            if (publication != null)
-            {
-                var goodCopy = publication.PublicationCopies.Where(p => p.PublicationState.Equals("Good")).Count();
-                return goodCopy;
-            }
-            return -1;
+        public static List<PublicationCopy> GetPublicationCopies(Publication publication)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.PublicationCopies
+                .Where(PC => PC.PublicationId == publication.PublicationId)
+                .ToList();
         }
     }
 }

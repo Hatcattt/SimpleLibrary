@@ -9,7 +9,9 @@ public partial class PublicationCopy
 
     public int PublicationId { get; set; }
 
-    public string PublicationState { get; set; } = null!;
+    public int PublicationState { get; set; }
 
     public virtual Publication Publication { get; set; } = null!;
+
+    public virtual PublicationStateEnum PublicationStateNavigation { get; set; } = null!;
 }

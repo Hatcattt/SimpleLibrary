@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:WpfApp.ViewModel"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Icon="/image/icon/simple_library.ico" Height="567"
+        Icon="/image/icon/simple_library.ico"
         Title="{x:Static local:AppConstant.APP_TITLE}">
 
     
@@ -25,7 +25,7 @@
             
             <!-- Info Bar Up -->
             <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_Home" Click="HomeView_Click"/>
+                <MenuItem Height="25" Header="_Home" Click="HomeView_Click"/>
                 <MenuItem Header="_Backup">
                     <MenuItem Header="_New" />
                     <MenuItem Header="_Load" />
@@ -52,8 +52,17 @@
             </StackPanel>
 
             <!-- Left Menu Bar -->
-            <StackPanel DockPanel.Dock="Left" Margin="10,20,10,10" VerticalAlignment="Center">
+            <StackPanel Height="250" Background="AliceBlue" Width="150" DockPanel.Dock="Left">
                 <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Height" Value="40"/>
+                        <Setter Property="Background" Value=""/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Content="Publications">
+                    
+                </Button>
+                <!--<StackPanel.Resources>
                     <Style TargetType="StackPanel">
                         <Setter Property="Margin" Value="0,5,0,5"/>
                     </Style>
@@ -92,7 +101,7 @@
                     <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
                     Copies
                     </TextBlock>
-                </StackPanel>
+                </StackPanel>-->
             </StackPanel>
 
             <!-- Main Views -->

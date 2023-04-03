@@ -24,6 +24,8 @@ public partial class SimpleLibraryContext : DbContext
 
     public virtual DbSet<PublicationCopy> PublicationCopies { get; set; }
 
+    public virtual DbSet<PublicationStateEnum> PublicationStateEnums { get; set; }
+
     public virtual DbSet<Shelf> Shelves { get; set; }
 
     public virtual DbSet<ShelfComposition> ShelfCompositions { get; set; }
@@ -90,11 +92,13 @@ public partial class SimpleLibraryContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("ISBN");
             entity.Property(e => e.Language).HasMaxLength(3);
+            entity.Property(e => e.LetterRow)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
             entity.Property(e => e.PublishedDate).HasColumnType("date");
             entity.Property(e => e.Publisher).HasMaxLength(100);
-            entity.Property(e => e.SubTitle)
-                .HasMaxLength(100)
-                .IsFixedLength();
+            entity.Property(e => e.SubTitle).HasMaxLength(100);
             entity.Property(e => e.Title).HasMaxLength(100);
 
             entity.HasOne(d => d.LocationNavigation).WithMany(p => p.Publications)
@@ -109,12 +113,26 @@ public partial class SimpleLibraryContext : DbContext
 
             entity.Property(e => e.PublicationCopyId).HasColumnName("PublicationCopyID");
             entity.Property(e => e.PublicationId).HasColumnName("PublicationID");
-            entity.Property(e => e.PublicationState).HasMaxLength(50);
 
             entity.HasOne(d => d.Publication).WithMany(p => p.PublicationCopies)
                 .HasForeignKey(d => d.PublicationId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PublicationCopy_Publication");
+
+            entity.HasOne(d => d.PublicationStateNavigation).WithMany(p => p.PublicationCopies)
+                .HasForeignKey(d => d.PublicationState)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PublicationCopy_PublicationStateEnum");
+        });
+
+        modelBuilder.Entity<PublicationStateEnum>(entity =>
+        {
+            entity.HasKey(e => e.PublicationStateId);
+
+            entity.ToTable("PublicationStateEnum");
+
+            entity.Property(e => e.PublicationStateId).ValueGeneratedNever();
+            entity.Property(e => e.PublicationState).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Shelf>(entity =>

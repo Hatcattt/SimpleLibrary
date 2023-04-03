@@ -11,14 +11,9 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-
             using var DB = new SimpleLibraryContext();
-            var shelf = DB.Shelves.First();
-            var liste = BU.Services.ShelfCompositionService.GetThemesOf(shelf);
-            foreach (var theme in liste)
-            {
-                Console.WriteLine(theme.ThemeName);
-            }
+            var sh = new Shelf() { ShelfName = "DBZ" };
+            Console.WriteLine(BU.Services.ShelfService.ShelfExist(sh));
         }
     }
 }

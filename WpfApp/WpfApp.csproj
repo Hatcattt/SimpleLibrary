@@ -53,6 +53,7 @@
 	  <Resource Include="image\icon\128\publication_search.png" />
 	  <Resource Include="image\icon\32\reset_icon.png" />
 	  <Resource Include="image\icon\simple_library.ico" />
+	  <Resource Include="image\Covers\content.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>

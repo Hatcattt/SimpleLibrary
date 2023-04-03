@@ -12,7 +12,7 @@ namespace WpfApp
         public MainWindow()
         {
             InitializeComponent();
-            SetCurrentView(AppView.Home);
+            SetCurrentView(AppView.Publication);
         }
 
         public void SetCurrentView(AppView currentAppView)
@@ -43,6 +43,15 @@ namespace WpfApp
         {
             SetCurrentView(AppView.Publication);
         }
+        private void HomeView_Click(object sender, RoutedEventArgs e)
+        {
+            SetCurrentView(AppView.Home);
+        }
+
+        private void ShelfView_Click(object sender, RoutedEventArgs e)
+        {
+            SetCurrentView(AppView.Shelf);
+        }
 
         private void MenuItemExit_Click(object sender, RoutedEventArgs e)
         {
@@ -57,16 +66,6 @@ namespace WpfApp
         public void SetCurrentView(UserControl currentView)
         {
             CurrentViewPlaceHolder.Content = currentView;
-        }
-
-        private void HomeView_Click(object sender, RoutedEventArgs e)
-        {
-            SetCurrentView(AppView.Home);
-        }
-
-        private void ShelfView_Click(object sender, RoutedEventArgs e)
-        {
-            SetCurrentView(AppView.Shelf);
         }
     }
 }

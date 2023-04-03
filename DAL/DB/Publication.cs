@@ -15,6 +15,8 @@ public partial class Publication
 
     public int Location { get; set; }
 
+    public string? LetterRow { get; set; }
+
     public string Publisher { get; set; } = null!;
 
     public DateTime? PublishedDate { get; set; }

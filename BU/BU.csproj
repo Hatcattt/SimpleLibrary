@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Interface\**" />
+    <EmbeddedResource Remove="Interface\**" />
+    <None Remove="Interface\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0" />
@@ -18,10 +24,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DAL\DAL.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Interface\" />
 	</ItemGroup>
 	
 </Project>

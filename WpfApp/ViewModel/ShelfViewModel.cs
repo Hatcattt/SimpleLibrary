@@ -22,36 +22,19 @@ namespace WpfApp.ViewModel
             get => _selectedShelf;
             set
             {
-                if (_selectedShelf != value)
-                {
-                    _selectedShelf = value;
-                    NotifyPropertyChanged(nameof(SelectedShelf));
-                }
+                _selectedShelf = value;
+                NotifyPropertyChanged(nameof(SelectedShelf));
             }
         }
 
-        private string _shelfAddInputText;
-        public string ShelfAddInputText
+        private string shelfInputText;
+        public string ShelfInputText
         {
-            get { return _shelfAddInputText; }
+            get => shelfInputText;
             set
             {
-                _shelfAddInputText = value;
-                NotifyPropertyChanged(nameof(ShelfAddInputText));
-            }
-        }
-
-        private string _shelfRenameInputText;
-        public string ShelfRenameInputText
-        {
-            get { return _shelfRenameInputText; }
-            set
-            {
-                if (_shelfRenameInputText != value)
-                {
-                    _shelfRenameInputText = value;
-                    NotifyPropertyChanged(nameof(ShelfRenameInputText));
-                }
+                shelfInputText = value;
+                NotifyPropertyChanged(nameof(ShelfInputText));
             }
         }
 
@@ -61,11 +44,8 @@ namespace WpfApp.ViewModel
             get { return shelves; }
             set
             {
-                if (shelves != value)
-                {
-                    shelves = value;
-                    NotifyPropertyChanged(nameof(Shelves));
-                }
+                shelves = value;
+                NotifyPropertyChanged(nameof(Shelves));
             }
         }
 
@@ -75,35 +55,32 @@ namespace WpfApp.ViewModel
             get => _selectedTheme;
             set
             {
-                if (_selectedTheme != value)
-                {
-                    _selectedTheme = value;
-                    NotifyPropertyChanged(nameof(SelectedTheme));
-                }
+                _selectedTheme = value;
+                NotifyPropertyChanged(nameof(SelectedTheme));
             }
         }
 
-        private string _themeAddInputText;
-        public string ThemeAddInputText
+        private string themeInputText;
+        public string ThemeInputText
         {
-            get { return _themeAddInputText; }
+            get => themeInputText;
             set
             {
-                _themeAddInputText = value;
-                //NotifyPropertyChanged(nameof(ThemeAddInputText));
+                themeInputText = value;
+                NotifyPropertyChanged(nameof(ThemeInputText));
             }
         }
 
-        private string _themeRenameInputText;
-        public string ThemeRenameInputText
+        private ObservableCollection<DAL.DB.Theme> themesOfShelf;
+        public ObservableCollection<DAL.DB.Theme> ThemesOfShelf
         {
-            get { return _themeRenameInputText; }
+            get { return themesOfShelf; }
             set
             {
-                if (_themeRenameInputText != value)
+                if (themesOfShelf != value)
                 {
-                    _themeRenameInputText = value;
-                    NotifyPropertyChanged(nameof(ThemeRenameInputText));
+                    themesOfShelf = value;
+                    NotifyPropertyChanged(nameof(ThemesOfShelf));
                 }
             }
         }
@@ -125,35 +102,44 @@ namespace WpfApp.ViewModel
 
         public ShelfViewModel()
         {
-            _shelfAddInputText = string.Empty;
-            _shelfRenameInputText = string.Empty;
-            _themeAddInputText = string.Empty;
-            _themeRenameInputText = string.Empty;
+            ShelfInputText = string.Empty;
+            ThemeInputText = string.Empty;
 
+            themes = new ObservableCollection<Theme>(BU.Services.ShelfService.GetThemes());
             shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
-            themes = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(SelectedShelf));
+            themesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(SelectedShelf));
         }
 
+        #region Methods
         public bool AddShelf()
         {
-            if (ShelfAddInputText.Length > 0)
+            if (ShelfInputText.IsNullOrEmpty())
             {
-                var newShelf = BU.Services.ShelfService.AddShelf(new DAL.DB.Shelf() { ShelfName = ShelfAddInputText });
-                MessageBox.Show("Shelf " 
-                    + BU.Services.ShelfService.GetShelf(newShelf).ShelfName 
-                    + " added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+            var newShelfId = BU.Services.ShelfService.AddShelf(new DAL.DB.Shelf() { ShelfName = ShelfInputText });
+            if (newShelfId != -1)
+            {
+                MessageBox.Show("Shelf "
+               + BU.Services.ShelfService.GetShelf(newShelfId).ShelfName
+               + " added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return true;
             }
+            MessageBox.Show("Warning : shelf not added. Maybe this shelf already exist.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
         public bool RenameShelf()
         {
-            if (SelectedShelf != null && ShelfRenameInputText.Length > 0)
+            if (SelectedShelf != null)
             {
-                BU.Services.ShelfService.RenameShelf(SelectedShelf, ShelfRenameInputText);
-                MessageBox.Show("Shelf was renamed sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                return true;
+                int renamedShelfId = BU.Services.ShelfService.RenameShelf(SelectedShelf, ShelfInputText);
+                if (renamedShelfId != -1)
+                {
+                    MessageBox.Show("Shelf was renamed sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return true;
+                }
+                MessageBox.Show("Warning : shelf not renamed. Maybe a shelf with the same name already exist.", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             return false;
         }
@@ -177,11 +163,11 @@ namespace WpfApp.ViewModel
 
         public bool AddTheme()
         {
-            if (ThemeAddInputText.Length > 0)
+            if (ThemeInputText.Length > 0 && SelectedShelf != null)
             {
-                var newTheme = BU.Services.ShelfService.AddTheme(new Theme() { ThemeName = ThemeAddInputText }, SelectedShelf);
+                int newThemeId = BU.Services.ShelfService.AddTheme(new Theme() { ThemeName = ThemeInputText }, SelectedShelf);
                 MessageBox.Show("Theme "
-                    + BU.Services.ShelfService.GetTheme(newTheme).ThemeName
+                    + BU.Services.ShelfService.GetTheme(newThemeId).ThemeName
                     + " added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return true;
             }
@@ -192,11 +178,29 @@ namespace WpfApp.ViewModel
         {
             if (SelectedTheme != null)
             {
-                BU.Services.ShelfService.RenameTheme(SelectedTheme, ThemeRenameInputText);
+                BU.Services.ShelfService.RenameTheme(SelectedTheme, ThemeInputText);
                 MessageBox.Show("Theme was renamed sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return true;
             }
             return false;
         }
+
+        internal bool DeleteTheme()
+        {
+            if (SelectedTheme != null)
+            {
+                var userChoice = MessageBox.Show("Are you sure you want to delete "
+                    + SelectedTheme.ThemeName
+                    + "?", "Delete a theme", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (userChoice == MessageBoxResult.Yes)
+                {
+                    BU.Services.ShelfService.DeleteTheme(SelectedTheme);
+                    MessageBox.Show("Shelf Deleted sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
     }
 }

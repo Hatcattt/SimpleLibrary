@@ -36,7 +36,8 @@ namespace WpfApp.View.Shelf
         private void PopulateAndBind()
         {
             shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
-            shelfVM.Themes = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+            shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
+            shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
             DataContext = shelfVM;
         }
 
@@ -53,41 +54,55 @@ namespace WpfApp.View.Shelf
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private void DeleteShelfButton_Click(object sender, RoutedEventArgs e)
         {
             if (shelfVM.DeleteShelf())
             {
-                PopulateAndBind();
+                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
             }
         }
 
-        private void ShelfRenameButtonClick(object sender, RoutedEventArgs e)
+        private void RenameShelfButton_Click(object sender, RoutedEventArgs e)
         {
             if (shelfVM.RenameShelf())
             {
-                PopulateAndBind();
+                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                shelfVM.ShelfInputText = string.Empty;
             }
         }
 
-        private void ThemeRenameButton_Click(object sender, RoutedEventArgs e)
+        private void RenameThemeButton_Click(object sender, RoutedEventArgs e)
         {
             if (shelfVM.RenameTheme())
             {
-                shelfVM.Themes = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+                shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
+                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
             }
         }
 
-        private void ThemeAddButton_Click(object sender, RoutedEventArgs e)
+        private void AddThemeButton_Click(object sender, RoutedEventArgs e)
         {
             if (shelfVM.AddTheme())
             {
-                shelfVM.Themes = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+                shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
+            }
+        }
+
+        private void DeleteThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (shelfVM.DeleteTheme())
+            {
+                shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
             }
         }
 
         private void ListView_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            shelfVM.Themes = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+            shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+            if (shelfVM.SelectedShelf != null)
+            {
+                shelfVM.ShelfInputText = shelfVM.SelectedShelf.ShelfName;
+            }
         }
     }
 }
