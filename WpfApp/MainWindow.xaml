@@ -8,8 +8,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Icon="/image/icon/simple_library.ico"
-        Title="{x:Static local:AppConstant.APP_TITLE}">
-
+        Title="TEST" Width="1080" Height="720">
     
     <Border BorderThickness="3">
         <Border.BorderBrush>
@@ -38,8 +37,7 @@
             <!-- Info System Down -->
             <StackPanel DockPanel.Dock="Bottom" 
                     Orientation="Horizontal"
-                    Height="20"
-                    Background="#FFEAEAEA">
+                    Height="20">
                 <TextBlock 
                     VerticalAlignment="Center" 
                     Text="[ Simple Library : version "
@@ -48,60 +46,72 @@
                 <TextBlock 
                     VerticalAlignment="Center" 
                     FontSize="11"
-                    Margin="2,0,0,0"/>
+                    Margin="2,0,0,0"
+                    Text="{x:Static local:AppConstant.APP_VERSION}"/>
             </StackPanel>
 
             <!-- Left Menu Bar -->
-            <StackPanel Height="250" Background="AliceBlue" Width="150" DockPanel.Dock="Left">
+            <StackPanel Background="#4e6675" Width="160" DockPanel.Dock="Left">
                 <StackPanel.Resources>
                     <Style TargetType="Button">
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Margin" Value="0,5,0,0"/>
+                    </Style>
+                    <Style TargetType="Border">
                         <Setter Property="Height" Value="40"/>
-                        <Setter Property="Background" Value=""/>
+                        <Setter Property="Width" Value="150"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF6F9686"/>
+                                    <GradientStop Color="#FF4E6675" Offset="0.313"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="BorderBrush">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF4E6675"/>
+                                    <GradientStop Color="#FF6F9686" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Foreground" Value="#bdd0ca"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
                     </Style>
                 </StackPanel.Resources>
-                <Button Content="Publications">
-                    
+                
+                <Button Click="PublicationViewButton_Click">
+                    <Border>
+                        <Label Content="Publications"></Label>
+                    </Border>
                 </Button>
-                <!--<StackPanel.Resources>
-                    <Style TargetType="StackPanel">
-                        <Setter Property="Margin" Value="0,5,0,5"/>
-                    </Style>
-                </StackPanel.Resources>
-                <StackPanel>
-                    <Button x:Name="But" Width="45" BorderThickness="0" Click="PublicationViewButton_Click">
-                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
-                    </Button>
-                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
-                    Publications
-                    </TextBlock>
-                </StackPanel>
 
-                <StackPanel>
-                    <Button x:Name="But1" Width="45" BorderThickness="0" Click="AuthorViewButton_Click">
-                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
-                    </Button>
-                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
-                    Authors
-                    </TextBlock>
-                </StackPanel>
+                <Button Click="AuthorViewButton_Click">
+                    <Border>
+                        <Label Content="Authors"></Label>
+                    </Border>
+                </Button>
 
-                <StackPanel>
-                    <Button x:Name="But2" Width="45" BorderThickness="0" Click="ShelfView_Click">
-                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
-                    </Button>
-                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
-                    Shelfs
-                    </TextBlock>
-                </StackPanel>
+                <Button Click="ShelfView_Click">
+                    <Border>
+                        <Label Content="Shelves"></Label>
+                    </Border>
+                </Button>
 
-                <StackPanel>
-                    <Button x:Name="But3" Width="45" BorderThickness="0">
-                        <Image Width="40" Source="image/icon/128/publication_search.png"/>
-                    </Button>
-                    <TextBlock FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,5,0,0">
-                    Copies
-                    </TextBlock>
-                </StackPanel>-->
+                <Button Click="ShelfView_Click">
+                    <Border>
+                        <Label Content="Publication Copies"></Label>
+                    </Border>
+                </Button>
             </StackPanel>
 
             <!-- Main Views -->

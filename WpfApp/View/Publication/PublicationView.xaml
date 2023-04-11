@@ -6,34 +6,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PublicationViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1080">
-    <UserControl.Resources>
-        <Style TargetType="ListViewItem">
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="FontFamily" Value="Rubik"/>
-            <Setter Property="Background" Value="#FFF0F4FF"/>
-        </Style>
-        <Style TargetType="GridViewColumnHeader">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Padding" Value="8"/>
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontFamily" Value="Arial Nova"/>
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
-                        <GradientStop Color="#FFA3D3FF" Offset="0"/>
-                        <GradientStop Color="#FF9DFFD0" Offset="1"/>
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
+
     <StackPanel>
-        <Label Foreground="White" Height="40" Background="#168AAD" VerticalContentAlignment="Center" FontSize="18" Content="Publication View"></Label>
+        <Label FontWeight="Bold" Foreground="#bdd0ca" Height="40" Background="#4e6675" VerticalContentAlignment="Center" FontSize="18" Content="Publication View"></Label>
         
         <Grid>
             <Grid.ColumnDefinitions>
@@ -47,10 +22,10 @@
             <StackPanel Grid.Column="0" Grid.Row="1">
 
                 <!-- Search Bar -->
-                <Border Padding="5" Background="#FFE2E2E2">
+                <Border Padding="5" Background="#6e838b">
                     <StackPanel x:Name="StackPanelSearch" Orientation="Horizontal">
                         <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
-                        <Label VerticalAlignment="Center" Margin="0,3,3,3" FontSize="14" FontWeight="DemiBold" Content="Search By"/>
+                        <Label VerticalAlignment="Center" Margin="0,3,3,3" Foreground="#545550" FontSize="14" FontWeight="DemiBold" Content="Search By"/>
                         <ComboBox SelectedIndex="0" ItemsSource="{Binding PropertiesSearch}" ToolTip="Select one..." Height="30" Width="93" Margin="0,0,5,0"/>
                         <TextBox Width="150" Height="30"/>
                         <Button ToolTip="Reset" Margin="0,0,5,0" FontSize="20" Height="30" Width="30">
@@ -58,42 +33,23 @@
                         </Button>
                     </StackPanel>
                 </Border>
-                
-                <ListView
+
+                <DataGrid
+                    Style="{StaticResource DataGridStyle}"
                     SelectionChanged="ListView_SelectionChanged" 
                     SelectedItem="{Binding PublicationSelected}" 
-                    ItemsSource="{Binding Publications}" 
-                    BorderBrush="#FF828790" 
-                    d:ItemsSource="{d:SampleData ItemCount=5}">
+                    ItemsSource="{Binding Publications}">
                     
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="ISBN" DisplayMemberBinding="{Binding Path=Isbn}"/>
-                            <GridViewColumn Header="Full title" Width="250">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="0,12,0,0">
-                                            <TextBlock Text="{Binding Path=Title}"/>
-                                            <TextBlock Grid.Column="1" Text="{Binding Path=SubTitle}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="Publisher" DisplayMemberBinding="{Binding Path=Publisher}"/>
-                            <GridViewColumn Header="Language" DisplayMemberBinding="{Binding Path=Language}"/>
-                            <GridViewColumn Header="Shelf" DisplayMemberBinding="{Binding Path=LocationNavigation.Shelf.ShelfName}"/>
-                            <GridViewColumn Header="Theme" DisplayMemberBinding="{Binding Path=LocationNavigation.Theme.ThemeName}"/>
-                            <GridViewColumn Header="Copies" DisplayMemberBinding="{Binding Path=PublicationCopies.Count}"/>
-                            <GridViewColumn Header="Cover image">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Image MouseLeave="MyImage_MouseLeave" MouseEnter="MyImage_MouseEnter" Source="/image/Covers/content.jpg" x:Name="myImage"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
+                        <DataGridTextColumn Header="Full title" Binding="{Binding Path=Title}" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Publisher" Binding="{Binding Path=Publisher}" Width="*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Lang" Binding="{Binding Path=Language}" Width="0.5*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Shelf" Binding="{Binding Path=LocationNavigation.Shelf.ShelfName}" Width="0.6*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Theme" Binding="{Binding Path=LocationNavigation.Theme.ThemeName}" Width="0.6*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Copies" Binding="{Binding Path=PublicationCopies.Count}" Width="0.5*"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Grid.Row="0" Background="AliceBlue" Orientation="Horizontal">
@@ -139,7 +95,9 @@
                             <Setter Property="Height" Value="35"/>
                         </Style>
                     </Grid.Resources>
-                    <Label Grid.ColumnSpan="2" MouseEnter="MessageTips_MouseEnter" MouseLeave="MessageTips_MouseLeave" HorizontalContentAlignment="Center" x:Name="MessageTips"  Background="LightYellow" Content="Click on a publication to see some details!" Margin="0,22,0,57" Grid.RowSpan="2" Grid.Row="6" Panel.ZIndex="1"></Label>
+                    
+                    <!-- message tips -->
+                    <!--<Label Grid.ColumnSpan="2" MouseEnter="MessageTips_MouseEnter" MouseLeave="MessageTips_MouseLeave" HorizontalContentAlignment="Center" x:Name="MessageTips"  Background="LightYellow" Content="Click on a publication to see some details!" Margin="0,22,0,57" Grid.RowSpan="2" Grid.Row="6" Panel.ZIndex="1"></Label>-->
 
                     <TextBlock Grid.Row="1" Text="ISBN"></TextBlock>
                     <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PublicationSelected.Isbn}"/>
@@ -179,7 +137,7 @@
                     <ListView Margin="0,10,0,0" Grid.Column="1" Grid.Row="8" ItemsSource="{Binding AuthorPublications}" BorderBrush="#FF828790">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
+                                <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
                                 <GridViewColumn Header="Function" DisplayMemberBinding="{Binding Path=AuthorFunction}"/>
                                 <GridViewColumn Header="Nationality" DisplayMemberBinding="{Binding Path=Author.Nationality}"/>
                             </GridView>
