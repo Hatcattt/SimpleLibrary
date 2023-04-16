@@ -5,30 +5,45 @@
              xmlns:local="clr-namespace:WpfApp.View.Publication"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PublicationViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="720" d:DesignWidth="1080">
+             d:DesignHeight="720" d:DesignWidth="1080"
+             Background="#FFEFEFEF">
 
-    <StackPanel>
-        <Label FontWeight="Bold" Foreground="#bdd0ca" Height="40" Background="#4e6675" VerticalContentAlignment="Center" FontSize="18" Content="Publication View"></Label>
-        
+    <StackPanel Margin="10">
+        <Label Style="{StaticResource MainLabelHeader}" Content="Publication View"></Label>
+
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3.5*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
-            <StackPanel Grid.Column="0" Grid.Row="1">
+
+            <StackPanel Grid.Column="0" Grid.Row="0">
 
                 <!-- Search Bar -->
-                <Border Padding="5" Background="#6e838b">
+                <Border Padding="5" BorderThickness="1,1,0,1">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFC5D9E0" Offset="1"/>
+                            <GradientStop Color="White" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#4e6675"/>
+                            <GradientStop Color="#FFC5D9E0" Offset="1"/>
+                            <GradientStop Color="White" Offset="0.3"/>
+                            <GradientStop Color="White" Offset="0.693"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
                     <StackPanel x:Name="StackPanelSearch" Orientation="Horizontal">
                         <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
-                        <Label VerticalAlignment="Center" Margin="0,3,3,3" Foreground="#545550" FontSize="14" FontWeight="DemiBold" Content="Search By"/>
-                        <ComboBox SelectedIndex="0" ItemsSource="{Binding PropertiesSearch}" ToolTip="Select one..." Height="30" Width="93" Margin="0,0,5,0"/>
-                        <TextBox Width="150" Height="30"/>
-                        <Button ToolTip="Reset" Margin="0,0,5,0" FontSize="20" Height="30" Width="30">
+                        <Label VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
+                        <ComboBox SelectedIndex="0" ItemsSource="{Binding PropertiesSearch}" ToolTip="Select one..." Height="30" Width="93" Margin="0,0,10,0"/>
+                        <TextBox MinWidth="200" Height="30"/>
+                        <Button Margin="10,0,0,0" ToolTip="Reset" FontSize="20" Height="30">
                             <Image Width="20" Source="/image/icon/32/reset_icon.png"/>
                         </Button>
                     </StackPanel>
@@ -39,7 +54,7 @@
                     SelectionChanged="ListView_SelectionChanged" 
                     SelectedItem="{Binding PublicationSelected}" 
                     ItemsSource="{Binding Publications}">
-                    
+
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
                         <DataGridTextColumn Header="Full title" Binding="{Binding Path=Title}" Width="2*"></DataGridTextColumn>
@@ -52,9 +67,14 @@
                 </DataGrid>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Grid.Row="0" Background="AliceBlue" Orientation="Horizontal">
-                <Label FontSize="15" Content="See details of :"></Label>
-                <TextBlock FontWeight="DemiBold" VerticalAlignment="Center" FontSize="14" Text="{Binding PublicationSelected.Title}"></TextBlock>
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                <StackPanel.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="White" Offset="1"/>
+                        <GradientStop Color="#FFEFEFEF" Offset="0"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+                <Label FontSize="15" Content="See details of the selected publication"></Label>
             </StackPanel>
 
             <ScrollViewer Grid.Column="1" Grid.Row="1" Margin="20,15,10,10">
@@ -95,7 +115,7 @@
                             <Setter Property="Height" Value="35"/>
                         </Style>
                     </Grid.Resources>
-                    
+
                     <!-- message tips -->
                     <!--<Label Grid.ColumnSpan="2" MouseEnter="MessageTips_MouseEnter" MouseLeave="MessageTips_MouseLeave" HorizontalContentAlignment="Center" x:Name="MessageTips"  Background="LightYellow" Content="Click on a publication to see some details!" Margin="0,22,0,57" Grid.RowSpan="2" Grid.Row="6" Panel.ZIndex="1"></Label>-->
 
@@ -104,7 +124,7 @@
 
                     <TextBlock Grid.Row="2" Text="Title"></TextBlock>
                     <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding PublicationSelected.Title}"/>
-                    
+
                     <TextBlock Grid.Row="2" Text="Title"></TextBlock>
                     <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding PublicationSelected.Title}"/>
 

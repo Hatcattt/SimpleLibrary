@@ -104,5 +104,22 @@ namespace WpfApp.View.Shelf
                 shelfVM.ShelfInputText = shelfVM.SelectedShelf.ShelfName;
             }
         }
+
+        private void AddShelfComposition_Click(object sender, RoutedEventArgs e)
+        {
+            if (shelfVM.AddShelfComposition())
+            {
+                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+                //shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+            }
+        }
+
+        private void DeleteShelfComposition_Click(object sender, RoutedEventArgs e)
+        {
+            if (shelfVM.DeleteShelfComposition())
+            {
+                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+            }
+        }
     }
 }

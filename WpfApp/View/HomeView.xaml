@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:WpfApp.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <GroupBox Margin="20" Header="Home" FontSize="15">
-        <StackPanel Margin="20" >
-            <TextBlock FontSize="30" Text="Simple library"/>
-            <TextBlock Margin="40">Show some statistics</TextBlock>
-        </StackPanel>
-    </GroupBox>
+
+    <StackPanel Margin="10" >
+        <Label Style="{StaticResource MainLabelHeader}" Content="Home"></Label>
+        <TextBlock Margin="0,10,0,0">Welcome To Simple library!</TextBlock>
+
+    </StackPanel>
 </UserControl>

@@ -139,8 +139,6 @@ public partial class SimpleLibraryContext : DbContext
         {
             entity.ToTable("Shelf");
 
-            entity.HasIndex(e => e.ShelfName, "IX_Unique_Shelf").IsUnique();
-
             entity.Property(e => e.ShelfId).HasColumnName("ShelfID");
             entity.Property(e => e.ShelfName).HasMaxLength(50);
         });
@@ -155,7 +153,6 @@ public partial class SimpleLibraryContext : DbContext
 
             entity.HasOne(d => d.Shelf).WithMany(p => p.ShelfCompositions)
                 .HasForeignKey(d => d.ShelfId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ShelfComposition_Shelf");
 
             entity.HasOne(d => d.Theme).WithMany(p => p.ShelfCompositions)
@@ -167,8 +164,6 @@ public partial class SimpleLibraryContext : DbContext
         modelBuilder.Entity<Theme>(entity =>
         {
             entity.ToTable("Theme");
-
-            entity.HasIndex(e => e.ThemeName, "IX_Unique_Theme").IsUnique();
 
             entity.Property(e => e.ThemeId).HasColumnName("ThemeID");
             entity.Property(e => e.ThemeName).HasMaxLength(50);

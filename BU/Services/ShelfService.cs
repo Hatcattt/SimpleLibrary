@@ -37,12 +37,12 @@ namespace BU.Services
                 .ToList();
         }
 
-        public static bool ShelfExist(Shelf shelf)
+        private static bool ShelfExist(string shelfName)
         {
-            if (shelf != null)
+            if (shelfName != null)
             {
                 using var DB = new SimpleLibraryContext();
-                var atLeastOneShelfExist = DB.Shelves.Where(S => S.ShelfName == shelf.ShelfName).FirstOrDefault();
+                var atLeastOneShelfExist = DB.Shelves.Where(S => S.ShelfName == shelfName).FirstOrDefault();
                 return atLeastOneShelfExist != null;
             }
             return false;
@@ -51,7 +51,7 @@ namespace BU.Services
         public static int AddShelf(Shelf shelf)
         {
             using var DB = new SimpleLibraryContext();
-            if (shelf != null && ! ShelfExist(shelf))
+            if (shelf != null && ! ShelfExist(shelf.ShelfName))
             {
                 DB.Shelves.Add(shelf);
                 DB.SaveChanges();
@@ -62,7 +62,7 @@ namespace BU.Services
 
         public static int RenameShelf(Shelf shelf, string shelfName)
         {
-            if (shelf != null && shelfName.Length > 0 && ! ShelfExist(shelf))
+            if (shelf != null && shelfName.Length > 0 && ! ShelfExist(shelfName))
             {
                 using var DB = new SimpleLibraryContext();
 
@@ -79,10 +79,6 @@ namespace BU.Services
             {
                 using var DB = new SimpleLibraryContext();
 
-                foreach (var sc in DB.ShelfCompositions.Where(sc => sc.ShelfId == shelf.ShelfId))
-                {
-                    DB.ShelfCompositions.Remove(sc);
-                }
                 DB.Shelves.Remove(shelf);
                 DB.SaveChanges();
                 return true;
@@ -98,6 +94,17 @@ namespace BU.Services
             {
                 using var DB = new SimpleLibraryContext();
                 var atLeastOneThemExist = DB.Themes.Where(T => T.ThemeName == theme.ThemeName).FirstOrDefault();
+                return atLeastOneThemExist != null;
+            }
+            return false;
+        }
+
+        public static bool ShelfCompositionExist(Shelf shelf, Theme theme)
+        {
+            if (shelf != null && theme != null)
+            {
+                using var DB = new SimpleLibraryContext();
+                var atLeastOneThemExist = DB.ShelfCompositions.Where(SC => SC.Shelf == shelf && SC.Theme == theme).FirstOrDefault();
                 return atLeastOneThemExist != null;
             }
             return false;
@@ -157,13 +164,45 @@ namespace BU.Services
         {
             if (theme != null)
             {
-
                 using var DB = new SimpleLibraryContext();
                 foreach (var sc in DB.ShelfCompositions.Where(sc => sc.ThemeId == theme.ThemeId))
                 {
                     DB.ShelfCompositions.Remove(sc);
                 }
                 DB.Themes.Remove(theme);
+                DB.SaveChanges();
+            }
+            return false;
+        }
+
+        public static int AddShelfComposition(Shelf shelf, Theme theme)
+        {
+            if (shelf != null && theme != null && ! ShelfCompositionExist(shelf, theme))
+            {
+                using var DB = new SimpleLibraryContext();
+                var newComposition = new ShelfComposition() { ShelfId = shelf.ShelfId, ThemeId = theme.ThemeId };
+                DB.ShelfCompositions.Add(newComposition);
+                DB.SaveChanges();
+                return newComposition.ShelfCompositionId;
+            }
+            return -1;
+        }
+
+        public static bool DeleteShelfComposition(Theme theme, Shelf shelf)
+        {
+            if (theme != null && shelf != null)
+            {
+                using var DB = new SimpleLibraryContext();
+                var shelfCompoToDelete = DB.ShelfCompositions
+                    .Where(SC => SC.Theme.ThemeId == theme.ThemeId && SC.Shelf.ShelfId == shelf.ShelfId)
+                    .SingleOrDefault();
+
+                if( shelfCompoToDelete != null)
+                {
+                    DB.ShelfCompositions.Remove(shelfCompoToDelete);
+                    DB.SaveChanges();
+                    return true;
+                }
             }
             return false;
         }

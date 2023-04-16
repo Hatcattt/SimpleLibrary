@@ -71,6 +71,7 @@ namespace WpfApp.ViewModel
             }
         }
 
+
         private ObservableCollection<DAL.DB.Theme> themesOfShelf;
         public ObservableCollection<DAL.DB.Theme> ThemesOfShelf
         {
@@ -131,29 +132,24 @@ namespace WpfApp.ViewModel
 
         public bool RenameShelf()
         {
-            if (SelectedShelf != null)
+            if (BU.Services.ShelfService.RenameShelf(SelectedShelf, ShelfInputText) != -1)
             {
-                int renamedShelfId = BU.Services.ShelfService.RenameShelf(SelectedShelf, ShelfInputText);
-                if (renamedShelfId != -1)
-                {
-                    MessageBox.Show("Shelf was renamed sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return true;
-                }
-                MessageBox.Show("Warning : shelf not renamed. Maybe a shelf with the same name already exist.", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Shelf was renamed sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return true;
             }
+            MessageBox.Show("Warning : shelf not renamed. Maybe a shelf with the same name already exist.", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             return false;
         }
 
         public bool DeleteShelf()
         {
-            if (SelectedShelf != null)
+            if (MessageBox.Show("Are you sure you want to delete "
+                    + SelectedShelf.ShelfName
+                    + "?", "Delete a Shelf", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                    == MessageBoxResult.Yes)
             {
-                var userChoice = MessageBox.Show("Are you sure you want to delete " 
-                    + SelectedShelf.ShelfName 
-                    + "?", "Delete a Shelf", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (userChoice == MessageBoxResult.Yes)
+                if (BU.Services.ShelfService.DeleteShelf(SelectedShelf))
                 {
-                    BU.Services.ShelfService.DeleteShelf(SelectedShelf);
                     MessageBox.Show("Shelf Deleted sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     return true;
                 }
@@ -197,6 +193,36 @@ namespace WpfApp.ViewModel
                     BU.Services.ShelfService.DeleteTheme(SelectedTheme);
                     MessageBox.Show("Shelf Deleted sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     return true;
+                }
+            }
+            return false;
+        }
+
+        public bool AddShelfComposition()
+        {
+            if (BU.Services.ShelfService.AddShelfComposition(SelectedShelf, SelectedTheme) != -1)
+            {
+                MessageBox.Show("New composition added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return true;
+            }
+            MessageBox.Show(
+                "You can't create this new shlef composition.\n" +
+                "Maybe this theme already exist inside the selected shelf.", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            return false;
+        }
+
+        public bool DeleteShelfComposition()
+        {
+            if (SelectedTheme != null && SelectedShelf != null)
+            {
+                var userChoice = MessageBox.Show("Are you sure you want to delete this theme inside this shelf ?", "Delete a composition", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (userChoice == MessageBoxResult.Yes)
+                {
+                    if (BU.Services.ShelfService.DeleteShelfComposition(SelectedTheme, SelectedShelf))
+                    {
+                        MessageBox.Show("Shelf Composition deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return true;
+                    }
                 }
             }
             return false;
