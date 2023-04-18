@@ -25,7 +25,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Label Style="{StaticResource LabelHeaderLite}" Content="All your shelves"></Label>
@@ -40,26 +39,25 @@
                     <DataGridTextColumn Header="Shelf name" Binding="{Binding Path=ShelfName}" Width="*"/>
                     <DataGridTextColumn Header="Theme count" Binding="{Binding Path=ShelfCompositions.Count}" Width="*"/>
                     <DataGridTextColumn Header="Total publication" Width="*"/>
+                    <DataGridTemplateColumn Header="Action" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Width="35" Height="35" Content="X" Style="{StaticResource DeleteButton}" Click="DeleteShelfButton_Click"></Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
 
             <Border Grid.Row="2" Style="{StaticResource BorderInput}" Margin="5">
-                <StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource LabelInfo}" Content="Shelf name"></Label>
-                    <TextBox Style="{StaticResource InputText}" Text="{Binding ShelfInputText}"/>
+                    <TextBox Style="{StaticResource InputText}" Text="{Binding ShelfInputText}" Width="150"/>
+                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfButton_Click"></Button>
+                    <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameShelfButton_Click"/>
                 </StackPanel>
             </Border>
-            <Grid Grid.Row="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfButton_Click"></Button>
-                <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameShelfButton_Click"/>
-                <Button HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteShelfButton_Click"></Button>
-            </Grid>
         </Grid>
 
         <!-- Themes -->
@@ -68,7 +66,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Label Style="{StaticResource LabelHeaderLite}" Content="All your Themes"></Label>
@@ -76,9 +73,9 @@
             <DataGrid Margin="5"
                 Grid.Row="1"
                 Style="{StaticResource DataGridStyle}"
-                SelectedItem="{Binding SelectedTheme}" 
-                ItemsSource="{Binding Themes}"
-                Height="{Binding ActualHeight, ElementName=ParentGrid}">
+                SelectedItem="{Binding SelectedTheme}"
+                SelectionChanged="ListView_SelectionChanged_2" 
+                ItemsSource="{Binding Themes}">
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Theme name" Binding="{Binding Path=ThemeName}" Width="0.5*"/>
@@ -92,27 +89,24 @@
                             </Style>
                         </DataGridCheckBoxColumn.ElementStyle>
                     </DataGridCheckBoxColumn>
+                    <DataGridTemplateColumn Header="Action" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Width="35" Height="35" Content="X" Style="{StaticResource DeleteButton}" Click="DeleteThemeButton_Click"></Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                 </DataGrid.Columns>
             </DataGrid>
-
-            <Border Grid.Row="2" Style="{StaticResource BorderInput}">
-                <StackPanel>
+            <Border Grid.Row="2" Style="{StaticResource BorderInput}" Margin="5">
+                <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource LabelInfo}" Content="Theme name"></Label>
-                    <TextBox Style="{StaticResource InputText}" Text="{Binding ThemeInputText}"/>
+                    <TextBox Style="{StaticResource InputText}" Text="{Binding ThemeInputText}" Width="150"/>
+                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddThemeButton_Click"></Button>
+                    <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameThemeButton_Click"/>
                 </StackPanel>
             </Border>
-            <Grid Grid.Row="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddThemeButton_Click"></Button>
-                <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameThemeButton_Click"/>
-                <Button HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteThemeButton_Click"></Button>
-            </Grid>
         </Grid>
 
         <!-- Shelf Composition -->

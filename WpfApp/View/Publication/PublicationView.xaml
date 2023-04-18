@@ -57,7 +57,7 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
-                        <DataGridTextColumn Header="Full title" Binding="{Binding Path=Title}" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" Width="2*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Publisher" Binding="{Binding Path=Publisher}" Width="*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Lang" Binding="{Binding Path=Language}" Width="0.5*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Shelf" Binding="{Binding Path=LocationNavigation.Shelf.ShelfName}" Width="0.6*"></DataGridTextColumn>
@@ -123,10 +123,7 @@
                     <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PublicationSelected.Isbn}"/>
 
                     <TextBlock Grid.Row="2" Text="Title"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding PublicationSelected.Title}"/>
-
-                    <TextBlock Grid.Row="2" Text="Title"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding PublicationSelected.Title}"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding FullTitleName}"/>
 
                     <TextBlock Grid.Row="3" Text="Publisher"></TextBlock>
                     <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding PublicationSelected.Publisher}"/>

@@ -105,6 +105,15 @@ namespace WpfApp.View.Shelf
             }
         }
 
+        private void ListView_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
+        {
+            shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+            if (shelfVM.SelectedTheme != null)
+            {
+                shelfVM.ThemeInputText = shelfVM.SelectedTheme.ThemeName;
+            }
+        }
+
         private void AddShelfComposition_Click(object sender, RoutedEventArgs e)
         {
             if (shelfVM.AddShelfComposition())
@@ -120,6 +129,11 @@ namespace WpfApp.View.Shelf
             {
                 shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
             }
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

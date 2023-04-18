@@ -12,6 +12,19 @@ namespace WpfApp.ViewModel
     {
         #region Propreties
         public List<string> PropertiesSearch { get; } = new List<string>() {"Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
+        private string fullTitleName;
+        public string FullTitleName
+        {
+            get { return fullTitleName; }
+            set
+            {
+                if (fullTitleName != value)
+                {
+                    fullTitleName = value;
+                    NotifyPropertyChanged(nameof(FullTitleName));
+                }
+            }
+        }
 
         private DAL.DB.Publication? publicationSelected;
         public DAL.DB.Publication? PublicationSelected

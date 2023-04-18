@@ -46,26 +46,10 @@ namespace WpfApp.View.Publication
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (publicationVM.PublicationSelected == null)
-            //{
-            //    MessageTips.Visibility = Visibility.Visible;
-            //    return;
-            //}
-            //MessageTips.Visibility = Visibility.Collapsed;
-
             publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.AuthorPublication>(BU.Services.PublicationService.GetAuthorsOf(publicationVM.PublicationSelected));
             publicationVM.PublicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>(BU.Services.PublicationService.GetPublicationCopies(publicationVM.PublicationSelected));
+            publicationVM.FullTitleName = publicationVM.PublicationSelected.Title + " " + publicationVM.PublicationSelected.SubTitle;
         }
-
-        //private void MessageTips_MouseEnter(object sender, MouseEventArgs e)
-        //{
-        //    MessageTips.Background = Brushes.LightCyan;
-        //}
-
-        //private void MessageTips_MouseLeave(object sender, MouseEventArgs e)
-        //{
-        //    MessageTips.Background = Brushes.LightYellow;
-        //}
 
         private void Label_MouseDown(object sender, MouseButtonEventArgs e)
         {
