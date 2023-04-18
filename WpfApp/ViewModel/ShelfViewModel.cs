@@ -145,7 +145,7 @@ namespace WpfApp.ViewModel
         {
             if (MessageBox.Show("Are you sure you want to delete "
                     + SelectedShelf.ShelfName
-                    + "?", "Delete a Shelf", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                    + "?\nAll theme inside will be remove too.", "Delete a Shelf", MessageBoxButton.YesNo, MessageBoxImage.Question)
                     == MessageBoxResult.Yes)
             {
                 if (BU.Services.ShelfService.DeleteShelf(SelectedShelf))
@@ -181,7 +181,7 @@ namespace WpfApp.ViewModel
             return false;
         }
 
-        internal bool DeleteTheme()
+        public bool DeleteTheme()
         {
             if (SelectedTheme != null)
             {
@@ -190,11 +190,17 @@ namespace WpfApp.ViewModel
                     + "?", "Delete a theme", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (userChoice == MessageBoxResult.Yes)
                 {
-                    BU.Services.ShelfService.DeleteTheme(SelectedTheme);
-                    MessageBox.Show("Shelf Deleted sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return true;
+                    if (BU.Services.ShelfService.DeleteTheme(SelectedTheme) == 0)
+                    {
+                        MessageBox.Show("Shelf Deleted sucessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return true;
+                    }
+                    MessageBox.Show("An error occur during the proccess", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
                 }
+                return false;
             }
+            MessageBox.Show("No theme selected!", "Oups", MessageBoxButton.OK, MessageBoxImage.Information);
             return false;
         }
 

@@ -160,19 +160,16 @@ namespace BU.Services
             return -1;
         }
 
-        public static bool DeleteTheme(Theme theme)
+        public static int DeleteTheme(Theme theme)
         {
             if (theme != null)
             {
                 using var DB = new SimpleLibraryContext();
-                foreach (var sc in DB.ShelfCompositions.Where(sc => sc.ThemeId == theme.ThemeId))
-                {
-                    DB.ShelfCompositions.Remove(sc);
-                }
                 DB.Themes.Remove(theme);
                 DB.SaveChanges();
+                return 0;
             }
-            return false;
+            return -1;
         }
 
         public static int AddShelfComposition(Shelf shelf, Theme theme)

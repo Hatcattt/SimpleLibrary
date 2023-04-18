@@ -89,7 +89,7 @@
             </StackPanel>
             
             <!-- Main Views -->
-            <ContentControl x:Name="CurrentViewPlaceHolder" DockPanel.Dock="Right"></ContentControl>
+            <ContentControl x:Name="CurrentViewPlaceHolder"></ContentControl>
         </DockPanel>
         
     </Border>

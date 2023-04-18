@@ -6,151 +6,153 @@
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="1080">
 
-    <StackPanel Margin="10" >
-        <Label Style="{StaticResource MainLabelHeader}" Content="Manage your shelves and themes"></Label>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Main Grid -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="1.5*"/>
-            </Grid.ColumnDefinitions>
+        <Label Grid.ColumnSpan="2" Style="{StaticResource MainLabelHeader}" Content="Manage your shelves and themes"></Label>
+
+        <!-- Shelves -->
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Style="{StaticResource LabelHeaderLite}" Content="All your shelves"></Label>
+
+            <DataGrid Margin="5"
+                Grid.Row="1"
+                Style="{StaticResource DataGridStyle}"
+                SelectionChanged="ListView_SelectionChanged_1" 
+                SelectedItem="{Binding SelectedShelf}" 
+                ItemsSource="{Binding Shelves}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Shelf name" Binding="{Binding Path=ShelfName}" Width="*"/>
+                    <DataGridTextColumn Header="Theme count" Binding="{Binding Path=ShelfCompositions.Count}" Width="*"/>
+                    <DataGridTextColumn Header="Total publication" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="2" Style="{StaticResource BorderInput}" Margin="5">
+                <StackPanel>
+                    <Label Style="{StaticResource LabelInfo}" Content="Shelf name"></Label>
+                    <TextBox Style="{StaticResource InputText}" Text="{Binding ShelfInputText}"/>
+                </StackPanel>
+            </Border>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfButton_Click"></Button>
+                <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameShelfButton_Click"/>
+                <Button HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteShelfButton_Click"></Button>
+            </Grid>
+        </Grid>
+
+        <!-- Themes -->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Style="{StaticResource LabelHeaderLite}" Content="All your Themes"></Label>
+
+            <DataGrid Margin="5"
+                Grid.Row="1"
+                Style="{StaticResource DataGridStyle}"
+                SelectedItem="{Binding SelectedTheme}" 
+                ItemsSource="{Binding Themes}"
+                Height="{Binding ActualHeight, ElementName=ParentGrid}">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Theme name" Binding="{Binding Path=ThemeName}" Width="0.5*"/>
+                    <DataGridTextColumn Header="Total publication" Width="*"></DataGridTextColumn>
+                    <DataGridCheckBoxColumn Width="0.5*" Header="Select">
+                        <DataGridCheckBoxColumn.ElementStyle>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Background" Value="#FFE6EBED"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.ElementStyle>
+                    </DataGridCheckBoxColumn>
+
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="2" Style="{StaticResource BorderInput}">
+                <StackPanel>
+                    <Label Style="{StaticResource LabelInfo}" Content="Theme name"></Label>
+                    <TextBox Style="{StaticResource InputText}" Text="{Binding ThemeInputText}"/>
+                </StackPanel>
+            </Border>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddThemeButton_Click"></Button>
+                <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameThemeButton_Click"/>
+                <Button HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteThemeButton_Click"></Button>
+            </Grid>
+        </Grid>
+
+        <!-- Shelf Composition -->
+        <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- All Shelves -->
-            <ScrollViewer Grid.Column="0" Grid.Row="0">
-                <StackPanel Grid.Column="0" Grid.Row="0">
-                    <Label Style="{StaticResource LabelHeaderLite}" Content="All your shelves"></Label>
+            <Label Style="{StaticResource LabelHeaderLite}" Content="Manage the shelf composition"></Label>
 
-                    <DataGrid
-                        Grid.Row="0"
-                        Style="{StaticResource DataGridStyle}"
-                        SelectionChanged="ListView_SelectionChanged_1" 
-                        SelectedItem="{Binding SelectedShelf}" 
-                        ItemsSource="{Binding Shelves}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Shelf name" Binding="{Binding Path=ShelfName}" Width="*"/>
-                            <DataGridTextColumn Header="Theme count" Binding="{Binding Path=ShelfCompositions.Count}" Width="*"/>
-                            <DataGridTextColumn Header="Total publication" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+            <StackPanel Grid.Row="1">
+                <GroupBox Header="Shelf selected">
+                    <Label Style="{StaticResource LabelInfo}" Content="{Binding SelectedShelf.ShelfName}"/>
+                </GroupBox>
+                <GroupBox Header="Theme selected">
+                    <Label Style="{StaticResource LabelInfo}" Content="{Binding SelectedTheme.ThemeName}"/>
+                </GroupBox>
+            </StackPanel>
 
-                    <Border Style="{StaticResource BorderInput}">
-                        <StackPanel>
-                            <Label Style="{StaticResource LabelInfo}" Content="Shelf name"></Label>
-                            <TextBox Style="{StaticResource InputText}" Text="{Binding ShelfInputText}"/>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource BorderInput}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <Button Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfComposition_Click"></Button>
+                <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteShelfComposition_Click"></Button>
+            </StackPanel>
 
-                            <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfButton_Click"></Button>
-                            <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameShelfButton_Click"/>
-                            <Button HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteShelfButton_Click"></Button>
-                        </Grid>
-                    </Border>
-                </StackPanel>
-            </ScrollViewer>
+            <DataGrid Margin="5"
+                Grid.Row="3"
+                Style="{StaticResource DataGridStyle}"
+                SelectedItem="{Binding SelectedTheme}" 
+                ItemsSource="{Binding ThemesOfShelf}"
+                x:Name="dgCompo">
 
-            <!-- All Themes -->
-            <ScrollViewer Grid.Column="0" Grid.Row="1">
-                <StackPanel Grid.Column="0" Grid.Row="1">
-                    <Label Style="{StaticResource LabelHeaderLite}" Content="All your Themes"></Label>
-                    <DataGrid
-                        Grid.Row="1"
-                        Style="{StaticResource DataGridStyle}"
-                        SelectedItem="{Binding SelectedTheme}" 
-                        ItemsSource="{Binding Themes}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Theme" Binding="{Binding Path=ThemeName}" Width="0.5*"/>
+                    <DataGridTextColumn Header="Total publication" Width="*"></DataGridTextColumn>
+                </DataGrid.Columns>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Theme name" Binding="{Binding Path=ThemeName}" Width="0.5*"/>
-                            <DataGridTextColumn Header="Total publication" Width="*"></DataGridTextColumn>
-                            <DataGridCheckBoxColumn Width="0.5*" Header="Select">
-                                <DataGridCheckBoxColumn.ElementStyle>
-                                    <Style TargetType="CheckBox">
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                                        <Setter Property="Background" Value="#FFE6EBED"/>
-                                    </Style>
-                                </DataGridCheckBoxColumn.ElementStyle>
-                            </DataGridCheckBoxColumn>
-
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <Border Style="{StaticResource BorderInput}">
-                        <StackPanel>
-                            <Label Style="{StaticResource LabelInfo}" Content="Theme name"></Label>
-                            <TextBox Style="{StaticResource InputText}" Text="{Binding ThemeInputText}"/>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource BorderInput}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddThemeButton_Click"></Button>
-                            <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameThemeButton_Click"/>
-                            <Button HorizontalAlignment="Right" Grid.Column="2" Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteThemeButton_Click"></Button>
-                        </Grid>
-                    </Border>
-                </StackPanel>
-            </ScrollViewer>
-
-            <!-- All Themes Inside shelf selected -->
-            <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
-                <StackPanel>
-                    <Label Style="{StaticResource LabelHeaderLite}" Content="Selection"></Label>
-
-                    <Border Style="{StaticResource BorderInput}" Margin="0">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Style="{StaticResource LabelInfo}" Content="{Binding SelectedShelf.ShelfName}"/>
-                            <Label Style="{StaticResource LabelInfo}" Content="Selected Shelf"></Label>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource BorderInput}" Margin="0">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Style="{StaticResource LabelInfo}" Content="{Binding SelectedTheme.ThemeName}"/>
-                            <Label Style="{StaticResource LabelInfo}" Content="Selected Theme"></Label>
-                        </StackPanel>
-                    </Border>
-                    
-                    <Label Style="{StaticResource LabelHeaderLite}" Content="Theme(s) inside the selection"></Label>
-                    
-                    <DataGrid
-                        Grid.Row="1"
-                        Style="{StaticResource DataGridStyle}"
-                        SelectedItem="{Binding SelectedTheme}" 
-                        ItemsSource="{Binding ThemesOfShelf}"
-                        x:Name="dgCompo">
-
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Theme" Binding="{Binding Path=ThemeName}" Width="0.5*"/>
-                            <DataGridTextColumn Header="Total publication" Width="*"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <Border Style="{StaticResource BorderInput}">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfComposition_Click"></Button>
-                            <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeleteShelfComposition_Click"></Button>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </ScrollViewer>
-
+            </DataGrid>
         </Grid>
-
-    </StackPanel>
+    </Grid>
 </UserControl>

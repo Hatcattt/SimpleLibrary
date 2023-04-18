@@ -11,7 +11,8 @@
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+
         <!-- Header Style -->
         <Setter Property="ColumnHeaderStyle">
             <Setter.Value>
@@ -145,7 +146,6 @@
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
-        <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderThickness" Value="3"/>
     </Style>
 

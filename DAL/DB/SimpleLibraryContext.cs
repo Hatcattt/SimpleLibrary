@@ -157,7 +157,6 @@ public partial class SimpleLibraryContext : DbContext
 
             entity.HasOne(d => d.Theme).WithMany(p => p.ShelfCompositions)
                 .HasForeignKey(d => d.ThemeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ShelfComposition_Theme");
         });
 
