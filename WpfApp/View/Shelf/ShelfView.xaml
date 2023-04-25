@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ShelfViewModel}"
              mc:Ignorable="d"
-             d:DesignHeight="720" d:DesignWidth="1080">
+             d:DesignHeight="720" d:DesignWidth="1080"
+             Background="#FFEFEFEF">
 
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -35,10 +36,11 @@
                 SelectionChanged="ListView_SelectionChanged_1" 
                 SelectedItem="{Binding SelectedShelf}" 
                 ItemsSource="{Binding Shelves}">
+                
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Shelf name" Binding="{Binding Path=ShelfName}" Width="*"/>
                     <DataGridTextColumn Header="Theme count" Binding="{Binding Path=ShelfCompositions.Count}" Width="*"/>
-                    <DataGridTextColumn Header="Total publication" Width="*"/>
+                    <DataGridTextColumn Header="Total publication" Binding="{Binding Path=ShelfCompositions.Publications.Count}" Width="*"/>
                     <DataGridTemplateColumn Header="Action" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

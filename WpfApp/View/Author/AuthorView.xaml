@@ -21,6 +21,34 @@
 
 
             <StackPanel>
+                
+                <!-- Search Bar -->
+                <Border Padding="5" BorderThickness="2">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFC5D9E0" Offset="1"/>
+                            <GradientStop Color="White" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFC5D9E0" Offset="0.283"/>
+                            <GradientStop Color="#FFC5D9E0" Offset="1"/>
+                            <GradientStop Color="White" Offset="0"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
+                        <Label VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
+                        <ComboBox SelectedIndex="1" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0"/>
+                        <TextBox Style="{StaticResource InputText}" MinWidth="200"/>
+                        <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset">
+                            <Image Width="25" Source="/image/icon/32/reset_icon.png"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
                 <DataGrid
                     Style="{StaticResource DataGridStyle}"
                     SelectedItem="{Binding AuthorSelected}" 

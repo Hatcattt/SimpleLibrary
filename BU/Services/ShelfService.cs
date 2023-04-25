@@ -34,6 +34,7 @@ namespace BU.Services
             using var DB = new SimpleLibraryContext();
             return DB.Shelves
                 .Include("ShelfCompositions.Theme")
+                .Include("ShelfCompositions.Publications")
                 .ToList();
         }
 
