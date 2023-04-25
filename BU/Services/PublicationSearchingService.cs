@@ -1,4 +1,6 @@
 ﻿using DAL.DB;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BU.Services
 {
@@ -15,38 +17,13 @@ namespace BU.Services
         public static List<Publication> GetPublicationsStartWithTitle(string sequence)
         {
             using var DB = new SimpleLibraryContext();
-            var publications = new List<Publication>();
-
-            DB.Publications.ToList().ForEach(p =>
-            {
-                if (p.Title.ToLower().StartsWith(sequence.ToLower()))
-                {
-                    publications.Add(p);
-                }
-            });
-
-            return publications;
-        }
-
-        /// <summary>
-        /// Get a list of publications whose publisher begins with a sequence.
-        /// </summary>
-        /// <param name="sequence">The sequence to search</param>
-        /// <returns>A list of publications</returns>
-        public static List<Publication> GetPublicationsStartWithPublisher(string sequence)
-        {
-            using var DB = new SimpleLibraryContext();
-            var publications = new List<Publication>();
-
-            DB.Publications.ToList().ForEach(p =>
-            {
-                if (p.Publisher.ToLower().StartsWith(sequence.ToLower()))
-                {
-                    publications.Add(p);
-                }
-            });
-
-            return publications;
+            return DB.Publications
+                .Where(P => P.Title.ToLower().StartsWith(sequence.ToLower()))
+                .Include("LocationNavigation.Shelf")
+                .Include("LocationNavigation.Theme")
+                .Include("PublicationCopies")
+                .Include("AuthorPublications.Author")
+                .ToList();
         }
 
         /// <summary>
@@ -57,17 +34,13 @@ namespace BU.Services
         public static List<Publication> GetPublicationsStartWithISBN(string sequence)
         {
             using var DB = new SimpleLibraryContext();
-            var publications = new List<Publication>();
-
-            DB.Publications.ToList().ForEach(p =>
-            {
-                if (p.Isbn.ToLower().StartsWith(sequence.ToLower()))
-                {
-                    publications.Add(p);
-                }
-            });
-
-            return publications;
+            return DB.Publications
+                .Where(P => P.Isbn.ToLower().StartsWith(sequence.ToLower()))
+                .Include("LocationNavigation.Shelf")
+                .Include("LocationNavigation.Theme")
+                .Include("PublicationCopies")
+                .Include("AuthorPublications.Author")
+                .ToList();
         }
     }
 }

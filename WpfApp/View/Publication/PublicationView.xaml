@@ -8,8 +8,8 @@
              d:DesignHeight="720" d:DesignWidth="1080"
              Background="#FFEFEFEF">
 
-    <StackPanel Margin="10">
-        <Label Style="{StaticResource MainLabelHeader}" Content="Publication View"></Label>
+    <DockPanel Margin="10">
+        <Label DockPanel.Dock="Top" Style="{StaticResource MainLabelHeader}" Content="Publication View"></Label>
 
         <Grid>
             <Grid.ColumnDefinitions>
@@ -20,10 +20,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="0" Grid.Row="0">
-
+            <!-- Left Column -->
+            <StackPanel>
+                
                 <!-- Search Bar -->
-                <Border Padding="5" BorderThickness="1,1,0,1">
+                <Border Padding="5" BorderThickness="2">
                     <Border.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FFC5D9E0" Offset="1"/>
@@ -32,19 +33,19 @@
                     </Border.Background>
                     <Border.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#4e6675"/>
+                            <GradientStop Color="#FFC5D9E0" Offset="0.283"/>
                             <GradientStop Color="#FFC5D9E0" Offset="1"/>
-                            <GradientStop Color="White" Offset="0.3"/>
-                            <GradientStop Color="White" Offset="0.693"/>
+                            <GradientStop Color="White" Offset="0"/>
                         </LinearGradientBrush>
                     </Border.BorderBrush>
+
                     <StackPanel x:Name="StackPanelSearch" Orientation="Horizontal">
                         <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
                         <Label VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
-                        <ComboBox SelectedIndex="0" ItemsSource="{Binding PropertiesSearch}" ToolTip="Select one..." Height="30" Width="93" Margin="0,0,10,0"/>
-                        <TextBox MinWidth="200" Height="30"/>
-                        <Button Margin="10,0,0,0" ToolTip="Reset" FontSize="20" Height="30">
-                            <Image Width="20" Source="/image/icon/32/reset_icon.png"/>
+                        <ComboBox SelectedIndex="1" x:Name="cbBox" ItemsSource="{Binding PropertiesSearch}" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0"/>
+                        <TextBox Style="{StaticResource InputText}" MinWidth="200" x:Name="InputSearch" TextChanged="TextBox_TextChanged"/>
+                        <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchInputButton_Click">
+                            <Image Width="25" Source="/image/icon/32/reset_icon.png"/>
                         </Button>
                     </StackPanel>
                 </Border>
@@ -62,119 +63,89 @@
                         <DataGridTextColumn Header="Lang" Binding="{Binding Path=Language}" Width="0.5*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Shelf" Binding="{Binding Path=LocationNavigation.Shelf.ShelfName}" Width="0.6*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Theme" Binding="{Binding Path=LocationNavigation.Theme.ThemeName}" Width="0.6*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Row" Binding="{Binding Path=LetterRow}" Width="0.5*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Copies" Binding="{Binding Path=PublicationCopies.Count}" Width="0.5*"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-                <StackPanel.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="White" Offset="1"/>
-                        <GradientStop Color="#FFEFEFEF" Offset="0"/>
-                    </LinearGradientBrush>
-                </StackPanel.Background>
-                <Label FontSize="15" Content="See details of the selected publication"></Label>
+            <!-- Right Column -->
+            <StackPanel Grid.Column="1" Margin="5">
+                <Label Margin="0,0,0,10" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected publication"/>
+
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Grid.RowSpan="3" Header="          Cover">
+                            <Image Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="120" Source="/image/Covers/content.jpg"/>
+                        </GroupBox>
+
+                        <Grid Grid.Column="1" Grid.RowSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Style="{StaticResource LabelInfo}" Content="ISBN"></Label>
+                            <TextBox IsReadOnly="False" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Isbn}"/>
+
+                            <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
+                            <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullTitleName}"/>
+
+                            <Label Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Publisher"></Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Publisher}"/>
+                        </Grid>
+                        
+                        <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Publisher Date"></Label>
+                        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.PublishedDate}"/>
+
+                        <Label Grid.Row="4" Style="{StaticResource LabelInfo}" Content="Location"></Label>
+                        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullLocation}"/>
+
+                        <Label Grid.Row="5" Style="{StaticResource LabelInfo}" Content="Language"></Label>
+                        <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Language}"/>
+
+                        <Label VerticalAlignment="Top" Grid.Row="6" Style="{StaticResource LabelInfo}" Content="Author(s)"></Label>
+                        <ListView Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding PublicationSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="150" Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
+                                    <GridViewColumn Header="Function" DisplayMemberBinding="{Binding Path=AuthorFunction}"/>
+                                    <GridViewColumn Header="Nationality" DisplayMemberBinding="{Binding Path=Author.Nationality}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <Label VerticalAlignment="Top" Grid.Row="7" Style="{StaticResource LabelInfo}" Content="Description"></Label>
+                        <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource InputTextDescription}" Text="{Binding PublicationSelected.Description}"/>
+                    </Grid>
+                </ScrollViewer>
+                <StackPanel Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource AddButton}" Content="ADD NEW"/>
+                    <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
+                    <Button Style="{StaticResource DeleteButton}" Content="DELETE"/>
+                </StackPanel>
             </StackPanel>
-
-            <ScrollViewer Grid.Column="1" Grid.Row="1" Margin="20,15,10,10">
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition Height="80"/>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="200"/>
-                    </Grid.RowDefinitions>
-                    <Grid.Resources>
-                        <Style TargetType="TextBox">
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="IsReadOnly" Value="True"/>
-                            <Setter Property="Margin" Value="0,10,0,0"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                        </Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="0,10,0,0"/>
-                        </Style>
-                        <Style TargetType="Label">
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        </Style>
-                        <Style TargetType="RowDefinition">
-                            <Setter Property="Height" Value="35"/>
-                        </Style>
-                    </Grid.Resources>
-
-                    <!-- message tips -->
-                    <!--<Label Grid.ColumnSpan="2" MouseEnter="MessageTips_MouseEnter" MouseLeave="MessageTips_MouseLeave" HorizontalContentAlignment="Center" x:Name="MessageTips"  Background="LightYellow" Content="Click on a publication to see some details!" Margin="0,22,0,57" Grid.RowSpan="2" Grid.Row="6" Panel.ZIndex="1"></Label>-->
-
-                    <TextBlock Grid.Row="1" Text="ISBN"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PublicationSelected.Isbn}"/>
-
-                    <TextBlock Grid.Row="2" Text="Title"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding FullTitleName}"/>
-
-                    <TextBlock Grid.Row="3" Text="Publisher"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding PublicationSelected.Publisher}"/>
-
-                    <TextBlock Grid.Row="4" Text="Published Date"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding PublicationSelected.PublishedDate}"/>
-
-                    <TextBlock Grid.Row="5" Text="Location"></TextBlock>
-                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.Column="1" Grid.Row="5" Background="AliceBlue">
-                        <Label x:Name="ShelfLinkLabel" MouseDown="Label_MouseDown" MouseEnter="Label_MouseEnter" MouseLeave="ShelfLinkLabel_MouseLeave"
-                            Content="{Binding PublicationSelected.LocationNavigation.Shelf.ShelfName}">
-                        </Label>
-                        <Label Content="-"/>
-                        <Label Content="{Binding PublicationSelected.LocationNavigation.Theme.ThemeName}"/>
-
-                        <Label Content="[ row : "/>
-                        <Label Content="{Binding PublicationSelected.LetterRow}"/>
-                        <Label Content=" ]"/>
-                    </StackPanel>
-
-                    <TextBlock Grid.Row="6" Text="Language"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding PublicationSelected.Language}"></TextBox>
-
-                    <TextBlock VerticalAlignment="Top" Grid.Row="7" Text="Description"></TextBlock>
-                    <TextBox Grid.Column="1" Grid.Row="7" TextWrapping="Wrap" AcceptsReturn="True" Padding="5" VerticalScrollBarVisibility="Visible" Text="{Binding PublicationSelected.Description}" Margin="0,10,0,0" ></TextBox>
-
-                    <TextBlock VerticalAlignment="Top" Grid.Row="8" Text="Author(s)"></TextBlock>
-                    <ListView Margin="0,10,0,0" Grid.Column="1" Grid.Row="8" ItemsSource="{Binding AuthorPublications}" BorderBrush="#FF828790">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
-                                <GridViewColumn Header="Function" DisplayMemberBinding="{Binding Path=AuthorFunction}"/>
-                                <GridViewColumn Header="Nationality" DisplayMemberBinding="{Binding Path=Author.Nationality}"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-
-                    <TextBlock Grid.Row="9" VerticalAlignment="Top" Text="Copies"></TextBlock>
-                    <ListView Margin="0,10,0,0" Grid.Column="1" Grid.Row="9" ItemsSource="{Binding PublicationCopies}" BorderBrush="#FF828790">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="State" Width="100" DisplayMemberBinding="{Binding Path=Key}"/>
-                                <GridViewColumn Header="Number" DisplayMemberBinding="{Binding}"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-
-                    <TextBlock Grid.Row="10" VerticalAlignment="Top" Text="Cover picture"></TextBlock>
-                    <Image Margin="0,10,0,0" Grid.Column="1" Grid.Row="11" Source="/image/Covers/content.jpg" HorizontalAlignment="Left" x:Name="myImage"/>
-                </Grid>
-            </ScrollViewer>
         </Grid>
-    </StackPanel>
+    </DockPanel>
 </UserControl>

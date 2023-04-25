@@ -37,16 +37,21 @@ namespace BU.Services
                 .Include("LocationNavigation.Shelf")
                 .Include("LocationNavigation.Theme")
                 .Include("PublicationCopies")
+                .Include("AuthorPublications.Author")
                 .ToList();
         }
 
         public static List<AuthorPublication> GetAuthorsOf(Publication publication)
         {
-            using var DB = new SimpleLibraryContext();
-            return DB.AuthorPublications
-                .Where(AP => AP.Publication.PublicationId == publication.PublicationId)
-                .Include("Author")
-                .ToList();
+            if (publication != null)
+            {
+                using var DB = new SimpleLibraryContext();
+                return DB.AuthorPublications
+                    .Where(AP => AP.Publication.PublicationId == publication.PublicationId)
+                    .Include("Author")
+                    .ToList();
+            }
+            return new List<AuthorPublication>();
         }
 
         public static List<PublicationCopy> GetPublicationCopies(Publication publication)
@@ -54,6 +59,7 @@ namespace BU.Services
             using var DB = new SimpleLibraryContext();
             return DB.PublicationCopies
                 .Where(PC => PC.PublicationId == publication.PublicationId)
+                .Include("PublicationStateNavigation")
                 .ToList();
         }
     }

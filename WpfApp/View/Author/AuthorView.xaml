@@ -2,13 +2,75 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:AuthorViewModel}"
              xmlns:local="clr-namespace:WpfApp.View.Author"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Margin="10" >
-        <Label Style="{StaticResource MainLabelHeader}" Content="Author View"></Label>
-        <TextBlock Margin="0,10,0,0">See your authors here!</TextBlock>
+             d:DesignHeight="720" d:DesignWidth="1080"
+             Background="#FFEFEFEF">
+    <DockPanel Margin="10">
+        <Label DockPanel.Dock="Top" Style="{StaticResource MainLabelHeader}" Content="Authors view"></Label>
 
-    </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <StackPanel>
+                <DataGrid
+                    Style="{StaticResource DataGridStyle}"
+                    SelectedItem="{Binding AuthorSelected}" 
+                    ItemsSource="{Binding Authors}">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Path=AuthorName}" Width="*"/>
+                        <DataGridTextColumn Header="Nationality" Binding="{Binding Path=Nationality}" Width="2*"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Label Margin="0,0,0,10" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected author"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Style="{StaticResource LabelInfo}" Content="Name"></Label>
+                    <TextBox Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding AuthorSelected.AuthorName}"/>
+
+                    <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Nationality"></Label>
+                    <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding AuthorSelected.Nationality}"/>
+
+                    <Label VerticalAlignment="Top" Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Publication(s)"></Label>
+                    <ListView Grid.Row="2" Grid.Column="1" Margin="5" MaxHeight="350" ItemsSource="{Binding AuthorSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="200" Header="Title" DisplayMemberBinding="{Binding Path=Publication.Title}"/>
+                                <GridViewColumn Header="Function" DisplayMemberBinding="{Binding Path=AuthorFunction}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                
+                <StackPanel Margin="10" Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource AddButton}" Content="ADD NEW"/>
+                    <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
+                    <Button Style="{StaticResource DeleteButton}" Content="DELETE"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
 </UserControl>

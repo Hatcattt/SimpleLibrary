@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,16 @@ namespace WpfApp.View.Author
     /// </summary>
     public partial class AuthorView : UserControl
     {
+        ViewModel.AuthorViewModel authorVM = new ViewModel.AuthorViewModel();
         public AuthorView()
         {
             InitializeComponent();
+            PopulateAndBind();
+        }
+
+        private void PopulateAndBind()
+        {
+            this.DataContext = authorVM;
         }
     }
 }

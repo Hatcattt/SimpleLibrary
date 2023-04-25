@@ -121,10 +121,10 @@
             <Label Style="{StaticResource LabelHeaderLite}" Content="Manage the shelf composition"></Label>
 
             <StackPanel Grid.Row="1">
-                <GroupBox Header="Shelf selected">
+                <GroupBox Height="60"  Header="Shelf selected">
                     <Label Style="{StaticResource LabelInfo}" Content="{Binding SelectedShelf.ShelfName}"/>
                 </GroupBox>
-                <GroupBox Header="Theme selected">
+                <GroupBox Height="60" Header="Theme selected">
                     <Label Style="{StaticResource LabelInfo}" Content="{Binding SelectedTheme.ThemeName}"/>
                 </GroupBox>
             </StackPanel>

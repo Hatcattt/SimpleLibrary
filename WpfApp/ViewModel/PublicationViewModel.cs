@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace WpfApp.ViewModel
@@ -11,7 +12,22 @@ namespace WpfApp.ViewModel
     public class PublicationViewModel : BaseViewModel
     {
         #region Propreties
-        public List<string> PropertiesSearch { get; } = new List<string>() {"Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
+        public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
+
+        private string fullLocation;
+        public string FullLocation
+        {
+            get { return fullLocation; }
+            set
+            {
+                if (fullLocation != value)
+                {
+                    fullLocation = value;
+                    NotifyPropertyChanged(nameof(FullLocation));
+                }
+            }
+        }
+
         private string fullTitleName;
         public string FullTitleName
         {
@@ -91,6 +107,7 @@ namespace WpfApp.ViewModel
         }
 
         #region Methods
+
 
         #endregion
     }

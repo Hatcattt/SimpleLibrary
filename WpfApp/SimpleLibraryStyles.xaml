@@ -153,7 +153,7 @@
     <!-- Base Button Style -->
     <Style x:Key="ButtonBaseStyle" TargetType="{x:Type Button}">
         <Setter Property="Width" Value="80"/>
-        <Setter Property="Height" Value="35"/>
+        <Setter Property="Height" Value="40"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderThickness" Value="2"/>
         <Setter Property="Foreground" Value="#4e6675"/>
@@ -203,22 +203,15 @@
         </Setter>
     </Style>
 
-    <!-- Rename Button Style -->
-    <Style x:Key="RenameButton" TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonBaseStyle}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFFEDED" Offset="0"/>
-                    <GradientStop Color="#FFFD5767" Offset="1"/>
-                    <GradientStop Color="#FFFFDFA7" Offset="0.5"/>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+    <!-- Reset Input Button Style -->
+    <Style x:Key="ResetInputButton" TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonBaseStyle}">
+        <Setter Property="Width" Value="35"/>
+        <Setter Property="Height" Value="35"/>
         <Setter Property="BorderBrush">
             <Setter.Value>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFF7F8B" Offset="1"/>
-                    <GradientStop Color="#FFFFEDED" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                    <GradientStop Color="#FFC5D9E0" Offset="0"/>
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
@@ -244,6 +237,39 @@
         <Setter Property="Foreground" Value="#4e6675"/>
     </Style>
 
+    <!-- Text Box Style readonly -->
+    <Style x:Key="InputTextReadOnly" TargetType="{x:Type TextBox}" BasedOn="{StaticResource InputText}">
+        <Setter Property="IsReadOnly" Value="True"/>
+    </Style>
+
+    <!-- Text Box Style readonly -->
+    <Style x:Key="InputTextDescription" TargetType="{x:Type TextBox}">
+        <Setter Property="BorderBrush" Value="#4e6675"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="MaxHeight" Value="100"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFECECEC" Offset="0"/>
+                    <GradientStop Color="White" Offset="0.397"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Text Block Demi Bold Style -->
+    <Style x:Key="TextBlockDemiBold" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Foreground" Value="#4e6675"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <!-- Label Box Style -->
     <Style x:Key="LabelInfo" TargetType="{x:Type Label}">
         <Setter Property="FontWeight" Value="SemiBold"/>
@@ -251,11 +277,12 @@
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Foreground" Value="#4e6675"/>
+
     </Style>
 
     <!-- Label Input Style -->
     <Style x:Key="LabelDisplay" TargetType="{x:Type Label}">
-        <Setter Property="MinHeight" Value="35"/>
+        <Setter Property="MinHeight" Value="30"/>
         <Setter Property="Padding" Value="5,0,0,0"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -272,5 +299,5 @@
         <Setter Property="BorderBrush" Value="#4e6675"/>
         <Setter Property="Foreground" Value="#4e6675"/>
     </Style>
-
+    
 </ResourceDictionary>

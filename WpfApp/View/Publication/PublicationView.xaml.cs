@@ -1,4 +1,5 @@
 ﻿using DAL.DB;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,7 +39,7 @@ namespace WpfApp.View.Publication
         private void PopulateAndBind()
         {
             this.DataContext = publicationVM;
-            foreach(var publi in publicationVM.Publications)
+            foreach (var publi in publicationVM.Publications)
             {
                 publi.CoverFilePath = "/image/Covers/content.jpg";
             }
@@ -46,34 +47,40 @@ namespace WpfApp.View.Publication
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.AuthorPublication>(BU.Services.PublicationService.GetAuthorsOf(publicationVM.PublicationSelected));
-            publicationVM.PublicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>(BU.Services.PublicationService.GetPublicationCopies(publicationVM.PublicationSelected));
-            publicationVM.FullTitleName = publicationVM.PublicationSelected.Title + " " + publicationVM.PublicationSelected.SubTitle;
+            if (publicationVM.PublicationSelected != null)
+            {
+                publicationVM.FullTitleName = publicationVM.PublicationSelected.Title + " " + publicationVM.PublicationSelected.SubTitle;
+                publicationVM.FullLocation = publicationVM.PublicationSelected.LocationNavigation.Shelf.ShelfName + " - " + publicationVM.PublicationSelected.LocationNavigation.Theme.ThemeName + " - " + publicationVM.PublicationSelected.LetterRow;
+            } else
+            {
+                publicationVM.FullTitleName = string.Empty;
+                publicationVM.FullLocation = string.Empty;
+            }
+            //publicationVM.PublicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>(BU.Services.PublicationService.GetPublicationCopies(publicationVM.PublicationSelected));
         }
 
-        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MessageBox.Show("Cliqued!");
+            if (InputSearch.Text.IsNullOrEmpty())
+            {
+                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+                return;
+            }
+            switch (cbBox.SelectedItem)
+            {
+                case "Isbn":
+                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithISBN(InputSearch.Text));
+                    break;
+
+                case "Title":
+                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithTitle(InputSearch.Text));
+                    break;
+            }
         }
 
-        private void Label_MouseEnter(object sender, MouseEventArgs e)
+        private void ResetSearchInputButton_Click(object sender, RoutedEventArgs e)
         {
-            ShelfLinkLabel.Background = Brushes.LightBlue;
-        }
-
-        private void ShelfLinkLabel_MouseLeave(object sender, MouseEventArgs e)
-        {
-            ShelfLinkLabel.ClearValue(BackgroundProperty);
-        }
-
-        private void MyImage_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void MyImage_MouseLeave(object sender, MouseEventArgs e)
-        {
-
+            InputSearch.Text = string.Empty;
         }
     }
 }
