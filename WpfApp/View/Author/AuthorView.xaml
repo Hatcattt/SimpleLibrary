@@ -86,7 +86,7 @@
                     <ListView Grid.Row="2" Grid.Column="1" Margin="5" MaxHeight="350" ItemsSource="{Binding AuthorSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Width="200" Header="Title" DisplayMemberBinding="{Binding Path=Publication.Title}"/>
+                                <GridViewColumn Width="150" Header="Title" DisplayMemberBinding="{Binding Path=Publication.Title}"/>
                                 <GridViewColumn Header="Function" DisplayMemberBinding="{Binding Path=AuthorFunction}"/>
                             </GridView>
                         </ListView.View>
@@ -94,8 +94,8 @@
                 </Grid>
                 
                 <StackPanel Margin="10" Grid.Row="8" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource AddButton}" Content="ADD NEW"/>
-                    <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
+                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="Button_Click_1"/>
+                    <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT" Click="EditAuthor_Click"/>
                     <Button Style="{StaticResource DeleteButton}" Content="DELETE"/>
                 </StackPanel>
             </StackPanel>

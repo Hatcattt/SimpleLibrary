@@ -41,17 +41,17 @@ namespace BU.Services
                 .ToList();
         }
 
-        public static List<AuthorPublication> GetAuthorsOf(Publication publication)
+        public static List<Publication> GetPublicationsOf(Author author)
         {
-            if (publication != null)
+            if (author != null)
             {
                 using var DB = new SimpleLibraryContext();
                 return DB.AuthorPublications
-                    .Where(AP => AP.Publication.PublicationId == publication.PublicationId)
-                    .Include("Author")
+                    .Where(AP => AP.Author.AuthorId == author.AuthorId)
+                    .Select(AP => AP.Publication)
                     .ToList();
             }
-            return new List<AuthorPublication>();
+            return new List<Publication>();
         }
 
         public static List<PublicationCopy> GetPublicationCopies(Publication publication)

@@ -22,6 +22,7 @@ namespace WpfApp.View.Author
     public partial class AuthorView : UserControl
     {
         ViewModel.AuthorViewModel authorVM = new ViewModel.AuthorViewModel();
+
         public AuthorView()
         {
             InitializeComponent();
@@ -31,6 +32,19 @@ namespace WpfApp.View.Author
         private void PopulateAndBind()
         {
             this.DataContext = authorVM;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            _ = new AboutWindow();
+        }
+
+        private void EditAuthor_Click(object sender, RoutedEventArgs e)
+        {
+            if (authorVM.AuthorSelected != null)
+            {
+                _ = new EditAuthorView(authorVM.AuthorSelected);
+            }
         }
     }
 }

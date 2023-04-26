@@ -82,5 +82,14 @@ namespace WpfApp.View.Publication
         {
             InputSearch.Text = string.Empty;
         }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (publicationVM.IsLookCheckBoxIsChecked)
+            {
+                var authorSelected = (DAL.DB.Author)AuthorsLV.SelectedItems[0];
+                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublicationsOf(authorSelected));
+            }
+        }
     }
 }

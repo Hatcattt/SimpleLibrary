@@ -12,6 +12,20 @@ namespace WpfApp.ViewModel
     public class PublicationViewModel : BaseViewModel
     {
         #region Propreties
+        private bool isLookCheckBoxIsChecked;
+        public bool IsLookCheckBoxIsChecked
+        {
+            get { return isLookCheckBoxIsChecked; }
+            set
+            {
+                if (isLookCheckBoxIsChecked != value)
+                {
+                    isLookCheckBoxIsChecked = value;
+                    NotifyPropertyChanged(nameof(IsLookCheckBoxIsChecked));
+                }
+            }
+        }
+
         public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
 
         private string fullLocation;

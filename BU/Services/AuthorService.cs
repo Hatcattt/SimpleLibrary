@@ -17,6 +17,22 @@ namespace BU.Services
                 .Include("AuthorPublications.Publication")
                 .ToList();
         }
+
+        public static int RenameAuthor(Author authorSelected, string authorName)
+        {
+            if (authorSelected != null && authorName.Length > 1)
+            {
+                using var DB = new SimpleLibraryContext();
+                var author = DB.Authors.Find(authorSelected.AuthorId);
+                if (author != null)
+                {
+                    author.AuthorName = authorName;
+                    DB.SaveChanges();
+                    return author.AuthorId;
+                }
+            }
+            return -1;
+        }
     }
     
 }

@@ -1,0 +1,29 @@
+﻿<Window x:Class="WpfApp.View.Author.EditAuthorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp.View.Author" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:AuthorViewModel}"
+        mc:Ignorable="d"
+        Height="400" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Icon="/image/icon/simple_library.ico"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        Title="EditAuthorView">
+    
+    <Border Style="{StaticResource PrimaryBorder}" Background="#FFEFEFEF" CornerRadius="0,0,20,20">
+        <StackPanel>
+            <Label Style="{StaticResource LabelHeaderLite}" Content="Edit author window"></Label>
+
+            <Label Style="{StaticResource LabelInfo}" Content="Name"></Label>
+            <TextBox x:Name="AuthorNameInput" Style="{StaticResource InputText}"/>
+            <Button Content="SAVE" Click="Button_Click_2"></Button>
+            
+            <Button Content="Quit" Click="Button_Click"/>
+
+        </StackPanel>
+    </Border>
+</Window>
