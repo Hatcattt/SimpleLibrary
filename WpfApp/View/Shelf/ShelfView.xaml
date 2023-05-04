@@ -40,7 +40,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Shelf name" Binding="{Binding Path=ShelfName}" Width="*"/>
                     <DataGridTextColumn Header="Theme count" Binding="{Binding Path=ShelfCompositions.Count}" Width="*"/>
-                    <DataGridTextColumn Header="Total publication" Binding="{Binding Path=ShelfCompositions.Publications.Count}" Width="*"/>
+                    <!--<DataGridTextColumn Header="Total publication" Binding="{Binding Path=ShelfCompositions.Publications.Count}" Width="*"/>-->
                     <DataGridTemplateColumn Header="Action" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

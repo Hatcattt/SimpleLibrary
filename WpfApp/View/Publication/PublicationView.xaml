@@ -58,7 +58,7 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
-                        <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Title" Binding="{Binding FullTitle}" Width="2*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Publisher" Binding="{Binding Path=Publisher}" Width="*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Lang" Binding="{Binding Path=Language}" Width="0.5*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Shelf" Binding="{Binding Path=LocationNavigation.Shelf.ShelfName}" Width="0.6*"></DataGridTextColumn>
@@ -76,7 +76,7 @@
                 <ScrollViewer>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="150"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -90,29 +90,33 @@
                             <RowDefinition Height="100"/>
                         </Grid.RowDefinitions>
 
-                        <GroupBox Grid.RowSpan="3" Header="          Cover">
-                            <Image Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="120" Source="/image/Covers/content.jpg"/>
+                        <GroupBox Grid.RowSpan="3" Header="Cover">
+                            <Image Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="150" Source="{Binding CoverImageURL}"/>
                         </GroupBox>
 
                         <Grid Grid.Column="1" Grid.RowSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="80"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <Label Style="{StaticResource LabelInfo}" Content="ISBN"></Label>
-                            <TextBox IsReadOnly="False" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Isbn}"/>
+                            <TextBox Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Isbn}"/>
 
                             <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullTitleName}"/>
+                            <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullTitle}"/>
 
                             <Label Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Location"></Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullLocation}"/>
+                            <TextBox Grid.Column="1" Grid.Row="2" Style="{StaticResource InputTextReadOnly}" Text="{Binding Location}"/>
+
+                            <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Letter Row"></Label>
+                            <TextBox Grid.Column="1" Grid.Row="3" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.LetterRow}"/>
                         </Grid>
 
                         <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Publisher"></Label>
@@ -140,7 +144,7 @@
                     </Grid>
                 </ScrollViewer>
                 <StackPanel Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource AddButton}" Content="ADD NEW"/>
+                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click"/>
                     <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
                     <Button Style="{StaticResource DeleteButton}" Content="DELETE"/>
                 </StackPanel>

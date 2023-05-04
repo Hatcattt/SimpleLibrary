@@ -36,7 +36,10 @@ namespace WpfApp.View.Author
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            _ = new AboutWindow();
+            //var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            //saveFileDialog.Filter = "Fichier SQL (*.sql)|*.sql";
+            //saveFileDialog.Title = "Enregistrer la sauvegarde sous";
+            //saveFileDialog.ShowDialog();
         }
 
         private void EditAuthor_Click(object sender, RoutedEventArgs e)

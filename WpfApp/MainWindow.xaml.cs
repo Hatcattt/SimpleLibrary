@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using DAL.DB;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using WpfApp.Enums;
 
@@ -66,6 +70,52 @@ namespace WpfApp
         public void SetCurrentView(UserControl currentView)
         {
             CurrentViewPlaceHolder.Content = currentView;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            //var config = new ConfigurationBuilder()
+            //    .SetBasePath(Directory.GetCurrentDirectory())
+            //    .AddJsonFile("appsettings.json", true, true)
+            //    .Build();
+
+            //string connectionString = config.GetConnectionString("SimpleLibrary");
+            //string backupFilePath = string.Empty;
+
+            //// Afficher la boîte de dialogue Enregistrer sous pour enregistrer le fichier de sauvegarde
+            //var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+            //saveFileDialog.Filter = "Fichier SQL (*.sql)|*.sql";
+            //saveFileDialog.Title = "Enregistrer la sauvegarde sous";
+            //saveFileDialog.ShowDialog();
+
+            //if (!string.IsNullOrEmpty(saveFileDialog.FileName))
+            //{
+            //    backupFilePath = saveFileDialog.FileName;
+
+            //    // Créer la commande SQL pour sauvegarder la base de données
+            //    string backupCommand = $"BACKUP DATABASE [{"SimpleLibrary"}] TO DISK = '{backupFilePath}' WITH FORMAT, MEDIANAME = 'SqlBackup', NAME = 'Full Backup of {"SimpleLibrary"}';";
+
+            //    // Exécuter la commande SQL pour sauvegarder la base de données
+            //    using (SqlConnection connection = new SqlConnection(connectionString))
+            //    {
+            //        connection.Open();
+            //        using (SqlCommand command = new SqlCommand(backupCommand, connection))
+            //        {
+            //            try
+            //            {
+            //                command.ExecuteNonQuery();
+            //            } catch (System.Exception ex)
+            //            {
+            //                ex.GetBaseException();
+            //                MessageBox.Show(ex.Message,"Error", MessageBoxButton.OK, MessageBoxImage.Err);
+            //            }
+            //            finally { connection.Close(); }
+                        
+            //        }
+            //    }
+
+            //    MessageBox.Show("Sauvegarde effectuée avec succès.");
+            //}
         }
     }
 }

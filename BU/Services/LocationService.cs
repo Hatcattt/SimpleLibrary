@@ -9,13 +9,13 @@ namespace BU.Services
     public class LocationService
     {
         /// <summary>
-        /// Get the location of a publication.
+        /// Get the location of a publication in a string format.
         /// </summary>
         /// <param name="publication">The publication to search</param>
-        /// <returns>The location</returns>
-        public static Location GetLocation(Publication publication)
+        /// <returns>The location in a string format.</returns>
+        public static string GetLocation(Publication publication)
         {
-            return new Location();
+            return $"{publication.LocationNavigation.Shelf.ShelfName} : {publication.LocationNavigation.Theme.ThemeName} : [ {publication.LetterRow} ]";
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfApp.ViewModel;
 
 namespace WpfApp.View.Author
 {
@@ -19,30 +20,30 @@ namespace WpfApp.View.Author
     /// </summary>
     public partial class EditAuthorView : Window
     {
-        ViewModel.AuthorViewModel authorVM = new ViewModel.AuthorViewModel();
+        ViewModel.AuthorViewModel authorVM;
 
         public EditAuthorView(DAL.DB.Author author)
         {
-            authorVM.AuthorSelected = author;
-            AuthorNameInput.Text = authorVM.AuthorSelected.AuthorName;
-
-            this.DataContext = authorVM;
             InitializeComponent();
+            this.authorVM = new AuthorViewModel();
+            this.authorVM.AuthorSelected = author;
+            this.DataContext = this.authorVM;
             this.ShowDialog();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void QuitAuthorViewButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void SaveAuthorChangesButton_Click(object sender, RoutedEventArgs e)
         {
 
-            if (BU.Services.AuthorService.RenameAuthor(authorVM.AuthorSelected, AuthorNameInput.Text) != -1)
+            if (BU.Services.AuthorService.EditAuthor(authorVM.AuthorSelected, AuthorNameInput.Text, AuthorNationalityInput.Text) != -1)
             {
                 MessageBox.Show("author renamed!");
-            } else
+            }
+            else
             {
                 MessageBox.Show("An error occur");
             }

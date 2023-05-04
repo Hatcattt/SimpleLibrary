@@ -19,7 +19,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-
             <StackPanel>
                 
                 <!-- Search Bar -->

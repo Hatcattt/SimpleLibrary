@@ -1,4 +1,8 @@
-﻿using System;
+﻿using BU.Entities;
+using DAL;
+using DAL.DB;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,52 +16,53 @@ namespace WpfApp.ViewModel
     public class PublicationViewModel : BaseViewModel
     {
         #region Propreties
-        private bool isLookCheckBoxIsChecked;
-        public bool IsLookCheckBoxIsChecked
-        {
-            get { return isLookCheckBoxIsChecked; }
-            set
-            {
-                if (isLookCheckBoxIsChecked != value)
-                {
-                    isLookCheckBoxIsChecked = value;
-                    NotifyPropertyChanged(nameof(IsLookCheckBoxIsChecked));
-                }
-            }
-        }
-
+        
         public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
 
-        private string fullLocation;
-        public string FullLocation
+        private string coverImageURL;
+        public string CoverImageURL
         {
-            get { return fullLocation; }
+            get { return coverImageURL ?? @"\image\Covers\DEFAULT.jpg"; }
             set
             {
-                if (fullLocation != value)
+                if (coverImageURL != value)
                 {
-                    fullLocation = value;
-                    NotifyPropertyChanged(nameof(FullLocation));
+                    coverImageURL = value;
+                    NotifyPropertyChanged(nameof(CoverImageURL));
                 }
             }
         }
 
-        private string fullTitleName;
-        public string FullTitleName
+        private string location = "";
+        public string Location
         {
-            get { return fullTitleName; }
+            get { return location; }
             set
             {
-                if (fullTitleName != value)
+                if (location != value)
                 {
-                    fullTitleName = value;
-                    NotifyPropertyChanged(nameof(FullTitleName));
+                    location = value;
+                    NotifyPropertyChanged(nameof(Location));
                 }
             }
         }
 
-        private DAL.DB.Publication? publicationSelected;
-        public DAL.DB.Publication? PublicationSelected
+        private string fullTitle = "";
+        public string FullTitle
+        {
+            get { return fullTitle; }
+            set
+            {
+                if (fullTitle != value)
+                {
+                    fullTitle = value;
+                    NotifyPropertyChanged(nameof(FullTitle));
+                }
+            }
+        }
+
+        private DAL.DB.Publication publicationSelected;
+        public DAL.DB.Publication PublicationSelected
         {
             get { return publicationSelected; }
             set
@@ -113,11 +118,12 @@ namespace WpfApp.ViewModel
         }
 
         #endregion
+
         public PublicationViewModel()
         {
             publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
             authorPublications = new ObservableCollection<DAL.DB.AuthorPublication>();
-            PublicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>();
+            publicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>();
         }
 
         #region Methods

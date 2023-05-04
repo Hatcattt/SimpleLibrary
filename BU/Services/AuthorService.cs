@@ -10,6 +10,7 @@ namespace BU.Services
 {
     public class AuthorService
     {
+        static int minAuthorLenght = 2;
         public static List<DAL.DB.Author> GetAuthors()
         {
             using var DB = new SimpleLibraryContext();
@@ -18,17 +19,18 @@ namespace BU.Services
                 .ToList();
         }
 
-        public static int RenameAuthor(Author authorSelected, string authorName)
+        public static int EditAuthor(Author author, string authorName, string nationality)
         {
-            if (authorSelected != null && authorName.Length > 1)
+            if (author != null && authorName.Length >= minAuthorLenght && nationality.Length >= minAuthorLenght)
             {
                 using var DB = new SimpleLibraryContext();
-                var author = DB.Authors.Find(authorSelected.AuthorId);
-                if (author != null)
+                var authorToEdit = DB.Authors.Find(author.AuthorId);
+                if (authorToEdit != null)
                 {
-                    author.AuthorName = authorName;
+                    authorToEdit.AuthorName = authorName;
+                    authorToEdit.Nationality = nationality;
                     DB.SaveChanges();
-                    return author.AuthorId;
+                    return authorToEdit.AuthorId;
                 }
             }
             return -1;

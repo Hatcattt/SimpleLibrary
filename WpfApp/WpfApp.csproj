@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="image\Covers\DEFAULT.jpg" />
+    <None Remove="image\Covers\ID_5.jpg" />
+	  
     <None Remove="image\icon\128\db_back-up.png" />
     <None Remove="image\icon\128\publication_add.png" />
     <None Remove="image\icon\128\publication_edit.png" />
@@ -40,6 +43,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Resource Include="image\Covers\DEFAULT.jpg" />
+	  <Resource Include="image\Covers\ID_5.jpg" />
+		
 	  <Resource Include="image\icon\128\db_back-up.png" />
 	  <Resource Include="image\icon\128\publication_add.png" />
 	  <Resource Include="image\icon\128\publication_edit.png" />
@@ -53,7 +59,6 @@
 	  <Resource Include="image\icon\128\publication_search.png" />
 	  <Resource Include="image\icon\32\reset_icon.png" />
 	  <Resource Include="image\icon\simple_library.ico" />
-	  <Resource Include="image\Covers\content.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>

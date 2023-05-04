@@ -62,5 +62,16 @@ namespace BU.Services
                 .Include("PublicationStateNavigation")
                 .ToList();
         }
+
+        /// <summary>
+        /// Get the fulltitle of a publication in a string format.
+        /// Concat the title and the subtitle.
+        /// </summary>
+        /// <param name="publication">The publication to search</param>
+        /// <returns>The full title in a string format.</returns>
+        public static string GetFulltitle(Publication publication)
+        {
+            return $"{publication.Title} {publication.SubTitle}";
+        }
     }
 }

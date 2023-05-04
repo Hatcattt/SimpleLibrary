@@ -33,30 +33,14 @@ namespace WpfApp.View.Publication
         public PublicationView()
         {
             InitializeComponent();
-            PopulateAndBind();
-        }
-
-        private void PopulateAndBind()
-        {
             this.DataContext = publicationVM;
-            foreach (var publi in publicationVM.Publications)
-            {
-                publi.CoverFilePath = "/image/Covers/content.jpg";
-            }
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (publicationVM.PublicationSelected != null)
-            {
-                publicationVM.FullTitleName = publicationVM.PublicationSelected.Title + " " + publicationVM.PublicationSelected.SubTitle;
-                publicationVM.FullLocation = publicationVM.PublicationSelected.LocationNavigation.Shelf.ShelfName + " - " + publicationVM.PublicationSelected.LocationNavigation.Theme.ThemeName + " - " + publicationVM.PublicationSelected.LetterRow;
-            } else
-            {
-                publicationVM.FullTitleName = string.Empty;
-                publicationVM.FullLocation = string.Empty;
-            }
-            //publicationVM.PublicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>(BU.Services.PublicationService.GetPublicationCopies(publicationVM.PublicationSelected));
+            publicationVM.Location = BU.Services.LocationService.GetLocation(publicationVM.PublicationSelected);
+            publicationVM.FullTitle = BU.Services.PublicationService.GetFulltitle(publicationVM.PublicationSelected);
+            publicationVM.CoverImageURL = publicationVM.PublicationSelected.CoverFilePath ?? @"\image\Covers\DEFAULT.jpg";
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -83,13 +67,9 @@ namespace WpfApp.View.Publication
             InputSearch.Text = string.Empty;
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void AddNewPublicationButton_Click(object sender, RoutedEventArgs e)
         {
-            if (publicationVM.IsLookCheckBoxIsChecked)
-            {
-                var authorSelected = (DAL.DB.Author)AuthorsLV.SelectedItems[0];
-                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublicationsOf(authorSelected));
-            }
+            _ = new CreatePublicationView();
         }
     }
 }

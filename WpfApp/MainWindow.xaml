@@ -21,7 +21,7 @@
             <Menu Margin="0,0,0,10" Background="#FFC5D9E0" DockPanel.Dock="Top">
                 <MenuItem Height="25" Header="_Home" Click="HomeView_Click"/>
                 <MenuItem Header="_Backup">
-                    <MenuItem Header="_New" />
+                    <MenuItem Header="_New" Click="MenuItem_Click" />
                     <MenuItem Header="_Load" />
                 </MenuItem>
                 <MenuItem Header="_?">

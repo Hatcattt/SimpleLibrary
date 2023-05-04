@@ -1,6 +1,13 @@
 ﻿using DAL.DB;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using DAL.Entities;
+using DAL.Services;
 
 namespace ConsoleApp
 {
@@ -9,27 +16,21 @@ namespace ConsoleApp
     /// </summary>
     public class Program
     {
+
         static void Main(string[] args)
         {
-            
-            using var DB = new SimpleLibraryContext();
-            var shelf = DB.Shelves.Find(1);
-            var theme = DB.Themes.Find(17);
-            var compoToDelete = DB.ShelfCompositions.Where(SC => SC.Shelf == shelf && SC.Theme == theme).FirstOrDefault();
-            Console.WriteLine(compoToDelete.Shelf.ShelfName + " " + compoToDelete.Theme.ThemeName);
-            Console.WriteLine(DB.ShelfCompositions.Count());
-            DB.ShelfCompositions.Remove(compoToDelete);
+            GoogleBookPublication gbook = new GoogleBookPublication("9782100796489");
 
-            Console.WriteLine(DB.ShelfCompositions.Where(SC => SC.Shelf == shelf && SC.Theme == theme).FirstOrDefault().Theme.ThemeName);
-            //var shelfCompoToDelete = DB.ShelfCompositions
-            //    .Where(SC => SC.Theme.ThemeId == theme.ThemeId && SC.Shelf.ShelfId == shelf.ShelfId)
-            //    .SingleOrDefault();
-
-            //if (shelfCompoToDelete != null)
-            //{
-            //    DB.ShelfCompositions.Remove(shelfCompoToDelete);
-            //    return true;
-            //}
+            Console.WriteLine(gbook.Isbn);
+            Console.WriteLine(gbook.Title);
+            Console.WriteLine(gbook.Publisher);
+            Console.WriteLine(gbook.PublishedDate);
+            Console.WriteLine(gbook.Description);
+            Console.WriteLine(gbook.CoverFilePath);
+            //IList<string> categoriesText = categories.Select(c => (string)c).ToList();
+            //// Json.NET
+            //// CodePlex
         }
     }
+
 }
