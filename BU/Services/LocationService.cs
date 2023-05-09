@@ -15,7 +15,8 @@ namespace BU.Services
         /// <returns>The location in a string format.</returns>
         public static string GetLocation(Publication publication)
         {
-            return $"{publication.LocationNavigation.Shelf.ShelfName} : {publication.LocationNavigation.Theme.ThemeName} : [ {publication.LetterRow} ]";
+            var location = publication.LocationNavigation;
+            return $"{location.Shelf.ShelfName} : {location.Theme.ThemeName}";
         }
     }
 }

@@ -12,6 +12,16 @@ namespace BU.Services
     public class ShelfService
     {
         #region Shelf
+
+        public static int GetShelfComposition(Shelf shelf, Theme theme)
+        {
+            using var DB = new SimpleLibraryContext();
+            if (shelf != null || theme != null)
+            {
+                return DB.ShelfCompositions.Where(SC => SC.Shelf.ShelfId == shelf.ShelfId && SC.Theme.ThemeId == theme.ThemeId).First().ShelfCompositionId;
+            }
+            return 0;
+        }
         public static Shelf GetShelf(int shelfId)
         {
             using var DB = new SimpleLibraryContext();
@@ -135,26 +145,35 @@ namespace BU.Services
             return -1;
         }
 
-        public static int AddTheme(Theme theme, Shelf shelfTarget)
+        public static ShelfComposition AddShelfComposition(Theme theme, Shelf shelfTarget)
         {
-            using var DB = new SimpleLibraryContext();
-            if (theme != null && shelfTarget != null)
+            try
             {
-                DB.Themes.Add(theme);
-                DB.ShelfCompositions.Add(new ShelfComposition() { Theme = theme, ShelfId = shelfTarget.ShelfId });
-                DB.SaveChanges();
-                return theme.ThemeId;
+                using var DB = new SimpleLibraryContext();
+                if (theme != null && shelfTarget != null)
+                {
+                    var newSc = new ShelfComposition() { Theme = theme, ShelfId = shelfTarget.ShelfId };
+                    DB.ShelfCompositions.Add(newSc);
+                    DB.SaveChanges();
+                    return newSc;
+                }
+                return new ShelfComposition();
+            } catch (Exception ex)
+            {
+                // looog
+                return new ShelfComposition();
             }
-            return -1;
         }
 
-        public static int RenameTheme(Theme theme, string shelfTheme)
+        public static int RenameTheme(Theme theme, string themeName)
         {
-            if (theme != null && shelfTheme.Length > 0 && theme.ThemeName != shelfTheme)
+            if (theme != null && themeName.Length > 0 && theme.ThemeName != themeName)
             {
                 using var DB = new SimpleLibraryContext();
 
-                DB.Themes.Where(T => T.ThemeId == theme.ThemeId).First().ThemeName = char.ToUpper(shelfTheme[0]) + shelfTheme[1..];
+                DB.Themes
+                    .Where(T => T.ThemeId == theme.ThemeId)
+                    .First().ThemeName = char.ToUpper(themeName[0]) + themeName[1..];
                 DB.SaveChanges();
                 return theme.ThemeId;
             }
@@ -173,18 +192,18 @@ namespace BU.Services
             return -1;
         }
 
-        public static int AddShelfComposition(Shelf shelf, Theme theme)
-        {
-            if (shelf != null && theme != null && ! ShelfCompositionExist(shelf, theme))
-            {
-                using var DB = new SimpleLibraryContext();
-                var newComposition = new ShelfComposition() { ShelfId = shelf.ShelfId, ThemeId = theme.ThemeId };
-                DB.ShelfCompositions.Add(newComposition);
-                DB.SaveChanges();
-                return newComposition.ShelfCompositionId;
-            }
-            return -1;
-        }
+        //public static int AddShelfComposition(Shelf shelf, Theme theme)
+        //{
+        //    if (shelf != null && theme != null && ! ShelfCompositionExist(shelf, theme))
+        //    {
+        //        using var DB = new SimpleLibraryContext();
+        //        var newComposition = new ShelfComposition() { ShelfId = shelf.ShelfId, ThemeId = theme.ThemeId };
+        //        DB.ShelfCompositions.Add(newComposition);
+        //        DB.SaveChanges();
+        //        return newComposition.ShelfCompositionId;
+        //    }
+        //    return -1;
+        //}
 
         public static bool DeleteShelfComposition(Theme theme, Shelf shelf)
         {

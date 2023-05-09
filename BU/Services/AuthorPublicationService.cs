@@ -4,12 +4,15 @@ namespace BU.Services
 {
     public class AuthorPublicationService
     {
-        public static List<Author> GetAuthorsPublication(Publication publication)
+        public static List<Author> GetAuthors(Publication publication)
         {
             using var DB = new SimpleLibraryContext();
-            var authors = new List<Author>();
-            // 
-            return authors;
+            if (publication != null)
+            {
+                var authors = DB.AuthorPublications.Where(AP => AP.PublicationId == publication.PublicationId).Select(AP => AP.Author).ToList();
+                return authors;
+            }
+            return new List<Author>();
         }
 
         /// <summary>

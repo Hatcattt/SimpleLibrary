@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.FileSystemGlobbing.Internal;
+﻿using DAL.DB;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,30 +14,27 @@ namespace DAL.Services
 {
     public class GoogleBookApiToJson
     {
-        private static string ISBN_REGEX = "^[0-9]*";
-        private static string BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
-        public const string DEFAULT_JSON = @"{'totalItems': 0}";
+        private static readonly string ISBN_REGEX = "^[0-9]*";
+        private static readonly string BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
+        public const string DEFAULT_JSON = "https://www.googleapis.com/books/v1/volumes?q=isbn:-1";
 
         public static async Task<string> GetJsonAsyncBy(string isbn)
         {
-            if (IsbnIsValide(isbn))
+            using var client = new HttpClient();
+            var url = IsbnIsValide(isbn) ? BASE_URL + isbn : DEFAULT_JSON;
+
+            using var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
             {
-                using var client = new HttpClient();
-
-                var url = BASE_URL + isbn;
-                using var response = await client.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
+                return await response.Content.ReadAsStringAsync();
             }
             return DEFAULT_JSON;
         }
 
         private static bool IsbnIsValide(string isbn)
         {
-            return Regex.IsMatch(isbn, ISBN_REGEX) && ! isbn.IsNullOrEmpty();
+            return Regex.IsMatch(isbn, ISBN_REGEX) && ! isbn.IsNullOrEmpty() && isbn.Length >= 3;
         }
 
         public static string GetISBN(JToken? jToken)
@@ -48,6 +47,11 @@ namespace DAL.Services
             return (string?)jToken?["title"] ?? string.Empty;
         }
 
+        public static string GetSubTitle(JToken? jToken)
+        {
+            return (string?)jToken?["subTitle"] ?? string.Empty;
+        }
+
         public static string GetPublisher(JToken? jToken)
         {
             return (string?)jToken?["publisher"] ?? string.Empty;
@@ -58,9 +62,35 @@ namespace DAL.Services
             return (string?)jToken?["description"] ?? string.Empty;
         }
 
-        public static string GetCoverThumbnail(JToken? jToken)
+        public static Uri GetCoverThumbnail(JToken? jToken)
         {
-            return (string?)jToken?["imageLinks"]?["thumbnail"] ?? string.Empty;
+            var uriJson = (string?)jToken?["imageLinks"]?["thumbnail"] ?? @"image\Covers\DEFAULT.jpg";
+            return new Uri(uriJson, UriKind.RelativeOrAbsolute);
+        }
+
+        public static DateTime GetPublishedDate(JToken? jToken)
+        {
+            try
+            {
+                return (DateTime?)jToken?["publishedDate"] ?? new DateTime(2023, 01, 01);
+            }
+            catch (System.FormatException fex)
+            {
+                // LOOOOOGGGGG !!
+                Console.WriteLine(fex.Message);
+                return new DateTime(2023, 01, 01);
+            }
+        }
+
+        public static List<string> GetAuthors(JToken? jToken)
+        {
+            var list = jToken?["authors"];
+            return list == null ? new List<string>() : list.Select(t => (string)t).ToList();
+        }
+
+        public static string GetLanguage(JToken? jToken)
+        {
+            return (string?)jToken?["language"] ?? string.Empty;
         }
     }
 }

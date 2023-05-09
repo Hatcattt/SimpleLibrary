@@ -159,9 +159,9 @@ namespace WpfApp.ViewModel
 
         public bool AddTheme()
         {
-            if (ThemeInputText.Length > 0 && SelectedShelf != null)
+            if (ThemeInputText.Length > 0)
             {
-                int newThemeId = BU.Services.ShelfService.AddTheme(new Theme() { ThemeName = ThemeInputText }, SelectedShelf);
+                int newThemeId = BU.Services.ShelfService.AddTheme(new Theme() { ThemeName = ThemeInputText });
                 MessageBox.Show("Theme "
                     + BU.Services.ShelfService.GetTheme(newThemeId).ThemeName
                     + " added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -206,14 +206,18 @@ namespace WpfApp.ViewModel
 
         public bool AddShelfComposition()
         {
-            if (BU.Services.ShelfService.AddShelfComposition(SelectedShelf, SelectedTheme) != -1)
+            try
             {
-                MessageBox.Show("New composition added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                return true;
+                if (BU.Services.ShelfService.AddShelfComposition(SelectedTheme, SelectedShelf).ShelfCompositionId > 0)
+                {
+                    AppConstant.Notification.Display_Info("Shelf composition added sucessfully!", "Theme added");
+                    return true;
+                }
+            } catch (Exception ex)
+            {
+                AppConstant.Notification.Display_Error($"An exception have been catch!\n{ex.Message}", "Error during process");
             }
-            MessageBox.Show(
-                "You can't create this new shlef composition.\n" +
-                "Maybe this theme already exist inside the selected shelf.", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
             return false;
         }
 

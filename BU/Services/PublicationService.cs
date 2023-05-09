@@ -11,6 +11,16 @@ namespace BU.Services
     {
 
         /// <summary>
+        /// Get the first publication.
+        /// </summary>
+        /// <returns>The first publication</returns>
+        public static Publication GetFirstPublication()
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Publications.First();
+        }
+
+        /// <summary>
         /// Get a publication by his id.
         /// </summary>
         /// <param name="id">The id to search</param>
@@ -69,9 +79,14 @@ namespace BU.Services
         /// </summary>
         /// <param name="publication">The publication to search</param>
         /// <returns>The full title in a string format.</returns>
-        public static string GetFulltitle(Publication publication)
+        public static string GetFullTitle(Publication publication)
         {
-            return $"{publication.Title} {publication.SubTitle}";
+            if (publication != null)
+            {
+                return $"{publication.Title} {publication.SubTitle}";
+
+            }
+            return "";
         }
     }
 }

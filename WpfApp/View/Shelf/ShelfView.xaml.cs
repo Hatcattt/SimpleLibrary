@@ -119,7 +119,7 @@ namespace WpfApp.View.Shelf
             if (shelfVM.AddShelfComposition())
             {
                 shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
-                //shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
             }
         }
 

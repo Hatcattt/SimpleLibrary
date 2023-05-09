@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WpfApp"
         xmlns:viewmodels="clr-namespace:WpfApp.ViewModel"
         mc:Ignorable="d"
+        WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
         Icon="/image/icon/simple_library.ico"
         Title="{x:Static local:AppConstant.APP_TITLE}" 

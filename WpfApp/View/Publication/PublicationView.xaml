@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:WpfApp.View.Publication"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PublicationViewModel}"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="1080"
              Background="#FFEFEFEF">
 
@@ -25,12 +25,6 @@
                 
                 <!-- Search Bar -->
                 <Border Padding="5" BorderThickness="2">
-                    <Border.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFC5D9E0" Offset="1"/>
-                            <GradientStop Color="White" Offset="0"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
                     <Border.BorderBrush>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FFC5D9E0" Offset="0.283"/>
@@ -39,14 +33,19 @@
                         </LinearGradientBrush>
                     </Border.BorderBrush>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
-                        <Label VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
-                        <ComboBox SelectedIndex="1" x:Name="cbBox" ItemsSource="{Binding PropertiesSearch}" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0"/>
-                        <TextBox Style="{StaticResource InputText}" MinWidth="200" x:Name="InputSearch" TextChanged="TextBox_TextChanged"/>
-                        <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchInputButton_Click">
-                            <Image Width="25" Source="/image/icon/32/reset_icon.png"/>
-                        </Button>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
+                            <Label x:Name="labelSearch" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
+                            <ComboBox SelectedIndex="1" x:Name="cbBox" ItemsSource="{Binding PropertiesSearch}" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0" SelectionChanged="cbBox_SelectionChanged"/>
+
+                            <ComboBox x:Name="comboboxShelf" MaxHeight="35" MinWidth="100" Margin="0,0,10,0" VerticalContentAlignment="Center" DisplayMemberPath="ShelfName" SelectionChanged="comboboxShelf_SelectionChanged"></ComboBox>
+
+                            <TextBox Style="{StaticResource InputText}" MinWidth="200" x:Name="InputSearch" TextChanged="TextBox_TextChanged"/>
+                            <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchInputButton_Click">
+                                <Image Width="25" Source="/image/icon/32/reset_icon.png"/>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
@@ -58,7 +57,8 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
-                        <DataGridTextColumn Header="Title" Binding="{Binding FullTitle}" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Title" Width="1.5*" Binding="{Binding Path=Title}"/>
+                        <DataGridTextColumn Header="Subtitle" Width="*" Binding="{Binding Path=SubTitle}"/>
                         <DataGridTextColumn Header="Publisher" Binding="{Binding Path=Publisher}" Width="*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Lang" Binding="{Binding Path=Language}" Width="0.5*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Shelf" Binding="{Binding Path=LocationNavigation.Shelf.ShelfName}" Width="0.6*"></DataGridTextColumn>
@@ -109,7 +109,7 @@
                             <Label Style="{StaticResource LabelInfo}" Content="ISBN"></Label>
                             <TextBox Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Isbn}"/>
 
-                            <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
+                            <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Full title"></Label>
                             <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullTitle}"/>
 
                             <Label Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Location"></Label>
@@ -129,7 +129,7 @@
                         <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Language}"/>
 
                         <Label VerticalAlignment="Top" Grid.Row="6" Style="{StaticResource LabelInfo}" Content="Author(s)"></Label>
-                        <ListView x:Name="AuthorsLV" Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding PublicationSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
+                        <ListView Height="100" Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding PublicationSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="150" Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
@@ -146,7 +146,7 @@
                 <StackPanel Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click"/>
                     <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
-                    <Button Style="{StaticResource DeleteButton}" Content="DELETE"/>
+                    <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeletePublication"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

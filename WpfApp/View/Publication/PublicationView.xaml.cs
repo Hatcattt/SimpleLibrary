@@ -33,14 +33,28 @@ namespace WpfApp.View.Publication
         public PublicationView()
         {
             InitializeComponent();
-            this.DataContext = publicationVM;
+            DataContext = publicationVM;
+            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+            comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
+            comboboxShelf.Visibility = Visibility.Collapsed;
+            labelSearch.Content = "Search By";
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            publicationVM.Location = BU.Services.LocationService.GetLocation(publicationVM.PublicationSelected);
-            publicationVM.FullTitle = BU.Services.PublicationService.GetFulltitle(publicationVM.PublicationSelected);
-            publicationVM.CoverImageURL = publicationVM.PublicationSelected.CoverFilePath ?? @"\image\Covers\DEFAULT.jpg";
+            if (publicationVM.PublicationSelected != null)
+            {
+                publicationVM.Location = BU.Services.LocationService.GetLocation(publicationVM.PublicationSelected);
+                publicationVM.FullTitle = BU.Services.PublicationService.GetFullTitle(publicationVM.PublicationSelected);
+                publicationVM.CoverImageURL = publicationVM.PublicationSelected.CoverFilePath ?? @"/image/Covers/DEFAULT.jpg";
+                publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorPublicationService.GetAuthors(publicationVM.PublicationSelected));
+            }
+            else
+            {
+                publicationVM.FullTitle = "";
+                publicationVM.Location = "";
+                publicationVM.CoverImageURL = @"/image/Covers/DEFAULT.jpg";
+            }
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -48,7 +62,6 @@ namespace WpfApp.View.Publication
             if (InputSearch.Text.IsNullOrEmpty())
             {
                 publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
-                return;
             }
             switch (cbBox.SelectedItem)
             {
@@ -58,6 +71,10 @@ namespace WpfApp.View.Publication
 
                 case "Title":
                     publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithTitle(InputSearch.Text));
+                    break;
+
+                case "Shelf":
+                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsOf((DAL.DB.Shelf)comboboxShelf.SelectedValue));
                     break;
             }
         }
@@ -70,6 +87,48 @@ namespace WpfApp.View.Publication
         private void AddNewPublicationButton_Click(object sender, RoutedEventArgs e)
         {
             _ = new CreatePublicationView();
+        }
+
+        private void DeletePublication(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var tempPublis = publicationVM.Publications;
+
+                using var DB = new SimpleLibraryContext();
+                DB.Publications.Remove(publicationVM.PublicationSelected);
+                DB.SaveChanges();
+                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+                ResetSearchInputButton_Click(sender, e);
+
+                MessageBox.Show("Publication successfully deleted!", "Operation OK", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n{ex.InnerException.Message}", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void cbBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbBox.SelectedItem.ToString() == "Shelf")
+            {
+                comboboxShelf.Visibility = Visibility.Visible;
+                InputSearch.IsEnabled = false;
+                labelSearch.Content = "Filter By";
+            } else
+            {
+                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+                comboboxShelf.Visibility = Visibility.Collapsed;
+                InputSearch.IsEnabled = true;
+                labelSearch.Content = "Search By";
+            }
+        }
+
+        private void comboboxShelf_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsOf((DAL.DB.Shelf)comboboxShelf.SelectedValue));
         }
     }
 }

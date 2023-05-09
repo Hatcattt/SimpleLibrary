@@ -1,4 +1,5 @@
 ﻿using DAL.Services;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ namespace DAL.Entities
     {
         #region Propreties
 
-        private JObject jsonContent;
-        private JToken? volumeInfo;
+        private readonly JObject jsonContent;
+        private readonly JToken? volumeInfo;
 
         public string Json { get; private set; } = GoogleBookApiToJson.DEFAULT_JSON;
 
@@ -27,11 +28,15 @@ namespace DAL.Entities
 
         public string Publisher { get; private set; } = string.Empty;
 
-        public DateTime? PublishedDate { get; private set; } = new DateTime();
+        public DateTime PublishedDate { get; private set; } = new DateTime();
 
         public string Description { get; private set; } = string.Empty;
 
-        public string CoverFilePath { get; private set; } = string.Empty;
+        public string Language { get; private set; } = string.Empty;
+
+        public Uri CoverFilePath { get; private set; } = new Uri(@"image/Covers/DEFAULT.jpg",  UriKind.Relative);
+
+        public List<string> Authors { get; private set; } = new List<string>();
 
         #endregion
 
@@ -39,9 +44,9 @@ namespace DAL.Entities
         {
             Json = json;
             jsonContent = JObject.Parse(Json);
-            if ((int)jsonContent["totalItems"] > 0)
+            if (JsonAsContent())
             {
-                volumeInfo = jsonContent["items"][0]["volumeInfo"];
+                volumeInfo = jsonContent["items"]?[0]?["volumeInfo"];
                 LinkPropreties();
             }
         }
@@ -50,27 +55,19 @@ namespace DAL.Entities
         {
             Isbn = GoogleBookApiToJson.GetISBN(volumeInfo);
             Title = GoogleBookApiToJson.GetTitle(volumeInfo);
+            SubTitle = GoogleBookApiToJson.GetSubTitle(volumeInfo);
             Publisher = GoogleBookApiToJson.GetPublisher(volumeInfo);
+            PublishedDate = GoogleBookApiToJson.GetPublishedDate(volumeInfo);
             Description = GoogleBookApiToJson.GetDescription(volumeInfo);
             CoverFilePath = GoogleBookApiToJson.GetCoverThumbnail(volumeInfo);
+            Language = GoogleBookApiToJson.GetLanguage(volumeInfo);
+            Authors = GoogleBookApiToJson.GetAuthors(volumeInfo);
+            LetterRow = Title[..1];
         }
-        
-  //"kind": "books#volumes",
-  //"totalItems": 1,
-  //"items": [
-  //  {
-  //    "kind": "books#volume",
-  //    "id": "9u6ODwAAQBAJ",
-  //    "etag": "d8Pq8edY3E0",
-  //    "selfLink": "https://www.googleapis.com/books/v1/volumes/9u6ODwAAQBAJ",
-  //    "volumeInfo": {
-  //      "title": "Explorateurs de l'espace",
-  //      "subtitle": "Voyage aux frontières de l'univers",
-  //      "authors": [
-  //        "Michel Tognini",
-  //        "Hélène Courtois",
-  //        "Jean-Yves Le Gall"
-  //      ],
-  //      "publisher": "Dunod",
+
+        public bool JsonAsContent()
+        {
+            return (int?)jsonContent["totalItems"] > 0;
+        }
     }
 }

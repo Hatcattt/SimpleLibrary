@@ -18,11 +18,12 @@ namespace WpfApp.ViewModel
         #region Propreties
         
         public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
+        public List<string> Languages { get; } = new List<string>() { "EN", "FR", "ES", "DE", "IT", "PT", "RU", "ZH", "JA", "KO" };
 
         private string coverImageURL;
         public string CoverImageURL
         {
-            get { return coverImageURL ?? @"\image\Covers\DEFAULT.jpg"; }
+            get { return coverImageURL.IsNullOrEmpty() ? @"\image\Covers\DEFAULT.jpg" : coverImageURL; }
             set
             {
                 if (coverImageURL != value)
@@ -39,7 +40,7 @@ namespace WpfApp.ViewModel
             get { return location; }
             set
             {
-                if (location != value)
+                if (location != value && value != null)
                 {
                     location = value;
                     NotifyPropertyChanged(nameof(Location));
@@ -61,8 +62,8 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private DAL.DB.Publication publicationSelected;
-        public DAL.DB.Publication PublicationSelected
+        private DAL.DB.Publication? publicationSelected;
+        public DAL.DB.Publication? PublicationSelected
         {
             get { return publicationSelected; }
             set
@@ -89,8 +90,8 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<DAL.DB.AuthorPublication> authorPublications;
-        public ObservableCollection<DAL.DB.AuthorPublication> AuthorPublications
+        private ObservableCollection<DAL.DB.Author> authorPublications;
+        public ObservableCollection<DAL.DB.Author> AuthorPublications
         {
             get { return authorPublications; }
             set
@@ -121,9 +122,10 @@ namespace WpfApp.ViewModel
 
         public PublicationViewModel()
         {
-            publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
-            authorPublications = new ObservableCollection<DAL.DB.AuthorPublication>();
+            publications = new ObservableCollection<DAL.DB.Publication>();
+            authorPublications = new ObservableCollection<DAL.DB.Author>();
             publicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>();
+            coverImageURL = @"/image/Covers/DEFAULT.jpg";
         }
 
         #region Methods

@@ -19,14 +19,14 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            GoogleBookPublication gbook = new GoogleBookPublication("9782100796489");
+            //GoogleBookPublication gbook = new GoogleBookPublication("9782100796489");
 
-            Console.WriteLine(gbook.Isbn);
-            Console.WriteLine(gbook.Title);
-            Console.WriteLine(gbook.Publisher);
-            Console.WriteLine(gbook.PublishedDate);
-            Console.WriteLine(gbook.Description);
-            Console.WriteLine(gbook.CoverFilePath);
+            //Console.WriteLine(gbook.Isbn);
+            //Console.WriteLine(gbook.Title);
+            //Console.WriteLine(gbook.Publisher);
+            //Console.WriteLine(gbook.PublishedDate);
+            //Console.WriteLine(gbook.Description);
+            //Console.WriteLine(gbook.CoverFilePath);
             //IList<string> categoriesText = categories.Select(c => (string)c).ToList();
             //// Json.NET
             //// CodePlex

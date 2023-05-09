@@ -9,12 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BU", "BU\BU.csproj", "{8E1A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{6D9B0CE8-BB84-4ED1-BDAC-0A1ECC12B626}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{B1CCD228-2CD8-46A5-AF2D-1E1BCB482DA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp", "WpfApp\WpfApp.csproj", "{B1CCD228-2CD8-46A5-AF2D-1E1BCB482DA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Description = Virtual library management system.
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8B4DB5FF-874E-4F38-8B6C-4093A2B451BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

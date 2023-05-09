@@ -42,5 +42,22 @@ namespace BU.Services
                 .Include("AuthorPublications.Author")
                 .ToList();
         }
+
+        /// <summary>
+        /// Get a list of publications of a shelf.
+        /// </summary>
+        /// <param name="sequence">The shelf to search</param>
+        /// <returns>A list of publications</returns>
+        public static List<Publication> GetPublicationsOf(DAL.DB.Shelf shelf)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Publications
+                .Where(P => P.LocationNavigation.Shelf == shelf)
+                .Include("LocationNavigation.Shelf")
+                .Include("LocationNavigation.Theme")
+                .Include("PublicationCopies")
+                .Include("AuthorPublications.Author")
+                .ToList();
+        }
     }
 }
