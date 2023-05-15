@@ -1,24 +1,11 @@
 ﻿using DAL.DB;
 using DAL.Entities;
 using DAL.Services;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WpfApp.View.Publication
 {
@@ -27,22 +14,23 @@ namespace WpfApp.View.Publication
     /// </summary>
     public partial class CreatePublicationView : Window
     {
-        View.Publication.PublicationView newPublicationVM = new();
-        GoogleBookPublication gBook;
+
+        private GoogleBookPublication? gBook;
+
         public CreatePublicationView()
         {
             InitializeComponent();
-            this.DataContext = newPublicationVM;
             this.comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
+
             this.ShowDialog();
         }
 
-        private void QuitPublicationViewButton_Click(object sender, RoutedEventArgs e)
+        private void CancelPublicationCreationButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private async void SearchWithAPIButton_Click(object sender, RoutedEventArgs e)
+        private async void SearchPublicationWithAPIButton_Click(object sender, RoutedEventArgs e)
         {
             string isbn = ISBNinputText.Text;
 
@@ -59,7 +47,6 @@ namespace WpfApp.View.Publication
                 LanguageInput.Text = gBook.Language;
                 CoverImage.Source = new BitmapImage(gBook.CoverFilePath);
                 AuthorsLV.ItemsSource = gBook.Authors;
-
             } else
             {
                 MessageBox.Show("Publication not found.\nMake sure your isbn is valid.", "Publication not found", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -71,38 +58,39 @@ namespace WpfApp.View.Publication
             this.comboboxTheme.ItemsSource = BU.Services.ShelfCompositionService.GetThemesOf((DAL.DB.Shelf)comboboxShelf.SelectedItem);
         }
 
-        private void CreateANewPublication_Click(object sender, RoutedEventArgs e)
+        private void CreateNewPublicationButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var shelf = (DAL.DB.Shelf)comboboxShelf.SelectedValue;
-                var theme = (DAL.DB.Theme)comboboxTheme.SelectedValue;
+            var shelf = (DAL.DB.Shelf)comboboxShelf.SelectedValue;
+            var theme = (DAL.DB.Theme)comboboxTheme.SelectedValue;
 
-                if (shelf != null && theme != null)
-                {
-                    using var DB = new SimpleLibraryContext();
-                    var newPublication = new DAL.DB.Publication()
-                    {
-                        Isbn = ISBNinputText.Text,
-                        Title = TitleInput.Text,
-                        //SubTitle = gBook.SubTitle,
-                        Publisher = PublisherInput.Text,
-                        PublishedDate = PublishedDatePicker.SelectedDate,
-                        Description = DescriptionInput.Text,
-                        Location = BU.Services.ShelfService.GetShelfComposition(shelf, theme),
-                        Language = LanguageInput.Text,
-                        LetterRow = TitleInput.Text[..1],
-                        //CoverFilePath = gBook.CoverFilePath.ToString(),
-                    };
-                    DB.Publications.Add(newPublication);
-                    DB.SaveChanges();
-                } else
-                {
-                    MessageBox.Show("Please choose a shelf and a theme!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            } catch (Exception ex)
+            if (shelf != null && theme != null && TitleInput.Text.Length >= 1)
             {
-                MessageBox.Show($"{ex.Message}\n{ex.InnerException.Message}", "ERROR",MessageBoxButton.OK, MessageBoxImage.Error);
+                var newPublication = new DAL.DB.Publication()
+                {
+                    Isbn = ISBNinputText.Text,
+                    Title = TitleInput.Text,
+                    SubTitle = gBook?.SubTitle ?? string.Empty,
+                    Publisher = PublisherInput.Text,
+                    PublishedDate = PublishedDatePicker.SelectedDate,
+                    Description = DescriptionInput.Text,
+                    Location = BU.Services.ShelfService.GetLocationOf(shelf, theme),
+                    Language = LanguageInput.Text,
+                    LetterRow = TitleInput.Text[..1],
+                    CoverFilePath = gBook?.CoverFilePath.ToString() ?? GoogleBookPublication.DEFAULT_COVER_PATH,
+                };
+
+                var result = BU.Services.PublicationService.AddNewPublication(newPublication);
+                if (result.Status == BU.Entities.ServiceResultStatus.OK)
+                {
+                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Readable, (int)goodCopy.Value);
+                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Unreadable, (int)badCopy.Value);
+                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Unknown, (int)unknownCopy.Value);
+                }
+                MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (int)result.Status == 2 ? MessageBoxImage.Warning : MessageBoxImage.Information );
+              
+            } else
+            {
+                MessageBox.Show("Not enought input. Please insert more informations about the publication.\n", "Not enought input", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

@@ -13,16 +13,19 @@
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3.5*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <!-- Left Column -->
-            <StackPanel>
-                
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
                 <!-- Search Bar -->
                 <Border Padding="5" BorderThickness="2">
                     <Border.BorderBrush>
@@ -37,9 +40,9 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
                             <Label x:Name="labelSearch" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
-                            <ComboBox SelectedIndex="1" x:Name="cbBox" ItemsSource="{Binding PropertiesSearch}" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0" SelectionChanged="cbBox_SelectionChanged"/>
+                            <ComboBox SelectedIndex="1" x:Name="cbBox" ItemsSource="{Binding PropertiesSearch}" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0" SelectionChanged="Combobox_SelectionChanged"/>
 
-                            <ComboBox x:Name="comboboxShelf" MaxHeight="35" MinWidth="100" Margin="0,0,10,0" VerticalContentAlignment="Center" DisplayMemberPath="ShelfName" SelectionChanged="comboboxShelf_SelectionChanged"></ComboBox>
+                            <ComboBox x:Name="comboboxShelf" MaxHeight="35" MinWidth="100" Margin="0,0,10,0" VerticalContentAlignment="Center" DisplayMemberPath="ShelfName" SelectionChanged="ComboboxShelf_SelectionChanged"></ComboBox>
 
                             <TextBox Style="{StaticResource InputText}" MinWidth="200" x:Name="InputSearch" TextChanged="TextBox_TextChanged"/>
                             <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchInputButton_Click">
@@ -50,10 +53,12 @@
                 </Border>
 
                 <DataGrid
+                    Grid.Row="1"
                     Style="{StaticResource DataGridStyle}"
                     SelectionChanged="ListView_SelectionChanged" 
                     SelectedItem="{Binding PublicationSelected}" 
-                    ItemsSource="{Binding Publications}">
+                    ItemsSource="{Binding Publications}"
+                    VerticalScrollBarVisibility="Visible">
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
@@ -67,14 +72,19 @@
                         <DataGridTextColumn Header="Copies" Binding="{Binding Path=PublicationCopies.Count}" Width="0.5*"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-            </StackPanel>
+            </Grid>
 
-            <!-- Right Column -->
-            <StackPanel Grid.Column="1" Margin="5">
-                <Label Margin="0,0,0,10" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected publication"/>
+            <ScrollViewer Grid.Column="1">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <ScrollViewer>
-                    <Grid>
+                    <Label Margin="0,0,0,10" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected publication"/>
+
+                    <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150"/>
                             <ColumnDefinition Width="*"/>
@@ -142,13 +152,17 @@
                         <Label VerticalAlignment="Top" Grid.Row="7" Style="{StaticResource LabelInfo}" Content="Description"></Label>
                         <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource InputTextDescription}" Text="{Binding PublicationSelected.Description}"/>
                     </Grid>
-                </ScrollViewer>
-                <StackPanel Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click"/>
-                    <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
-                    <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeletePublication"/>
-                </StackPanel>
-            </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click"/>
+                        <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
+                        <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeletePublication"/>
+                    </StackPanel>
+
+                </Grid>
+            </ScrollViewer>
+            
+
         </Grid>
     </DockPanel>
 </UserControl>

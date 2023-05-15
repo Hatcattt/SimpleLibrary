@@ -14,8 +14,8 @@
                 <Label DockPanel.Dock="Top" Grid.ColumnSpan="2" Style="{StaticResource MainLabelHeader}" Content="Add a new publication"></Label>
 
                 <StackPanel DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="CreateANewPublication_Click"></Button>
-                    <Button Style="{StaticResource DeleteButton}" Content="CANCEL" Click="QuitPublicationViewButton_Click"/>
+                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="CreateNewPublicationButton_Click"></Button>
+                    <Button Style="{StaticResource DeleteButton}" Content="CANCEL" Click="CancelPublicationCreationButton_Click"/>
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Left" Margin="10">
@@ -44,7 +44,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{StaticResource InputText}" x:Name="ISBNinputText"/>
-                            <Button Width="100" Height="35" Grid.Column="1" Content="Search with API" Click="SearchWithAPIButton_Click"/>
+                            <Button Width="100" Height="35" Grid.Column="1" Content="Search with API" Click="SearchPublicationWithAPIButton_Click"/>
                         </Grid>
 
                         <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
@@ -98,9 +98,9 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             
-                            <local:CounterControl GroupBoxHeader="Good" Value="0" />
-                            <local:CounterControl Grid.Column="1" GroupBoxHeader="Bad" Value="0" />
-                            <local:CounterControl Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />
+                            <local:CounterControl x:Name="goodCopy" GroupBoxHeader="Good" Value="0" />
+                            <local:CounterControl x:Name="badCopy" Grid.Column="1" GroupBoxHeader="Bad" Value="0" />
+                            <local:CounterControl x:Name="unknownCopy" Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />
                         </Grid>
                     </Grid>
                 </StackPanel>

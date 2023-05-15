@@ -116,7 +116,6 @@ public partial class SimpleLibraryContext : DbContext
 
             entity.HasOne(d => d.Publication).WithMany(p => p.PublicationCopies)
                 .HasForeignKey(d => d.PublicationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PublicationCopy_Publication");
 
             entity.HasOne(d => d.PublicationStateNavigation).WithMany(p => p.PublicationCopies)

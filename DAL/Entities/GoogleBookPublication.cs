@@ -12,6 +12,7 @@ namespace DAL.Entities
     public class GoogleBookPublication
     {
         #region Propreties
+        public const string DEFAULT_COVER_PATH = @"image/Covers/DEFAULT.jpg";
 
         private readonly JObject jsonContent;
         private readonly JToken? volumeInfo;
@@ -28,13 +29,13 @@ namespace DAL.Entities
 
         public string Publisher { get; private set; } = string.Empty;
 
-        public DateTime PublishedDate { get; private set; } = new DateTime();
+        public DateTime? PublishedDate { get; private set; } = null;
 
         public string Description { get; private set; } = string.Empty;
 
         public string Language { get; private set; } = string.Empty;
 
-        public Uri CoverFilePath { get; private set; } = new Uri(@"image/Covers/DEFAULT.jpg",  UriKind.Relative);
+        public Uri CoverFilePath { get; private set; } = new Uri(DEFAULT_COVER_PATH,  UriKind.Relative);
 
         public List<string> Authors { get; private set; } = new List<string>();
 

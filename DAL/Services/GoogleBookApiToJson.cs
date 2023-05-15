@@ -14,13 +14,14 @@ namespace DAL.Services
 {
     public class GoogleBookApiToJson
     {
+        private static readonly HttpClient client = new HttpClient();
         private static readonly string ISBN_REGEX = "^[0-9]*";
         private static readonly string BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
         public const string DEFAULT_JSON = "https://www.googleapis.com/books/v1/volumes?q=isbn:-1";
 
         public static async Task<string> GetJsonAsyncBy(string isbn)
         {
-            using var client = new HttpClient();
+
             var url = IsbnIsValide(isbn) ? BASE_URL + isbn : DEFAULT_JSON;
 
             using var response = await client.GetAsync(url);
@@ -68,17 +69,17 @@ namespace DAL.Services
             return new Uri(uriJson, UriKind.RelativeOrAbsolute);
         }
 
-        public static DateTime GetPublishedDate(JToken? jToken)
+        public static DateTime? GetPublishedDate(JToken? jToken)
         {
             try
             {
-                return (DateTime?)jToken?["publishedDate"] ?? new DateTime(2023, 01, 01);
+                return (DateTime?)jToken?["publishedDate"] ?? null;
             }
             catch (System.FormatException fex)
             {
                 // LOOOOOGGGGG !!
                 Console.WriteLine(fex.Message);
-                return new DateTime(2023, 01, 01);
+                return null;
             }
         }
 

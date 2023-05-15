@@ -1,25 +1,8 @@
 ﻿using DAL.DB;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WpfApp.View.Publication
 {
@@ -91,26 +74,16 @@ namespace WpfApp.View.Publication
 
         private void DeletePublication(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var tempPublis = publicationVM.Publications;
+            using var DB = new SimpleLibraryContext();
+            DB.Publications.Remove(publicationVM.PublicationSelected);
+            DB.SaveChanges();
+            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+            ResetSearchInputButton_Click(sender, e);
 
-                using var DB = new SimpleLibraryContext();
-                DB.Publications.Remove(publicationVM.PublicationSelected);
-                DB.SaveChanges();
-                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
-                ResetSearchInputButton_Click(sender, e);
-
-                MessageBox.Show("Publication successfully deleted!", "Operation OK", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{ex.Message}\n{ex.InnerException.Message}", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            MessageBox.Show("Publication successfully deleted!", "Operation OK", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void cbBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbBox.SelectedItem.ToString() == "Shelf")
             {
@@ -126,7 +99,7 @@ namespace WpfApp.View.Publication
             }
         }
 
-        private void comboboxShelf_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboboxShelf_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsOf((DAL.DB.Shelf)comboboxShelf.SelectedValue));
         }

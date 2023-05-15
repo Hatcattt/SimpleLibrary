@@ -13,7 +13,7 @@ namespace BU.Services
     {
         #region Shelf
 
-        public static int GetShelfComposition(Shelf shelf, Theme theme)
+        public static int GetLocationOf(Shelf shelf, Theme theme)
         {
             using var DB = new SimpleLibraryContext();
             if (shelf != null || theme != null)
