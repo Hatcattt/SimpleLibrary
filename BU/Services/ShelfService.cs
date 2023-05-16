@@ -152,7 +152,7 @@ namespace BU.Services
                 using var DB = new SimpleLibraryContext();
                 if (theme != null && shelfTarget != null)
                 {
-                    var newSc = new ShelfComposition() { Theme = theme, ShelfId = shelfTarget.ShelfId };
+                    var newSc = new ShelfComposition() { ThemeId = theme.ThemeId, ShelfId = shelfTarget.ShelfId };
                     DB.ShelfCompositions.Add(newSc);
                     DB.SaveChanges();
                     return newSc;

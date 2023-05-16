@@ -61,6 +61,7 @@
                     VerticalScrollBarVisibility="Visible">
 
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="Added" Binding="{Binding Path=CreateAt}" Width="65"></DataGridTextColumn>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
                         <DataGridTextColumn Header="Title" Width="1.5*" Binding="{Binding Path=Title}"/>
                         <DataGridTextColumn Header="Subtitle" Width="*" Binding="{Binding Path=SubTitle}"/>
@@ -101,7 +102,7 @@
                         </Grid.RowDefinitions>
 
                         <GroupBox Grid.RowSpan="3" Header="Cover">
-                            <Image Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="150" Source="{Binding CoverImageURL}"/>
+                            <Image Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="180" Source="{Binding CoverImageURL}"/>
                         </GroupBox>
 
                         <Grid Grid.Column="1" Grid.RowSpan="3">

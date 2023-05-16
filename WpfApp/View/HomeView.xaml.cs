@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfApp.ViewModel;
+using System.Collections.ObjectModel;
 
 namespace WpfApp.View
 {
@@ -20,9 +22,30 @@ namespace WpfApp.View
     /// </summary>
     public partial class HomeView : UserControl
     {
+        private readonly HomeViewModel homeVM;
+        private readonly static int minPublicationDisplay = 5;
+        private readonly static int maxPublicationDisplay = 15;
         public HomeView()
         {
             InitializeComponent();
+            homeVM = new HomeViewModel();
+            inputFilter.Text = minPublicationDisplay.ToString();
+            homeVM.LastPublicationsCreate = new ObservableCollection<DAL.DB.Publication>(BU.Services.TimeStampService.GetLastPublicationsAdded(minPublicationDisplay));
+            this.DataContext = homeVM;
+        }
+
+        private void inputFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int number = 0;
+
+            if (int.TryParse(inputFilter.Text, out number))
+            {
+                number = int.Parse(inputFilter.Text);
+                if (number >= minPublicationDisplay && number <= maxPublicationDisplay)
+                {
+                    homeVM.LastPublicationsCreate = new ObservableCollection<DAL.DB.Publication>(BU.Services.TimeStampService.GetLastPublicationsAdded(number));
+                }
+            }
         }
     }
 }

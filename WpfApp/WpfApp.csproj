@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>image\icon\simple_library.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,10 @@
     <None Remove="image\icon\simple_library.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="image\icon\simple_library.ico" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0" />
@@ -43,7 +48,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="image\Covers\DEFAULT.jpg" />
+	  <Resource Include="image\Covers\DEFAULT.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="image\Covers\ID_5.jpg" />
 		
 	  <Resource Include="image\icon\128\db_back-up.png" />

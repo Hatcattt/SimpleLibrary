@@ -21,8 +21,6 @@ namespace WpfApp.Helpers
             {
                 MessageBox.Show(message + "\n\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            // Affichage du message d'erreur dans une MessageBox
-            
         }
 
         private static void LogException(Exception ex, string message)

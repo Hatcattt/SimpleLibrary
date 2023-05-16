@@ -17,11 +17,12 @@ namespace ConsoleApp
     public class Program
     {
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            using var DB = new SimpleLibraryContext();
-            var firstPubli = DB.PublicationCopies.First();
-            Console.WriteLine(firstPubli.PublicationState);
+            var json = await GoogleBookApiToJson.GetJsonAsyncBy("9782033200282");
+            var gBook = new GoogleBookPublication(json);
+
+            Console.WriteLine($"Isbn  : {gBook.Isbn}\nTitle : {gBook.Title}\nCover : {gBook.CoverFilePath}");
         }
     }
 

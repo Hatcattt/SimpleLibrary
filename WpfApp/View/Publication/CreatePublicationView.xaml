@@ -5,7 +5,6 @@
         xmlns:local="clr-namespace:WpfApp.Controls"
         Height="750" Width="800"
         WindowStartupLocation="CenterScreen"
-        Icon="/image/icon/simple_library.ico"
         Title="New publication">
     <Border BorderThickness="4" BorderBrush="#4e6675" Style="{StaticResource PrimaryBorder}" Background="#FFEFEFEF">
         <ScrollViewer>
@@ -107,7 +106,7 @@
 
                 <StackPanel DockPanel.Dock="Right">
                     <GroupBox Header="Cover Manager">
-                        <Image x:Name="CoverImage" Source="\image\Covers\DEFAULT.jpg" Margin="10" Width="200" Height="200"/>
+                        <Image x:Name="CoverImage" Margin="10" Width="200" Height="200"/>
                     </GroupBox>
                     <StackPanel Margin="5" HorizontalAlignment="Center">
                         <Button IsEnabled="False" Style="{StaticResource ButtonBaseStyle}" Content="UPLOAD"></Button>

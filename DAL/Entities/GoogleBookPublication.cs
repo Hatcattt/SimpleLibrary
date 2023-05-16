@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,8 @@ namespace DAL.Entities
     public class GoogleBookPublication
     {
         #region Propreties
-        public const string DEFAULT_COVER_PATH = @"image/Covers/DEFAULT.jpg";
+        //private static string assemblyName = Assembly.GetEntryAssembly().GetName().Name;
+        public static string DEFAULT_COVER_PATH = "image/Covers/DEFAULT.jpg";
 
         private readonly JObject jsonContent;
         private readonly JToken? volumeInfo;
@@ -35,7 +37,7 @@ namespace DAL.Entities
 
         public string Language { get; private set; } = string.Empty;
 
-        public Uri CoverFilePath { get; private set; } = new Uri(DEFAULT_COVER_PATH,  UriKind.Relative);
+        public string CoverFilePath { get; private set; } = DEFAULT_COVER_PATH;
 
         public List<string> Authors { get; private set; } = new List<string>();
 

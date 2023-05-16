@@ -14,6 +14,7 @@ namespace BU.Entities
         public ServiceResultStatus Status { get; set; }
         public StandardErrorCode? ErrorCode { get; set; }
         public string? Message { get; set; }
+        public ImageBox ImageBox { get; set; }
 
     }
 
@@ -38,5 +39,11 @@ namespace BU.Entities
         NotFound,
         AlreadyExist,
         BadInput
+    }
+
+    public enum ImageBox
+    {
+        Warning = 48,
+        Information = 64
     }
 }

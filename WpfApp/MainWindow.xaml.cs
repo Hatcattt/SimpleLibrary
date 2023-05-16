@@ -16,7 +16,7 @@ namespace WpfApp
         public MainWindow()
         {
             InitializeComponent();
-            SetCurrentView(AppView.Publication);
+            SetCurrentView(AppView.Home);
         }
 
         public void SetCurrentView(AppView currentAppView)

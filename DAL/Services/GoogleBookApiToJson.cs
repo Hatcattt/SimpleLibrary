@@ -1,4 +1,5 @@
 ﻿using DAL.DB;
+using DAL.Entities;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
@@ -21,7 +22,6 @@ namespace DAL.Services
 
         public static async Task<string> GetJsonAsyncBy(string isbn)
         {
-
             var url = IsbnIsValide(isbn) ? BASE_URL + isbn : DEFAULT_JSON;
 
             using var response = await client.GetAsync(url);
@@ -63,10 +63,9 @@ namespace DAL.Services
             return (string?)jToken?["description"] ?? string.Empty;
         }
 
-        public static Uri GetCoverThumbnail(JToken? jToken)
+        public static string GetCoverThumbnail(JToken? jToken)
         {
-            var uriJson = (string?)jToken?["imageLinks"]?["thumbnail"] ?? @"image\Covers\DEFAULT.jpg";
-            return new Uri(uriJson, UriKind.RelativeOrAbsolute);
+            return (string?)jToken?["imageLinks"]?["thumbnail"] ?? GoogleBookPublication.DEFAULT_COVER_PATH;
         }
 
         public static DateTime? GetPublishedDate(JToken? jToken)

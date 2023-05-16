@@ -115,14 +115,17 @@ namespace BU.Services
                 {
                     Status = ServiceResultStatus.KO,
                     ErrorCode = StandardErrorCode.AlreadyExist,
-                    Message = "The publication you want to add already exists inside the system."
+                    Message = "The publication you want to add already exists inside the system.",
+                    ImageBox = ImageBox.Warning
+                    
                 };
             }
             return new ServiceResult<Publication>()
             {
                 Status = ServiceResultStatus.OK,
                 Value = publication,
-                Message = "Publication added successfully!"
+                Message = "Publication added successfully!",
+                ImageBox = ImageBox.Information
             };
         }
 

@@ -29,6 +29,10 @@ public partial class Publication
 
     public string? CoverFilePath { get; set; }
 
+    public DateTime? CreateAt { get; set; }
+
+    public DateTime? UpdateAt { get; set; }
+
     public virtual ICollection<AuthorPublication> AuthorPublications { get; } = new List<AuthorPublication>();
 
     public virtual ShelfComposition LocationNavigation { get; set; } = null!;

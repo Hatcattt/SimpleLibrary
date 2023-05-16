@@ -8,7 +8,6 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Icon="/image/icon/simple_library.ico"
         Title="{x:Static local:AppConstant.APP_TITLE}" 
         Width="1080" 
         Height="720"

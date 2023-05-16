@@ -88,6 +88,7 @@ public partial class SimpleLibraryContext : DbContext
 
             entity.Property(e => e.PublicationId).HasColumnName("PublicationID");
             entity.Property(e => e.CoverFilePath).HasMaxLength(250);
+            entity.Property(e => e.CreateAt).HasColumnType("date");
             entity.Property(e => e.Isbn)
                 .HasMaxLength(20)
                 .HasColumnName("ISBN");
@@ -100,6 +101,7 @@ public partial class SimpleLibraryContext : DbContext
             entity.Property(e => e.Publisher).HasMaxLength(100);
             entity.Property(e => e.SubTitle).HasMaxLength(100);
             entity.Property(e => e.Title).HasMaxLength(100);
+            entity.Property(e => e.UpdateAt).HasColumnType("date");
 
             entity.HasOne(d => d.LocationNavigation).WithMany(p => p.Publications)
                 .HasForeignKey(d => d.Location)

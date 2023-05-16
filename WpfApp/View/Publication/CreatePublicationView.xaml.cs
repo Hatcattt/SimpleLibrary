@@ -21,7 +21,6 @@ namespace WpfApp.View.Publication
         {
             InitializeComponent();
             this.comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
-
             this.ShowDialog();
         }
 
@@ -40,12 +39,12 @@ namespace WpfApp.View.Publication
             if (gBook.JsonAsContent())
             {
                 ISBNinputText.Text = gBook.Isbn;
-                TitleInput.Text = gBook.Title + " " + gBook.SubTitle;
+                TitleInput.Text = (gBook.Title + " " + gBook.SubTitle).Trim();
                 PublisherInput.Text = gBook.Publisher;
                 PublishedDatePicker.SelectedDate = gBook.PublishedDate;
                 DescriptionInput.Text = gBook.Description;
                 LanguageInput.Text = gBook.Language;
-                CoverImage.Source = new BitmapImage(gBook.CoverFilePath);
+                CoverImage.Source = new BitmapImage(new Uri(gBook.CoverFilePath, UriKind.RelativeOrAbsolute));
                 AuthorsLV.ItemsSource = gBook.Authors;
             } else
             {
@@ -76,7 +75,8 @@ namespace WpfApp.View.Publication
                     Location = BU.Services.ShelfService.GetLocationOf(shelf, theme),
                     Language = LanguageInput.Text,
                     LetterRow = TitleInput.Text[..1],
-                    CoverFilePath = gBook?.CoverFilePath.ToString() ?? GoogleBookPublication.DEFAULT_COVER_PATH,
+                    CoverFilePath = gBook?.CoverFilePath ?? GoogleBookPublication.DEFAULT_COVER_PATH,
+                    CreateAt = DateTime.Now,
                 };
 
                 var result = BU.Services.PublicationService.AddNewPublication(newPublication);
@@ -86,8 +86,7 @@ namespace WpfApp.View.Publication
                     BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Unreadable, (int)badCopy.Value);
                     BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Unknown, (int)unknownCopy.Value);
                 }
-                MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (int)result.Status == 2 ? MessageBoxImage.Warning : MessageBoxImage.Information );
-              
+                MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
             } else
             {
                 MessageBox.Show("Not enought input. Please insert more informations about the publication.\n", "Not enought input", MessageBoxButton.OK, MessageBoxImage.Information);
