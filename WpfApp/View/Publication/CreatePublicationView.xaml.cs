@@ -21,6 +21,7 @@ namespace WpfApp.View.Publication
         {
             InitializeComponent();
             this.comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
+            CoverImage.Source = new BitmapImage(new Uri(GoogleBookPublication.DEFAULT_COVER_PATH, UriKind.Absolute));
             this.ShowDialog();
         }
 

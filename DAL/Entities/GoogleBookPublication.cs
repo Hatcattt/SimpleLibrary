@@ -14,7 +14,7 @@ namespace DAL.Entities
     {
         #region Propreties
         //private static string assemblyName = Assembly.GetEntryAssembly().GetName().Name;
-        public static string DEFAULT_COVER_PATH = "image/Covers/DEFAULT.jpg";
+        public static string DEFAULT_COVER_PATH = "D:\\Users\\Hatcat\\Max\\Programmation\\C#Projects\\Hatcattt\\SimpleLibrary\\WpfApp\\image\\Covers\\DEFAULT.jpg";
 
         private readonly JObject jsonContent;
         private readonly JToken? volumeInfo;
