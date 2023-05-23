@@ -1,6 +1,8 @@
-﻿using DAL.DB;
+﻿using BU.Entities;
+using DAL.DB;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,14 +31,14 @@ namespace WpfApp.View.Publication
             {
                 publicationVM.Location = BU.Services.LocationService.GetLocation(publicationVM.PublicationSelected);
                 publicationVM.FullTitle = BU.Services.PublicationService.GetFullTitle(publicationVM.PublicationSelected);
-                publicationVM.CoverImageURL = publicationVM.PublicationSelected.CoverFilePath ?? @"/image/Covers/DEFAULT.jpg";
+                publicationVM.CoverImagePath = publicationVM.PublicationSelected.CoverFilePath;
                 publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorPublicationService.GetAuthors(publicationVM.PublicationSelected));
             }
             else
             {
                 publicationVM.FullTitle = "";
                 publicationVM.Location = "";
-                publicationVM.CoverImageURL = @"/image/Covers/DEFAULT.jpg";
+                publicationVM.CoverImagePath = CoverImage.DEFAUT_IMAGE_PATH;
             }
         }
 
@@ -77,6 +79,7 @@ namespace WpfApp.View.Publication
             using var DB = new SimpleLibraryContext();
             DB.Publications.Remove(publicationVM.PublicationSelected);
             DB.SaveChanges();
+
             publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
             ResetSearchInputButton_Click(sender, e);
 
@@ -101,7 +104,13 @@ namespace WpfApp.View.Publication
 
         private void ComboboxShelf_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsOf((DAL.DB.Shelf)comboboxShelf.SelectedValue));
+            var shelfSelected = (DAL.DB.Shelf)comboboxShelf.SelectedValue;
+            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsOf(shelfSelected));
+        }
+
+        private void EditPublicationButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = new View.Publication.UpdatePublicationView(publicationVM);
         }
     }
 }

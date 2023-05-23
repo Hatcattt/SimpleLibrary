@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,17 +21,23 @@ namespace WpfApp.ViewModel
         public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
         public List<string> Languages { get; } = new List<string>() { "EN", "FR", "ES", "DE", "IT", "PT", "RU", "ZH", "JA", "KO" };
 
-        private string coverImageURL;
-        public string CoverImageURL
+        private string coverImagePath;
+        public string CoverImagePath
         {
-            get { return coverImageURL.IsNullOrEmpty() ? @"\image\Covers\DEFAULT.jpg" : coverImageURL; }
+            get
+            {
+                return coverImagePath;
+            }
             set
             {
-                if (coverImageURL != value)
+                if (value == null)
                 {
-                    coverImageURL = value;
-                    NotifyPropertyChanged(nameof(CoverImageURL));
+                    coverImagePath = CoverImage.DEFAUT_IMAGE_PATH;
+                }else
+                {
+                    coverImagePath = value;
                 }
+                NotifyPropertyChanged(nameof(CoverImagePath));
             }
         }
 
@@ -40,7 +47,7 @@ namespace WpfApp.ViewModel
             get { return location; }
             set
             {
-                if (location != value && value != null)
+                if (location != value)
                 {
                     location = value;
                     NotifyPropertyChanged(nameof(Location));
@@ -125,7 +132,7 @@ namespace WpfApp.ViewModel
             publications = new ObservableCollection<DAL.DB.Publication>();
             authorPublications = new ObservableCollection<DAL.DB.Author>();
             publicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>();
-            coverImageURL = @"/image/Covers/DEFAULT.jpg";
+            coverImagePath = CoverImage.DEFAUT_IMAGE_PATH;
         }
 
         #region Methods

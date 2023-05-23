@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BU.Entities
 {
     /// <summary>
-    /// Service execution result without return data
+    /// Service execution result without return data.
     /// </summary>
     public class ServiceResult
     {

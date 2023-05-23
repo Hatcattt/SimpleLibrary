@@ -5,29 +5,28 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>image\icon\simple_library.ico</ApplicationIcon>
+    <ApplicationIcon>Images\icon\simple_library.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="image\Covers\DEFAULT.jpg" />
-    <None Remove="image\Covers\ID_5.jpg" />
+    <None Remove="Images\Covers\DEFAULT.jpg" />
 	  
-    <None Remove="image\icon\128\db_back-up.png" />
-    <None Remove="image\icon\128\publication_add.png" />
-    <None Remove="image\icon\128\publication_edit.png" />
-    <None Remove="image\icon\128\publication_information.png" />
-    <None Remove="image\icon\128\reset_icon.png" />
-    <None Remove="image\icon\32\db_back-up_menu.png" />
-    <None Remove="image\icon\32\publication_add_menu.png" />
-    <None Remove="image\icon\32\publication_edit_menu.png" />
-    <None Remove="image\icon\32\publication_information_menu.png" />
-    <None Remove="image\icon\32\publication_search_menu.png" />
-    <None Remove="image\icon\32\reset_icon.png" />
-    <None Remove="image\icon\simple_library.ico" />
+    <None Remove="Images\icon\128\db_back-up.png" />
+    <None Remove="Images\icon\128\publication_add.png" />
+    <None Remove="Images\icon\128\publication_edit.png" />
+    <None Remove="Images\icon\128\publication_information.png" />
+    <None Remove="Images\icon\128\reset_icon.png" />
+    <None Remove="Images\icon\32\db_back-up_menu.png" />
+    <None Remove="Images\icon\32\publication_add_menu.png" />
+    <None Remove="Images\icon\32\publication_edit_menu.png" />
+    <None Remove="Images\icon\32\publication_information_menu.png" />
+    <None Remove="Images\icon\32\publication_search_menu.png" />
+    <None Remove="Images\icon\32\reset_icon.png" />
+    <None Remove="Images\icon\simple_library.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="image\icon\simple_library.ico" />
+    <Content Include="Images\icon\simple_library.ico" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -48,24 +47,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="image\Covers\DEFAULT.jpg">
+	  <Resource Include="Images\Covers\DEFAULT.jpg">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
-	  <Resource Include="image\Covers\ID_5.jpg" />
 		
-	  <Resource Include="image\icon\128\db_back-up.png" />
-	  <Resource Include="image\icon\128\publication_add.png" />
-	  <Resource Include="image\icon\128\publication_edit.png" />
-	  <Resource Include="image\icon\128\publication_information.png" />
-	  <Resource Include="image\icon\128\reset_icon.png" />
-	  <Resource Include="image\icon\32\db_back-up_menu.png" />
-	  <Resource Include="image\icon\32\publication_add_menu.png" />
-	  <Resource Include="image\icon\32\publication_edit_menu.png" />
-	  <Resource Include="image\icon\32\publication_information_menu.png" />
-	  <Resource Include="image\icon\32\publication_search_menu.png" />
-	  <Resource Include="image\icon\128\publication_search.png" />
-	  <Resource Include="image\icon\32\reset_icon.png" />
-	  <Resource Include="image\icon\simple_library.ico" />
+	  <Resource Include="Images\icon\128\db_back-up.png" />
+	  <Resource Include="Images\icon\128\publication_add.png" />
+	  <Resource Include="Images\icon\128\publication_edit.png" />
+	  <Resource Include="Images\icon\128\publication_information.png" />
+	  <Resource Include="Images\icon\128\reset_icon.png" />
+	  <Resource Include="Images\icon\32\db_back-up_menu.png" />
+	  <Resource Include="Images\icon\32\publication_add_menu.png" />
+	  <Resource Include="Images\icon\32\publication_edit_menu.png" />
+	  <Resource Include="Images\icon\32\publication_information_menu.png" />
+	  <Resource Include="Images\icon\32\publication_search_menu.png" />
+	  <Resource Include="Images\icon\128\publication_search.png" />
+	  <Resource Include="Images\icon\32\reset_icon.png" />
+	  <Resource Include="Images\icon\simple_library.ico" />
 	</ItemGroup>
 
 	<ItemGroup>

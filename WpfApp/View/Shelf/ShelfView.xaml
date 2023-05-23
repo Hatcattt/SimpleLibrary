@@ -7,7 +7,7 @@
              d:DesignHeight="720" d:DesignWidth="1080"
              Background="#FFEFEFEF">
 
-    <Grid Margin="10">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="1.5*"/>

@@ -1,0 +1,124 @@
+﻿<Window x:Class="WpfApp.View.Publication.UpdatePublicationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodel="clr-namespace:WpfApp.ViewModel" xmlns:local="clr-namespace:WpfApp.Controls" d:DataContext="{d:DesignInstance Type=viewmodel:PublicationViewModel}"
+        mc:Ignorable="d"
+        Height="750" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Title="Edit publication">
+    <Border BorderThickness="4" BorderBrush="#4e6675" Style="{StaticResource PrimaryBorder}" Background="#FFEFEFEF">
+        <ScrollViewer>
+            <DockPanel>
+                <Label DockPanel.Dock="Top" Style="{StaticResource MainLabelHeader}" Content="Edit a publication"></Label>
+
+                <StackPanel DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" ></Button>
+                    <Button Style="{StaticResource DeleteButton}" Content="CANCEL"/>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Left" Margin="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="350"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource LabelInfo}" Content="ISBN"></Label>
+                        <TextBox Grid.Column="1" Style="{StaticResource InputText}" x:Name="ISBNinputText" Text="{Binding PublicationSelected.Isbn, Mode=OneWay}"/>
+
+                        <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
+                        <TextBox x:Name="TitleInput" Grid.Column="1" Grid.Row="1" Style="{StaticResource InputText}" Text="{Binding PublicationSelected.Title, Mode=OneWay}"/>
+
+                        <Label Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Location"></Label>
+                        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="Width" Value="100"/>
+                                    <Setter Property="Margin" Value="5,0,10,0"/>
+                                    <Setter Property="IsReadOnly" Value="True"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <ComboBox 
+                                x:Name="comboboxShelf" 
+                                DisplayMemberPath="ShelfName"
+                                SelectedItem="{Binding PublicationSelected.LocationNavigation.Shelf, Mode=OneWay}" 
+                                Text="{Binding PublicationSelected.LocationNavigation.Shelf.ShelfName, Mode=OneWay}"
+                                SelectionChanged="LoadThemeOfShelfSelected"/>
+
+                            <ComboBox
+                                x:Name="comboboxTheme" 
+                                DisplayMemberPath="ThemeName" 
+                                SelectedItem="{Binding PublicationSelected.LocationNavigation.Theme, Mode=OneWay}" 
+                                Text="{Binding PublicationSelected.LocationNavigation.Theme.ThemeName, Mode=OneWay}"/>
+                            
+                            <Label Margin="10,0,0,0" VerticalContentAlignment="Center" Content="[ Shelf - Theme ]"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Publisher"></Label>
+                        <TextBox x:Name="PublisherInput" Grid.Row="3" Grid.Column="1" Style="{StaticResource InputText}" Text="{Binding PublicationSelected.Publisher}"/>
+
+                        <Label Grid.Row="4" Style="{StaticResource LabelInfo}" Content="Publisher Date"></Label>
+                        <DatePicker SelectedDate="{Binding PublicationSelected.PublishedDate}" x:Name="DatePickerPublisher" VerticalContentAlignment="Center" Height="35" Margin="5,5,45,5" Grid.Row="4" Grid.Column="1"/>
+
+                        <StackPanel Margin="0,0,5,0" Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Width="30" HorizontalAlignment="Right">
+                            <Button FontSize="11" Width="30" Height="20" Content="Now" Click="DatePickerDateToNow"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="5" Style="{StaticResource LabelInfo}" Content="Language"></Label>
+                        <TextBox x:Name="LanguageInput" Grid.Row="5" Grid.Column="1" Style="{StaticResource InputText}" Text="{Binding PublicationSelected.Language}"/>
+
+                        <Label VerticalAlignment="Top" Grid.Row="6" Style="{StaticResource LabelInfo}" Content="Description"></Label>
+                        <TextBox TextWrapping="Wrap" Height="100" IsReadOnly="False" x:Name="DescriptionInput" Grid.Row="6" Grid.Column="1" Style="{StaticResource InputTextDescription}"  Text="{Binding PublicationSelected.Description}"/>
+
+                        <!-- Copy Counter -->
+                        <Label VerticalAlignment="Top" Grid.Row="7" Style="{StaticResource LabelInfo}" Content="Copies"></Label>
+                        <Grid Grid.Row="7" Grid.Column="1" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <local:CounterControl x:Name="goodCopy" GroupBoxHeader="Good" Value="0" />
+                            <local:CounterControl x:Name="badCopy" Grid.Column="1" GroupBoxHeader="Bad" Value="0" />
+                            <local:CounterControl x:Name="unknownCopy" Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Right">
+                    <GroupBox Header="Cover Manager">
+                        <Image Margin="10" Width="200" Height="200" Source="{Binding CoverImagePath}"/>
+                    </GroupBox>
+                    <Button Margin="0,5,0,25" IsEnabled="False" Style="{StaticResource ButtonBaseStyle}" Content="UPLOAD"></Button>
+
+                    <Label DockPanel.Dock="Top" Style="{StaticResource LabelHeaderLite}" Content="Manage author(s)"></Label>
+
+                    <ListView Height="100" ItemsSource="{Binding PublicationSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Author.AuthorName}" Width="150" Header="Name"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=AuthorFunction}" Header="Function"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Author.Nationality}" Header="Nationality"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+            </DockPanel>
+        </ScrollViewer>
+    </Border>
+</Window>

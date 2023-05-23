@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,13 +21,12 @@ namespace WpfApp.View.Author
     /// </summary>
     public partial class EditAuthorView : Window
     {
-        ViewModel.AuthorViewModel authorVM;
+        ViewModel.AuthorViewModel authorVM = new AuthorViewModel();
 
         public EditAuthorView(DAL.DB.Author author)
         {
             InitializeComponent();
-            this.authorVM = new AuthorViewModel();
-            this.authorVM.AuthorSelected = author;
+            this.authorVM.AuthorSelected = author ?? throw new ArgumentNullException(nameof(author) + " cannot be null");
             this.DataContext = this.authorVM;
             this.ShowDialog();
         }
@@ -36,17 +36,19 @@ namespace WpfApp.View.Author
             this.Close();
         }
 
+        /// <summary>
+        /// Call a method to edit the author selected if not null.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveAuthorChangesButton_Click(object sender, RoutedEventArgs e)
         {
-
-            if (BU.Services.AuthorService.EditAuthor(authorVM.AuthorSelected, AuthorNameInput.Text, AuthorNationalityInput.Text) != -1)
+            if (authorVM.AuthorSelected != null)
             {
-                MessageBox.Show("author renamed!");
+                var editAuthor = BU.Services.AuthorService.EditAuthor(authorVM.AuthorSelected, AuthorNameInput.Text, AuthorNationalityInput.Text);
+                MessageBox.Show(editAuthor.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)editAuthor.ImageBox);
             }
-            else
-            {
-                MessageBox.Show("An error occur");
-            }
+            this.Close();
         }
     }
 }

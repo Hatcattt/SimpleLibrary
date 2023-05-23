@@ -52,7 +52,12 @@ namespace WpfApp.Controls
             InitializeComponent();
         }
 
-        private void AddOne(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Incremented the value.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlusOneButton_Click(object sender, RoutedEventArgs e)
         {
             if (Value < int.MaxValue)
             {
@@ -60,17 +65,17 @@ namespace WpfApp.Controls
             }
         }
 
-        private void RemoveOne(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Decremented the Value.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MinusOneButton_Click(object sender, RoutedEventArgs e)
         {
             if (Value > 0)
             {
                 Value--;
             }
-        }
-
-        private void ResetCounter(object sender, RoutedEventArgs e)
-        {
-            Value = 0;
         }
     }
 }

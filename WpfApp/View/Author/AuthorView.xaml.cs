@@ -1,6 +1,7 @@
 ﻿using DAL.DB;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,19 +35,32 @@ namespace WpfApp.View.Author
             this.DataContext = authorVM;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void CreateAuthorButton_Click(object sender, RoutedEventArgs e)
         {
-            //var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
-            //saveFileDialog.Filter = "Fichier SQL (*.sql)|*.sql";
-            //saveFileDialog.Title = "Enregistrer la sauvegarde sous";
-            //saveFileDialog.ShowDialog();
+            _ = new CreateAuthorView();
+            authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
         }
 
-        private void EditAuthor_Click(object sender, RoutedEventArgs e)
+        private void EditAuthorButton_Click(object sender, RoutedEventArgs e)
         {
             if (authorVM.AuthorSelected != null)
             {
-                _ = new EditAuthorView(authorVM.AuthorSelected);
+                var test = new EditAuthorView(authorVM.AuthorSelected);
+                if (! test.IsActive)
+                {
+                    authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
+
+                }
+            }
+        }
+
+        private void DeleteAuthorButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (authorVM.AuthorSelected != null)
+            {
+                var deleteAuthor = BU.Services.AuthorService.DeleteAuthor(authorVM.AuthorSelected);
+                MessageBox.Show(deleteAuthor.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)deleteAuthor.ImageBox);
+                authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
             }
         }
     }

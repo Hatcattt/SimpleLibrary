@@ -5,40 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="100">
+             d:DesignHeight="50" d:DesignWidth="100">
 
     <GroupBox Header="{Binding GroupBoxHeader, RelativeSource={RelativeSource AncestorType={x:Type local:CounterControl}}}" Width="100">
-        <StackPanel>
-            <TextBox Margin="10" Text="{Binding Value, RelativeSource={RelativeSource AncestorType={x:Type local:CounterControl}}}" />
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="BorderBrush" Value="#4e6675"/>
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#FFE6EBED" Offset="0"/>
-                                    <GradientStop Color="#FFC5D9E0" Offset="1"/>
-                                    <GradientStop Color="White" Offset="0.98"/>
-                                </LinearGradientBrush>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Grid.Resources>
-
-                <Button Content="+" Click="AddOne"/>
-                <Button Content="-" Grid.Column="1" Click="RemoveOne"/>
-                <Button BorderThickness="1,0,1,1" Background="#FFEFEFEF" Grid.Row="1" Grid.ColumnSpan="2" Content="reset" FontSize="11" Click="ResetCounter"/>
-            </Grid>
+        <StackPanel Margin="2,5,0,0" Height="20" Orientation="Horizontal">
+            <TextBox Text="{Binding Value, RelativeSource={RelativeSource AncestorType={x:Type local:CounterControl}}}" Width="44"/>
+            
+            <Button Width="15" Margin="5,0,5,0" Content="+" Click="PlusOneButton_Click"/>
+            <Button Width="15" Content="-" Grid.Column="1" Click="MinusOneButton_Click"/>
         </StackPanel>
     </GroupBox>
 

@@ -34,7 +34,6 @@ namespace BU.Services
         public static void RemovePublication(Publication publication) { }
         public static void UpdatePublication(Publication publication) { }
 
-
         /// <summary>
         /// Get all publications from the library system into a list.
         /// </summary>
@@ -82,19 +81,19 @@ namespace BU.Services
         {
             if (publication != null)
             {
-                return $"{publication.Title} {publication.SubTitle}";
+                return $"{publication.Title} {publication.SubTitle}".Trim();
 
             }
             return "";
         }
 
         /// <summary>
-        /// Add a new publication inside the Database.
-        /// Return a new ServiceResult with datas if status is OK, otherwise return without.
+        /// Add a new publication inside the database.
+        /// Return a new ServiceResult with data if status is OK, otherwise return ServiceResult without data.
         /// </summary>
-        /// <param name="publication">The publication to add inside the Database.</param>
-        /// <returns>A new ServiceResult with or without datas.</returns>
-        /// <exception cref="ArgumentException">If the publiction is null.</exception>
+        /// <param name="publication">The publication to add inside the database.</param>
+        /// <returns>A new ServiceResult with or without data.</returns>
+        /// <exception cref="ArgumentException">If publiction is null.</exception>
         public static ServiceResult<Publication> AddNewPublication(Publication publication)
         {
             if (publication == null)
@@ -103,13 +102,11 @@ namespace BU.Services
             }
 
             using var DB = new SimpleLibraryContext();
-            var publicationExist = DB.Publications.Where(P => P.Isbn == publication.Isbn).FirstOrDefault();
+            var publicationExist = DB.Publications
+                .Where(P => P.Isbn == publication.Isbn)
+                .FirstOrDefault();
             
-            if (publicationExist == null)
-            {
-                DB.Publications.Add(publication);
-                DB.SaveChanges();
-            } else
+            if (publicationExist != null)
             {
                 return new ServiceResult<Publication>()
                 {
@@ -117,9 +114,12 @@ namespace BU.Services
                     ErrorCode = StandardErrorCode.AlreadyExist,
                     Message = "The publication you want to add already exists inside the system.",
                     ImageBox = ImageBox.Warning
-                    
                 };
             }
+
+            DB.Publications.Add(publication);
+            DB.SaveChanges();
+
             return new ServiceResult<Publication>()
             {
                 Status = ServiceResultStatus.OK,

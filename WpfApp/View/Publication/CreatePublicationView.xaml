@@ -10,14 +10,30 @@
         <ScrollViewer>
             <DockPanel>
 
-                <Label DockPanel.Dock="Top" Grid.ColumnSpan="2" Style="{StaticResource MainLabelHeader}" Content="Add a new publication"></Label>
+                <Label 
+                    DockPanel.Dock="Top" 
+                    Style="{StaticResource MainLabelHeader}" 
+                    Content="Add a new publication"/>
 
-                <StackPanel DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="CreateNewPublicationButton_Click"></Button>
-                    <Button Style="{StaticResource DeleteButton}" Content="CANCEL" Click="CancelPublicationCreationButton_Click"/>
+                <StackPanel 
+                    DockPanel.Dock="Bottom" 
+                    Margin="5" 
+                    HorizontalAlignment="Left" 
+                    Orientation="Horizontal">
+
+                    <Button 
+                        Style="{StaticResource AddButton}" 
+                        Content="ADD NEW" 
+                        Click="CreateNewPublicationButton_Click"/>
+                    <Button 
+                        Style="{StaticResource DeleteButton}" 
+                        Content="CANCEL" 
+                        Click="CancelPublicationCreationButton_Click"/>
                 </StackPanel>
 
-                <StackPanel DockPanel.Dock="Left" Margin="10">
+                <StackPanel 
+                    DockPanel.Dock="Left" 
+                    Margin="10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
@@ -35,15 +51,24 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Label Style="{StaticResource LabelInfo}" Content="ISBN"></Label>
+                        <Label 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="ISBN"/>
+                        
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Style="{StaticResource InputText}" x:Name="ISBNinputText"/>
-                            <Button Width="100" Height="35" Grid.Column="1" Content="Search with API" Click="SearchPublicationWithAPIButton_Click"/>
+                            <TextBox 
+                                Style="{StaticResource InputText}" 
+                                x:Name="ISBNinputText"/>
+                            <Button 
+                                Margin="5"
+                                Grid.Column="1" 
+                                Content="Search with API" 
+                                Click="SearchPublicationWithAPIButton_Click"/>
                         </Grid>
 
                         <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
@@ -60,7 +85,7 @@
                         <TextBox x:Name="PublisherInput" Grid.Row="3" Grid.Column="1" Style="{StaticResource InputText}"/>
 
                         <Label Grid.Row="4" Style="{StaticResource LabelInfo}" Content="Publisher Date"></Label>
-                        <DatePicker VerticalContentAlignment="Center" Height="35" Margin="5" x:Name="PublishedDatePicker" Grid.Row="4" Grid.Column="1"/>
+                        <DatePicker x:Name="DatePickerPublisher" VerticalContentAlignment="Center" Height="35" Margin="5" Grid.Row="4" Grid.Column="1"/>
 
                         <Label Grid.Row="5" Style="{StaticResource LabelInfo}" Content="Language"></Label>
                         <TextBox x:Name="LanguageInput" Grid.Row="5" Grid.Column="1" Style="{StaticResource InputText}"/>
@@ -88,7 +113,7 @@
                             </ListView>
                         </StackPanel>
 
-                        <!-- Copy Counter --> 
+                        <!-- Copy Counter -->
                         <Label VerticalAlignment="Top" Grid.Row="8" Style="{StaticResource LabelInfo}" Content="Copies"></Label>
                         <Grid Grid.Row="8" Grid.Column="1" Margin="5">
                             <Grid.ColumnDefinitions>
@@ -96,7 +121,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <local:CounterControl x:Name="goodCopy" GroupBoxHeader="Good" Value="0" />
                             <local:CounterControl x:Name="badCopy" Grid.Column="1" GroupBoxHeader="Bad" Value="0" />
                             <local:CounterControl x:Name="unknownCopy" Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />
@@ -105,16 +130,22 @@
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Right">
-                    <GroupBox Header="Cover Manager">
-                        <Image x:Name="CoverImage" Margin="10" Width="200" Height="200"/>
-                    </GroupBox>
-                    <StackPanel Margin="5" HorizontalAlignment="Center">
-                        <Button IsEnabled="False" Style="{StaticResource ButtonBaseStyle}" Content="UPLOAD"></Button>
-                    </StackPanel>
-                </StackPanel>
+                    <GroupBox Header="Manage the cover">
+                        <Image 
+                            x:Name="CoverImageView" 
+                            Margin="10"
+                            Width="200" 
+                            Height="200"/>
 
+                    </GroupBox>
+                    <Button 
+                        Style="{StaticResource ButtonBaseStyle}" 
+                        Content="UPLOAD" 
+                        Click="UploadUserImage"/>
+                    
+                </StackPanel>
             </DockPanel>
         </ScrollViewer>
-        
+
     </Border>
 </Window>

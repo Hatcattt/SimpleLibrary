@@ -113,7 +113,7 @@
         </Setter>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Height" Value="45"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
@@ -162,6 +162,34 @@
     </Style>
 
     <!-- ########## Button Style ####################################################### -->
+    
+        <!-- Menu Button Style -->
+    <Style x:Key="MenuButton" TargetType="{x:Type Button}">
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFE6EBED" Offset="0"/>
+                    <GradientStop Color="#FFC5D9E0" Offset="1"/>
+                    <GradientStop Color="White" Offset="0.98"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="#4e6675"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFC5D9E0" Offset="0.283"/>
+                    <GradientStop Color="#FFC5D9E0" Offset="1"/>
+                    <GradientStop Color="White" Offset="0"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+    
     <!-- Base Button Style -->
     <Style x:Key="ButtonBaseStyle" TargetType="{x:Type Button}">
         <Setter Property="Width" Value="80"/>

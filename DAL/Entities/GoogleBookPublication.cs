@@ -1,20 +1,15 @@
-﻿using DAL.Services;
-using Microsoft.IdentityModel.Tokens;
+﻿using BU.Entities;
+using DAL.Services;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
+    /// <summary>
+    /// Représente une classe qui sera générée à partir d'une Google Book API pour créer une nouvelle Publication.
+    /// </summary>
     public class GoogleBookPublication
     {
         #region Propreties
-        //private static string assemblyName = Assembly.GetEntryAssembly().GetName().Name;
-        public static string DEFAULT_COVER_PATH = "D:\\Users\\Hatcat\\Max\\Programmation\\C#Projects\\Hatcattt\\SimpleLibrary\\WpfApp\\image\\Covers\\DEFAULT.jpg";
 
         private readonly JObject jsonContent;
         private readonly JToken? volumeInfo;
@@ -37,20 +32,31 @@ namespace DAL.Entities
 
         public string Language { get; private set; } = string.Empty;
 
-        public string CoverFilePath { get; private set; } = DEFAULT_COVER_PATH;
+        public string? CoverFilePath { get; private set; }
 
         public List<string> Authors { get; private set; } = new List<string>();
 
         #endregion
 
+        /// <summary>
+        /// Constructeur de cette classe.
+        /// Parse un json et lie les données aux propriétés de cette classe.
+        /// </summary>
+        /// <param name="json">le json à parser</param>
         public GoogleBookPublication(string json)
         {
-            Json = json;
-            jsonContent = JObject.Parse(Json);
-            if (JsonAsContent())
+            try
             {
-                volumeInfo = jsonContent["items"]?[0]?["volumeInfo"];
-                LinkPropreties();
+                Json = json;
+                jsonContent = JObject.Parse(Json);
+                if (JsonAsContent())
+                {
+                    volumeInfo = jsonContent["items"]?[0]?["volumeInfo"];
+                    LinkPropreties();
+                }
+            } catch (Exception ex)
+            {
+                throw new Exception($"Problem with Json Parser. See Message :\n{ex.Message}");
             }
         }
 
@@ -65,7 +71,7 @@ namespace DAL.Entities
             CoverFilePath = GoogleBookApiToJson.GetCoverThumbnail(volumeInfo);
             Language = GoogleBookApiToJson.GetLanguage(volumeInfo);
             Authors = GoogleBookApiToJson.GetAuthors(volumeInfo);
-            LetterRow = Title[..1];
+            LetterRow = Title[..1].Length >= 1 ? Title[..1] : "0"; // REVOIR
         }
 
         public bool JsonAsContent()

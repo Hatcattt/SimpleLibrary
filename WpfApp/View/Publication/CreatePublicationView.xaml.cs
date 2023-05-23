@@ -1,8 +1,13 @@
-﻿using DAL.DB;
+﻿using BU.Entities;
+using DAL.DB;
 using DAL.Entities;
 using DAL.Services;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32;
 using System;
 using System.Collections;
+using System.IO;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -21,7 +26,7 @@ namespace WpfApp.View.Publication
         {
             InitializeComponent();
             this.comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
-            CoverImage.Source = new BitmapImage(new Uri(GoogleBookPublication.DEFAULT_COVER_PATH, UriKind.Absolute));
+            CoverImageView.Source = new BitmapImage(new Uri(CoverImage.DEFAUT_IMAGE_PATH, UriKind.Relative));
             this.ShowDialog();
         }
 
@@ -42,10 +47,10 @@ namespace WpfApp.View.Publication
                 ISBNinputText.Text = gBook.Isbn;
                 TitleInput.Text = (gBook.Title + " " + gBook.SubTitle).Trim();
                 PublisherInput.Text = gBook.Publisher;
-                PublishedDatePicker.SelectedDate = gBook.PublishedDate;
+                DatePickerPublisher.SelectedDate = gBook.PublishedDate;
                 DescriptionInput.Text = gBook.Description;
                 LanguageInput.Text = gBook.Language;
-                CoverImage.Source = new BitmapImage(new Uri(gBook.CoverFilePath, UriKind.RelativeOrAbsolute));
+                CoverImageView.Source = new BitmapImage(new Uri(gBook.CoverFilePath ?? CoverImage.DEFAUT_IMAGE_PATH, UriKind.RelativeOrAbsolute));
                 AuthorsLV.ItemsSource = gBook.Authors;
             } else
             {
@@ -65,18 +70,20 @@ namespace WpfApp.View.Publication
 
             if (shelf != null && theme != null && TitleInput.Text.Length >= 1)
             {
+                var image = new CoverImage(CoverImageView.Source.ToString(), ISBNinputText.Text);
+
                 var newPublication = new DAL.DB.Publication()
                 {
                     Isbn = ISBNinputText.Text,
                     Title = TitleInput.Text,
                     SubTitle = gBook?.SubTitle ?? string.Empty,
                     Publisher = PublisherInput.Text,
-                    PublishedDate = PublishedDatePicker.SelectedDate,
+                    PublishedDate = DatePickerPublisher.SelectedDate,
                     Description = DescriptionInput.Text,
                     Location = BU.Services.ShelfService.GetLocationOf(shelf, theme),
                     Language = LanguageInput.Text,
                     LetterRow = TitleInput.Text[..1],
-                    CoverFilePath = gBook?.CoverFilePath ?? GoogleBookPublication.DEFAULT_COVER_PATH,
+                    CoverFilePath = CoverImage.IsFromAPI(image.ImagePath) ? image.ImagePath : image.ImageName,
                     CreateAt = DateTime.Now,
                 };
 
@@ -90,7 +97,78 @@ namespace WpfApp.View.Publication
                 MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
             } else
             {
-                MessageBox.Show("Not enought input. Please insert more informations about the publication.\n", "Not enought input", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Your input that you whote seems to have bad value(s).\n", "Bad input", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void DatePickerDateToNow(object sender, RoutedEventArgs e)
+        {
+            DatePickerPublisher.SelectedDate = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Copy an user source to the main source folder, with a filename base on the ISBN of a Book and return the new path.
+        /// </summary>
+        /// <param name="basePath">the path of the source</param>
+        /// <param name="isbn">The code for the filename</param>
+        /// <returns>the new path of the copied source</returns>
+        private bool CopyAnImage(string basePath, string isbn)
+        {
+            if (basePath.IsNullOrEmpty() || isbn.IsNullOrEmpty())
+            {
+                return false;
+            }
+            string path = Path.Combine(Environment.CurrentDirectory, "Covers", isbn + ".jpg");
+            try
+            {
+                File.Copy(basePath, path);
+                return true;
+            } catch (Exception ex)
+            {
+
+            }
+            return false;
+        }
+
+        private void UploadUserImage(object sender, RoutedEventArgs e)
+        {
+            if (ISBNinputText.Text.IsNullOrEmpty())
+            {
+                MessageBox.Show("Please, write at least the ISBN of the book.", "Isbn not found", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            OpenFileDialog fileDialog = new()
+            {
+                Title = "Select a source",
+                Filter = "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg;",
+            };
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    BitmapImage image = new BitmapImage();
+
+                    image.BeginInit();
+                    image.UriSource = new Uri(fileDialog.FileName, UriKind.Relative);
+                    image.EndInit();
+
+                    if (image.PixelHeight <= 500 && image.PixelWidth <= 400)
+                    {
+                        CoverImageView.Source = image;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please, choose an smaller source (MAX : 256px / 200px)");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // LOOG
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

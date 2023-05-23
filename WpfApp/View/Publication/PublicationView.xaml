@@ -8,7 +8,7 @@
              d:DesignHeight="720" d:DesignWidth="1080"
              Background="#FFEFEFEF">
 
-    <DockPanel Margin="10">
+    <DockPanel>
         <Label DockPanel.Dock="Top" Style="{StaticResource MainLabelHeader}" Content="Publication View"></Label>
 
         <Grid>
@@ -38,7 +38,7 @@
 
                     <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="35" Margin="5" Source="/image/icon/128/publication_search.png"/>
+                            <Image Width="35" Margin="5" Source="\Images\icon\128\publication_search.png"/>
                             <Label x:Name="labelSearch" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
                             <ComboBox SelectedIndex="1" x:Name="cbBox" ItemsSource="{Binding PropertiesSearch}" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0" SelectionChanged="Combobox_SelectionChanged"/>
 
@@ -46,7 +46,7 @@
 
                             <TextBox Style="{StaticResource InputText}" MinWidth="200" x:Name="InputSearch" TextChanged="TextBox_TextChanged"/>
                             <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchInputButton_Click">
-                                <Image Width="25" Source="/image/icon/32/reset_icon.png"/>
+                                <Image Width="25" Source="\Images\icon\32\reset_icon.png"/>
                             </Button>
                         </StackPanel>
                     </StackPanel>
@@ -102,7 +102,7 @@
                         </Grid.RowDefinitions>
 
                         <GroupBox Grid.RowSpan="3" Header="Cover">
-                            <Image Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="180" Source="{Binding CoverImageURL}"/>
+                            <Image x:Name="CoverImageView" Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="180" Source="{Binding CoverImagePath}"/>
                         </GroupBox>
 
                         <Grid Grid.Column="1" Grid.RowSpan="3">
@@ -156,7 +156,7 @@
 
                     <StackPanel Grid.Row="2" Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click"/>
-                        <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT"/>
+                        <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT" Click="EditPublicationButton_Click"/>
                         <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeletePublication"/>
                     </StackPanel>
 
