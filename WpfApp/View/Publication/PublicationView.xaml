@@ -76,14 +76,14 @@
             </Grid>
 
             <ScrollViewer Grid.Column="1">
-                <Grid Margin="20">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Label Margin="0,0,0,10" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected publication"/>
+                    <Label Margin="0,0,0,15" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected publication"/>
 
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>

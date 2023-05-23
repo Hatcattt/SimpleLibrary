@@ -25,7 +25,7 @@ namespace WpfApp
 
             // Appel de la méthode de gestion d'exceptions avec l'exception non attrapée
             ExceptionHelper.HandleException(e.Exception, "An unhandled error occurred.");
-            //Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
 
         private void LogException(Exception exception)
