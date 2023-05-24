@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BU.Entities
 {
+    /// <summary>
+    /// Represent the state of a publication copy.
+    /// </summary>
     public enum PublicationState
     {
         Unreadable = -1,

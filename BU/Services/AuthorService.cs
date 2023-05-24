@@ -5,9 +5,17 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BU.Services
 {
+    /// <summary>
+    /// Classe de service utilisée pour gérer les auteurs dans la base de données.
+    /// </summary>
     public class AuthorService
     {
-        static int minAuthorLenght = 2;
+        static int minAuthorNameLenght = 2;
+
+        /// <summary>
+        /// Get all the authors from de datbase, with include publications.
+        /// </summary>
+        /// <returns>A list of authors</returns>
         public static List<DAL.DB.Author> GetAuthors()
         {
             using var DB = new SimpleLibraryContext();
@@ -26,7 +34,7 @@ namespace BU.Services
         /// <exception cref="ArgumentNullException">If the author is null</exception>
         public static BU.Entities.ServiceResult<Author> EditAuthor(Author author, string authorName, string nationality)
         {
-            if (authorName.Length >= minAuthorLenght && author != null)
+            if (authorName.Length >= minAuthorNameLenght && author != null)
             {
                 using var DB = new SimpleLibraryContext();
                 var authorToEdit = DB.Authors.Find(author.AuthorId);
@@ -35,11 +43,13 @@ namespace BU.Services
                     authorToEdit.AuthorName = authorName;
                     authorToEdit.Nationality = nationality ?? null;
                     DB.SaveChanges();
+
                     return new Entities.ServiceResult<Author>()
                     {
                         Status = Entities.ServiceResultStatus.OK,
                         Message = nameof(author) + " modify successfully!",
-                        ImageBox = Entities.ImageBox.Information
+                        ImageBox = Entities.ImageBox.Information,
+                        Value = authorToEdit
                     };
                 }
             }
@@ -52,6 +62,11 @@ namespace BU.Services
             };
         }
 
+        /// <summary>
+        /// Add an new author in the database.
+        /// </summary>
+        /// <param name="newAuthor">The newest author to add</param>
+        /// <returns>ServiceResult with data if the operation succeeds, otherwise returns no data.</returns>
         public static ServiceResult<Author> CreateAuthor(DAL.DB.Author newAuthor)
         {
             if (newAuthor != null && ! newAuthor.AuthorName.IsNullOrEmpty() && ! AuthorExist(newAuthor))
@@ -59,11 +74,13 @@ namespace BU.Services
                 using var DB = new SimpleLibraryContext();
                 DB.Authors.Add(newAuthor);
                 DB.SaveChanges();
+
                 return new Entities.ServiceResult<Author>()
                 {
                     Status = Entities.ServiceResultStatus.OK,
                     Message = nameof(newAuthor) + " create successfully!",
-                    ImageBox = Entities.ImageBox.Information
+                    ImageBox = Entities.ImageBox.Information,
+                    Value = newAuthor
                 };
             }
             return new Entities.ServiceResult<Author>()
@@ -75,12 +92,11 @@ namespace BU.Services
             };
         }
 
-        private static bool AuthorExist(Author newAuthor)
-        {
-            using var DB = new SimpleLibraryContext();
-            return DB.Authors.Find(newAuthor.AuthorId) != null;
-        }
-
+        /// <summary>
+        /// Delete an author from the database.
+        /// </summary>
+        /// <param name="author"></param>
+        /// <returns>ServiceResult with status OK if the operation succeeds, otherwise returns status KO.</returns>
         public static ServiceResult<Author> DeleteAuthor(DAL.DB.Author author)
         {
             if (author != null)
@@ -90,12 +106,14 @@ namespace BU.Services
                     using var DB = new SimpleLibraryContext();
                     DB.Authors.Remove(author);
                     DB.SaveChanges();
+
                     return new Entities.ServiceResult<Author>()
                     {
                         Status = Entities.ServiceResultStatus.OK,
                         Message = "Author deleted successfully!",
                         ImageBox = Entities.ImageBox.Information
                     };
+
                 } catch (Exception ex)
                 {
                     return new Entities.ServiceResult<Author>()
@@ -115,6 +133,18 @@ namespace BU.Services
                 Message = "Please make sure to have a name for the new author.",
                 ImageBox = Entities.ImageBox.Warning
             };
+        }
+
+
+        /// <summary>
+        /// Check if an exist in the database.
+        /// </summary>
+        /// <param name="author">The author to check.</param>
+        /// <returns>True if the author exist, false otherwise.</returns>
+        private static bool AuthorExist(Author author)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Authors.Find(author.AuthorId) != null;
         }
     }
     

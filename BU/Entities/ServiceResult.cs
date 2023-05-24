@@ -18,6 +18,9 @@ namespace BU.Entities
 
     }
 
+    /// <summary>
+    /// Service execution result with data.
+    /// </summary>
     public class ServiceResult<TValue> : ServiceResult
     {
         /// <summary>
@@ -26,6 +29,9 @@ namespace BU.Entities
         public TValue? Value { get; set; }
     }
 
+    /// <summary>
+    /// The state of the ServiceResult.
+    /// </summary>
     public enum ServiceResultStatus
     {
         UNKNOWN,
@@ -33,6 +39,9 @@ namespace BU.Entities
         KO
     }
 
+    /// <summary>
+    /// Errors code for the ServiceResult.
+    /// </summary>
     public enum StandardErrorCode
     {
         GenericError,
@@ -41,6 +50,9 @@ namespace BU.Entities
         BadInput
     }
 
+    /// <summary>
+    /// Image box value to display in a MessageBox.
+    /// </summary>
     public enum ImageBox
     {
         Warning = 48,

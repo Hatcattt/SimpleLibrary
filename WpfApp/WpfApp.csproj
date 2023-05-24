@@ -26,7 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\icon\simple_library.ico" />
+    <Content Include="Images\icon\simple_library.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 	<ItemGroup>

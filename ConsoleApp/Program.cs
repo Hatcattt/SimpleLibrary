@@ -19,10 +19,15 @@ namespace ConsoleApp
 
         static async Task Main(string[] args)
         {
-            var json = await GoogleBookApiToJson.GetJsonAsyncBy("9782033200282");
-            var gBook = new GoogleBookPublication(json);
+            //string isbn = "9782800180083";
+            //using var client = new HttpClient();
+            //var result = await client.GetStringAsync($"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}");
+            //Console.WriteLine(result);
 
-            Console.WriteLine($"Isbn  : {gBook.Isbn}\nTitle : {gBook.Title}\nCover : {gBook.CoverFilePath}");
+            //var json = await GoogleBookApiToJson.GetJsonAsyncBy(isbn);
+            //var gBook = new GoogleBookPublication(json);
+
+            //Console.WriteLine($"Isbn  : {gBook.Isbn}\nTitle : {gBook.Title}\nCover : {gBook.CoverFilePath}");
         }
     }
 

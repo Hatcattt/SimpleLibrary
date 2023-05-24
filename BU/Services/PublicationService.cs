@@ -88,12 +88,11 @@ namespace BU.Services
         }
 
         /// <summary>
-        /// Add a new publication inside the database.
-        /// Return a new ServiceResult with data if status is OK, otherwise return ServiceResult without data.
+        /// Add a new publication in the database.
         /// </summary>
-        /// <param name="publication">The publication to add inside the database.</param>
-        /// <returns>A new ServiceResult with or without data.</returns>
-        /// <exception cref="ArgumentException">If publiction is null.</exception>
+        /// <param name="publication">The publication to add.</param>
+        /// <returns>ServiceResult with data if the operation succeeds, otherwise returns no data.</returns>
+        /// <exception cref="ArgumentNullException">If publiction is null.</exception>
         public static ServiceResult<Publication> AddNewPublication(Publication publication)
         {
             if (publication == null)
@@ -123,9 +122,9 @@ namespace BU.Services
             return new ServiceResult<Publication>()
             {
                 Status = ServiceResultStatus.OK,
-                Value = publication,
                 Message = "Publication added successfully!",
-                ImageBox = ImageBox.Information
+                ImageBox = ImageBox.Information,
+                Value = publication
             };
         }
 

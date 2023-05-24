@@ -15,12 +15,18 @@
     <Border Style="{StaticResource PrimaryBorder}">
 
         <DockPanel>
-            
-            <!-- Info Bar Up -->
-            <Menu DockPanel.Dock="Top" Background="#FFC5D9E0">
-                <MenuItem Height="25" Header="_Home" Click="HomeView_Click"/>
+            <Menu 
+                DockPanel.Dock="Top" 
+                Background="#FFC5D9E0">
+                
+                <MenuItem 
+                    Height="25" 
+                    Header="_Home" 
+                    Click="HomeView_Click"/>
                 <MenuItem Header="_?">
-                    <MenuItem Header="_about" Click="MenuItemAbout_Click" />
+                    <MenuItem 
+                        Header="_about" 
+                        Click="MenuItemAbout_Click"/>
                 </MenuItem>
             </Menu>
 
@@ -39,7 +45,11 @@
                     Text="{x:Static local:AppConstant.APP_VERSION}"/>
             </StackPanel>
 
-            <Grid MinWidth="175" DockPanel.Dock="Left" Margin="0,0,5,10">
+            <Grid 
+                MinWidth="175" 
+                DockPanel.Dock="Left" 
+                Margin="0,0,5,10"
+                Background="#FFC5D9E0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -47,7 +57,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
+                
                 <Button 
                     Style="{StaticResource MenuButton}" 
                     Content="Home"
@@ -79,8 +89,10 @@
 
             </Grid>
             
-            <!-- Main Views -->
-            <ContentControl Margin="0,0,10,10" x:Name="CurrentViewPlaceHolder"></ContentControl>
+            <ContentControl 
+                Margin="0,0,10,10" 
+                x:Name="CurrentViewPlaceHolder"/>
+            
         </DockPanel>
         
     </Border>
