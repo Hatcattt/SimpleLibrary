@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp", "WpfApp\WpfApp.csp
 		{49797A31-3980-4386-80B4-2DFFD1965EAF} = {49797A31-3980-4386-80B4-2DFFD1965EAF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{49797A31-3980-4386-80B4-2DFFD1965EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{49797A31-3980-4386-80B4-2DFFD1965EAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
