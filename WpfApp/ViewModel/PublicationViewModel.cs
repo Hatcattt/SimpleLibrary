@@ -1,16 +1,6 @@
-﻿using BU.Entities;
-using DAL;
-using DAL.DB;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace WpfApp.ViewModel
 {
@@ -26,18 +16,15 @@ namespace WpfApp.ViewModel
         {
             get
             {
-                return coverImagePath;
+                return coverImagePath.IsNullOrEmpty() ? BU.Entities.CoverConstants.DEFAUT_IMAGE_PATH : coverImagePath;
             }
             set
             {
-                if (value == null)
-                {
-                    coverImagePath = CoverImage.DEFAUT_IMAGE_PATH;
-                }else
+                if (coverImagePath != value)
                 {
                     coverImagePath = value;
+                    NotifyPropertyChanged(nameof(CoverImagePath));
                 }
-                NotifyPropertyChanged(nameof(CoverImagePath));
             }
         }
 
@@ -132,7 +119,7 @@ namespace WpfApp.ViewModel
             publications = new ObservableCollection<DAL.DB.Publication>();
             authorPublications = new ObservableCollection<DAL.DB.Author>();
             publicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>();
-            coverImagePath = CoverImage.DEFAUT_IMAGE_PATH;
+            coverImagePath = BU.Entities.CoverConstants.DEFAUT_IMAGE_PATH;
         }
 
         #region Methods

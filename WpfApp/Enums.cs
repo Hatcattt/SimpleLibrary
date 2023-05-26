@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WpfApp.Enums
 {
+    /// <summary>
+    /// Represent all views of the application.
+    /// </summary>
     public enum AppView
     {
         Home,

@@ -46,19 +46,20 @@
 
                             <TextBox Style="{StaticResource InputText}" MinWidth="200" x:Name="InputSearch" TextChanged="TextBox_TextChanged"/>
                             <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchInputButton_Click">
-                                <Image Width="25" Source="\Images\icon\32\reset_icon.png"/>
+                                <Image Width="25" Source="\Images\icon\32\reset_icon.png" Cursor="Hand"/>
                             </Button>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <DataGrid
+                    x:Name="DG"
                     Grid.Row="1"
                     Style="{StaticResource DataGridStyle}"
                     SelectionChanged="ListView_SelectionChanged" 
                     SelectedItem="{Binding PublicationSelected}" 
                     ItemsSource="{Binding Publications}"
-                    VerticalScrollBarVisibility="Visible">
+                    VerticalScrollBarVisibility="Visible" Cursor="Hand">
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Added" Binding="{Binding Path=CreateAt}" Width="65"></DataGridTextColumn>
@@ -101,7 +102,7 @@
                             <RowDefinition Height="100"/>
                         </Grid.RowDefinitions>
 
-                        <GroupBox Grid.RowSpan="3" Header="Cover">
+                        <GroupBox Grid.RowSpan="3" Header="Cover" Margin="0,0,0,10">
                             <Image x:Name="CoverImageView" Margin="10" Grid.RowSpan="3" HorizontalAlignment="Left" Height="180" Source="{Binding CoverImagePath}"/>
                         </GroupBox>
 
@@ -111,6 +112,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -128,6 +130,43 @@
 
                             <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Letter Row"></Label>
                             <TextBox Grid.Column="1" Grid.Row="3" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.LetterRow}"/>
+
+                            <Label Grid.Row="4" Style="{StaticResource LabelInfo}" Content="Copies"></Label>
+                            <Grid
+                                Margin="3,5,5,5"
+                                Grid.Column="1" 
+                                Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="GroupBox">
+                                        <Setter Property="Foreground" Value="#4e6675"/>
+                                        <Setter Property="FontWeight" Value="DemiBold"/>
+                                        <Setter Property="FontSize" Value="13"/>
+                                    </Style>
+                                </Grid.Resources>
+
+                                <GroupBox 
+                                    Header="Good">
+                                    <TextBlock 
+                                        Text="4"></TextBlock>
+                                </GroupBox>
+                                <GroupBox 
+                                    Header="Bad"
+                                    Grid.Column="1">
+                                    <TextBlock 
+                                        Text="4"></TextBlock>
+                                </GroupBox>
+                                <GroupBox 
+                                    Header="?"
+                                    Grid.Column="2">
+                                    <TextBlock 
+                                        Text="4"></TextBlock>
+                                </GroupBox>
+                            </Grid>
                         </Grid>
 
                         <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Publisher"></Label>
@@ -155,14 +194,14 @@
                     </Grid>
 
                     <StackPanel Grid.Row="2" Margin="0,20,0,0"  Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click"/>
-                        <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT" Click="EditPublicationButton_Click"/>
-                        <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeletePublication"/>
+                        <Button Style="{StaticResource AddButton}" Content="ADD NEW" Click="AddNewPublicationButton_Click" Cursor="Hand"/>
+                        <Button Style="{StaticResource ButtonBaseStyle}" Content="EDIT" Click="EditPublicationButton_Click" Cursor="Hand"/>
+                        <Button Style="{StaticResource DeleteButton}" Content="DELETE" Click="DeletePublicationButton_Click" Cursor="Cross"/>
                     </StackPanel>
 
                 </Grid>
             </ScrollViewer>
-            
+
 
         </Grid>
     </DockPanel>

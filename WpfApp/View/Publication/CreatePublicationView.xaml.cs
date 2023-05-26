@@ -1,13 +1,10 @@
 ﻿using BU.Entities;
-using DAL.DB;
-using DAL.Entities;
 using DAL.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using System;
-using System.Collections;
 using System.IO;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -20,13 +17,13 @@ namespace WpfApp.View.Publication
     public partial class CreatePublicationView : Window
     {
 
-        private GoogleBookPublication? gBook;
+        private BU.Entities.GoogleBookPublication? gBook;
 
         public CreatePublicationView()
         {
             InitializeComponent();
             this.comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
-            CoverImageView.Source = new BitmapImage(new Uri(CoverImage.DEFAUT_IMAGE_PATH, UriKind.Relative));
+            CoverImageView.Source = new BitmapImage(new Uri(CoverConstants.DEFAUT_IMAGE_PATH, UriKind.Relative));
             this.ShowDialog();
         }
 
@@ -39,8 +36,8 @@ namespace WpfApp.View.Publication
         {
             string isbn = ISBNinputText.Text;
 
-            var json = await GoogleBookApiToJson.GetJsonAsyncBy(isbn);
-            gBook = new GoogleBookPublication(json);
+            var json = await DAL.Services.LibraryGoogleAgentService.GetJsonAsyncBy(isbn);
+            gBook = new BU.Entities.GoogleBookPublication(json);
 
             if (gBook.JsonAsContent())
             {
@@ -50,7 +47,7 @@ namespace WpfApp.View.Publication
                 DatePickerPublisher.SelectedDate = gBook.PublishedDate;
                 DescriptionInput.Text = gBook.Description;
                 LanguageInput.Text = gBook.Language;
-                CoverImageView.Source = new BitmapImage(new Uri(gBook.CoverFilePath ?? CoverImage.DEFAUT_IMAGE_PATH, UriKind.RelativeOrAbsolute));
+                CoverImageView.Source = new BitmapImage(new Uri(gBook.CoverFilePath ?? CoverConstants.DEFAUT_IMAGE_PATH, UriKind.RelativeOrAbsolute));
                 AuthorsLV.ItemsSource = gBook.Authors;
             } else
             {
@@ -83,17 +80,27 @@ namespace WpfApp.View.Publication
                     Location = BU.Services.ShelfService.GetLocationOf(shelf, theme),
                     Language = LanguageInput.Text,
                     LetterRow = TitleInput.Text[..1],
-                    CoverFilePath = CoverImage.IsFromAPI(image.ImagePath) ? image.ImagePath : image.ImageName,
+                    CoverFilePath = image.ImagePath,
                     CreateAt = DateTime.Now,
                 };
 
                 var result = BU.Services.PublicationService.AddNewPublication(newPublication);
                 if (result.Status == BU.Entities.ServiceResultStatus.OK)
                 {
-                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Readable, (int)goodCopy.Value);
-                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Unreadable, (int)badCopy.Value);
-                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Entities.PublicationState.Unknown, (int)unknownCopy.Value);
+                    //BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Readable, (int)goodCopy.Value);
+                    //BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unreadable, (int)badCopy.Value);
+                    //BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unknown, (int)unknownCopy.Value);
                 }
+                //if (! image.IsFromAPI())
+                //{
+                //    var destination = new ConfigurationBuilder()
+                //    .AddJsonFile("appsettings.json")
+                //    .Build()
+                //    .GetSection("AppSettings")["CoverFolderPath"] + image.ImageName;
+
+                //    Common.FileProcess.CopyImageToDisk(image.ImagePath, destination);
+                //    BU.Services.PublicationService.ChangeCoverFilePath(newPublication, destination);
+                //}
                 MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
             } else
             {
@@ -106,70 +113,25 @@ namespace WpfApp.View.Publication
             DatePickerPublisher.SelectedDate = DateTime.Now;
         }
 
-        /// <summary>
-        /// Copy an user source to the main source folder, with a filename base on the ISBN of a Book and return the new path.
-        /// </summary>
-        /// <param name="basePath">the path of the source</param>
-        /// <param name="isbn">The code for the filename</param>
-        /// <returns>the new path of the copied source</returns>
-        private bool CopyAnImage(string basePath, string isbn)
-        {
-            if (basePath.IsNullOrEmpty() || isbn.IsNullOrEmpty())
-            {
-                return false;
-            }
-            string path = Path.Combine(Environment.CurrentDirectory, "Covers", isbn + ".jpg");
-            try
-            {
-                File.Copy(basePath, path);
-                return true;
-            } catch (Exception ex)
-            {
-
-            }
-            return false;
-        }
-
-        private void UploadUserImage(object sender, RoutedEventArgs e)
+        private void UploadUserImageButton_Click(object sender, RoutedEventArgs e)
         {
             if (ISBNinputText.Text.IsNullOrEmpty())
             {
-                MessageBox.Show("Please, write at least the ISBN of the book.", "Isbn not found", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please wrote at least the ISBN of the book as it's used to generate image name.", "Wrong isbn", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            OpenFileDialog fileDialog = new()
+            var imageUploaded = Interfaces.ICoverManager.UploadImageFromDisk();
+            if (imageUploaded != null)
             {
-                Title = "Select a source",
-                Filter = "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg;",
-            };
-
-            if (fileDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    BitmapImage image = new BitmapImage();
-
-                    image.BeginInit();
-                    image.UriSource = new Uri(fileDialog.FileName, UriKind.Relative);
-                    image.EndInit();
-
-                    if (image.PixelHeight <= 500 && image.PixelWidth <= 400)
-                    {
-                        CoverImageView.Source = image;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Please, choose an smaller source (MAX : 256px / 200px)");
-                        return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // LOOG
-                    MessageBox.Show(ex.Message);
-                }
+                CoverImageView.Source = imageUploaded;
             }
+        }
+
+        private void CheckBoxHelp_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Si vous selectionner cette option, vous serez rediriger vers le menu de Copy management après l'ajout de la publication.", "Manage publication copy after?", MessageBoxButton.OK, MessageBoxImage.Information);
+
         }
     }
 }

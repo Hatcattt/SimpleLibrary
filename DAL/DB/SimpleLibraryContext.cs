@@ -69,12 +69,10 @@ public partial class SimpleLibraryContext : DbContext
 
             entity.HasOne(d => d.Author).WithMany(p => p.AuthorPublications)
                 .HasForeignKey(d => d.AuthorId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AuthorPublication_Author");
 
             entity.HasOne(d => d.Publication).WithMany(p => p.AuthorPublications)
                 .HasForeignKey(d => d.PublicationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AuthorPublication_Publication");
         });
 

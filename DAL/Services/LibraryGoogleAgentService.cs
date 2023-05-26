@@ -1,20 +1,14 @@
-﻿using BU.Entities;
-using DAL.DB;
-using DAL.Entities;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DAL.Services
 {
-    public class GoogleBookApiToJson
+    /// <summary>
+    /// Service class utilisée pour charger un fichier JSON associé à un ISBN.
+    /// Une requête GET
+    /// </summary>
+    public class LibraryGoogleAgentService
     {
         private static readonly HttpClient client = new HttpClient();
         private static readonly string ISBN_REGEX = "^[0-9]*";
@@ -69,6 +63,10 @@ namespace DAL.Services
             return (string?)jToken?["imageLinks"]?["thumbnail"];
         }
 
+        /// <summary>
+        /// Get the published date of a json section.
+        /// </summary>
+        /// <returns>A datetime in basic format or null if not found.</returns>
         public static DateTime? GetPublishedDate(JToken? jToken)
         {
             try
@@ -77,8 +75,6 @@ namespace DAL.Services
             }
             catch (System.FormatException fex)
             {
-                // LOOOOOGGGGG !!
-                Console.WriteLine(fex.Message);
                 return null;
             }
         }

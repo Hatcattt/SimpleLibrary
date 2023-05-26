@@ -1,8 +1,5 @@
-﻿using BU.Entities;
-using DAL.DB;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -38,7 +35,7 @@ namespace WpfApp.View.Publication
             {
                 publicationVM.FullTitle = "";
                 publicationVM.Location = "";
-                publicationVM.CoverImagePath = CoverImage.DEFAUT_IMAGE_PATH;
+                publicationVM.CoverImagePath = "";
             }
         }
 
@@ -71,19 +68,29 @@ namespace WpfApp.View.Publication
 
         private void AddNewPublicationButton_Click(object sender, RoutedEventArgs e)
         {
-            _ = new CreatePublicationView();
+            _ = new View.Publication.CreatePublicationView();
+            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
         }
 
-        private void DeletePublication(object sender, RoutedEventArgs e)
+        private void DeletePublicationButton_Click(object sender, RoutedEventArgs e)
         {
-            using var DB = new SimpleLibraryContext();
-            DB.Publications.Remove(publicationVM.PublicationSelected);
-            DB.SaveChanges();
+            if (publicationVM.PublicationSelected == null)
+            {
+                return;
+            }
 
-            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
-            ResetSearchInputButton_Click(sender, e);
-
-            MessageBox.Show("Publication successfully deleted!", "Operation OK", MessageBoxButton.OK, MessageBoxImage.Information);
+            var messageBoxChoice = MessageBox.Show("Are you sure you want to delete this publication? L'auteur ne sera plus référencé.", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (messageBoxChoice == MessageBoxResult.Yes)
+            {
+                var result = BU.Services.PublicationService.DeletePublication(publicationVM.PublicationSelected);
+                MessageBox.Show(result.Message, "Information from the system.", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
+                if (result.Status == BU.Entities.ServiceResultStatus.OK)
+                {
+                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+                    InputSearch.Text = string.Empty;
+                    return;
+                }
+            }
         }
 
         private void Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -110,7 +117,12 @@ namespace WpfApp.View.Publication
 
         private void EditPublicationButton_Click(object sender, RoutedEventArgs e)
         {
+            if (publicationVM.PublicationSelected == null)
+            {
+                return;
+            }
             _ = new View.Publication.UpdatePublicationView(publicationVM);
+            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
         }
     }
 }

@@ -2,7 +2,7 @@
 using DAL.Services;
 using Newtonsoft.Json.Linq;
 
-namespace DAL.Entities
+namespace BU.Entities
 {
     /// <summary>
     /// Représente une classe qui sera générée à partir d'une Google Book API pour créer une nouvelle Publication.
@@ -14,7 +14,7 @@ namespace DAL.Entities
         private readonly JObject jsonContent;
         private readonly JToken? volumeInfo;
 
-        public string Json { get; private set; } = GoogleBookApiToJson.DEFAULT_JSON;
+        public string Json { get; private set; } = LibraryGoogleAgentService.DEFAULT_JSON;
 
         public string Isbn { get; private set; } = string.Empty;
 
@@ -62,15 +62,15 @@ namespace DAL.Entities
 
         private void LinkPropreties()
         {
-            Isbn = GoogleBookApiToJson.GetISBN(volumeInfo);
-            Title = GoogleBookApiToJson.GetTitle(volumeInfo);
-            SubTitle = GoogleBookApiToJson.GetSubTitle(volumeInfo);
-            Publisher = GoogleBookApiToJson.GetPublisher(volumeInfo);
-            PublishedDate = GoogleBookApiToJson.GetPublishedDate(volumeInfo);
-            Description = GoogleBookApiToJson.GetDescription(volumeInfo);
-            CoverFilePath = GoogleBookApiToJson.GetCoverThumbnail(volumeInfo);
-            Language = GoogleBookApiToJson.GetLanguage(volumeInfo);
-            Authors = GoogleBookApiToJson.GetAuthors(volumeInfo);
+            Isbn = LibraryGoogleAgentService.GetISBN(volumeInfo);
+            Title = LibraryGoogleAgentService.GetTitle(volumeInfo);
+            SubTitle = LibraryGoogleAgentService.GetSubTitle(volumeInfo);
+            Publisher = LibraryGoogleAgentService.GetPublisher(volumeInfo);
+            PublishedDate = LibraryGoogleAgentService.GetPublishedDate(volumeInfo);
+            Description = LibraryGoogleAgentService.GetDescription(volumeInfo);
+            CoverFilePath = LibraryGoogleAgentService.GetCoverThumbnail(volumeInfo);
+            Language = LibraryGoogleAgentService.GetLanguage(volumeInfo);
+            Authors = LibraryGoogleAgentService.GetAuthors(volumeInfo);
             LetterRow = Title[..1].Length >= 1 ? Title[..1] : "0"; // REVOIR
         }
 

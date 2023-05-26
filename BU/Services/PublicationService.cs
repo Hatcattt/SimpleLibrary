@@ -10,29 +10,46 @@ namespace BU.Services
     /// </summary>
     public class PublicationService
     {
+        #region Utilities Services Methods
+        /// <summary>
+        /// Check if a publication existe in the database.
+        /// </summary>
+        /// <param name="publication">The publication to check.</param>
+        /// <returns>True if at least one publication exist, othewise false.</returns>
+        public static bool IsPublicationExist(DAL.DB.Publication publication)
+        {
+            if (publication != null)
+            {
+                using var DB = new SimpleLibraryContext();
+                var publicationExist = DB.Publications
+                    .Where(P => P.Isbn == publication.Isbn)
+                    .FirstOrDefault();
+
+                return publicationExist != null;
+            }
+            return false;
+        }
 
         /// <summary>
-        /// Get the first publication.
+        /// Get the first publication of the database if found, or a default publication.
         /// </summary>
-        /// <returns>The first publication</returns>
+        /// <returns>The first publication if found, or a default.</returns>
         public static Publication GetFirstPublication()
         {
             using var DB = new SimpleLibraryContext();
-            return DB.Publications.First();
+            return DB.Publications.FirstOrDefault() ?? new Publication();
         }
 
         /// <summary>
-        /// Get a publication by his id.
+        /// Get a publication by his publicationId.
         /// </summary>
-        /// <param name="id">The id to search</param>
-        /// <returns>The publication</returns>
-        public static Publication? GetPublication(int id)
+        /// <param name="publicationId">The publicationId to search</param>
+        /// <returns>The publication if found, otherwise a new instance of a publication.</returns>
+        public static Publication GetPublication(int publicationId)
         {
             using var DB = new SimpleLibraryContext();
-            return DB.Publications.SingleOrDefault(x => x.PublicationId == id);
+            return DB.Publications.SingleOrDefault(x => x.PublicationId == publicationId) ?? new Publication();
         }
-        public static void RemovePublication(Publication publication) { }
-        public static void UpdatePublication(Publication publication) { }
 
         /// <summary>
         /// Get all publications from the library system into a list.
@@ -49,6 +66,11 @@ namespace BU.Services
                 .ToList();
         }
 
+        /// <summary>
+        /// Get all the publications of an author.
+        /// </summary>
+        /// <param name="author">The author of the publication(s).</param>
+        /// <returns>A list of publication by his author.</returns>
         public static List<Publication> GetPublicationsOf(Author author)
         {
             if (author != null)
@@ -82,11 +104,12 @@ namespace BU.Services
             if (publication != null)
             {
                 return $"{publication.Title} {publication.SubTitle}".Trim();
-
             }
             return "";
         }
+        #endregion
 
+        #region CRUD ServiceResult Methods
         /// <summary>
         /// Add a new publication in the database.
         /// </summary>
@@ -97,21 +120,18 @@ namespace BU.Services
         {
             if (publication == null)
             {
-               throw new ArgumentNullException("Publication cannot be null.");
+               throw new Common.Exceptions.AppException($"{nameof(publication)} cannot be null!");
             }
 
             using var DB = new SimpleLibraryContext();
-            var publicationExist = DB.Publications
-                .Where(P => P.Isbn == publication.Isbn)
-                .FirstOrDefault();
-            
-            if (publicationExist != null)
+
+            if (IsPublicationExist(publication))
             {
                 return new ServiceResult<Publication>()
                 {
                     Status = ServiceResultStatus.KO,
                     ErrorCode = StandardErrorCode.AlreadyExist,
-                    Message = "The publication you want to add already exists inside the system.",
+                    Message = "The publication you want to add already exists inside the system and cannot be added.",
                     ImageBox = ImageBox.Warning
                 };
             }
@@ -128,23 +148,116 @@ namespace BU.Services
             };
         }
 
-        public static void AddPublicationCopies(Publication publication, Entities.PublicationState publicationState, int number)
+        /// <summary>
+        /// Edit a publication in the database.
+        /// </summary>
+        /// <param name="publication">The publication to edit.</param>
+        /// <returns>ServiceResult with data if the operation succeeds, otherwise returns no data.</returns>
+        /// <exception cref="ArgumentNullException">If publiction is null.</exception>
+        public static ServiceResult<Publication> EditPublication(Publication publication)
         {
-            using var DB = new SimpleLibraryContext();
-            Publication publicationToCopy = GetPublication(publication.PublicationId);
-
-            int numberOfCopiesToAdd = number > 0 ? number : 0;
-            for (int i = 0; i < numberOfCopiesToAdd; i++)
+            if (publication == null)
             {
-                PublicationCopy newCopy = new PublicationCopy()
+                throw new Common.Exceptions.AppException($"{nameof(publication)} cannot be null!");
+            }
+
+            using var DB = new SimpleLibraryContext();
+
+            if (IsPublicationExist(publication))
+            {
+                return new ServiceResult<Publication>()
                 {
-                    PublicationId = publication.PublicationId,
-                    PublicationState = (int)publicationState,
+                    Status = ServiceResultStatus.KO,
+                    ErrorCode = StandardErrorCode.AlreadyExist,
+                    Message = "The publication you want to add already exists inside the system and cannot be added.",
+                    ImageBox = ImageBox.Warning
+                };
+            }
+
+            DB.Publications.Add(publication);
+            DB.SaveChanges();
+
+            return new ServiceResult<Publication>()
+            {
+                Status = ServiceResultStatus.OK,
+                Message = "Publication added successfully!",
+                ImageBox = ImageBox.Information,
+                Value = publication
+            };
+        }
+
+        /// <summary>
+        /// Delete a publication from the database.
+        /// </summary>
+        /// <param name="publication">The publication to delete.</param>
+        /// <returns>ServiceResult with status OK if the operation succeeds, otherwise returns KO.</returns>
+        /// <exception cref="ArgumentNullException">If publiction is null.</exception>
+        public static ServiceResult<Publication> DeletePublication(Publication publication)
+        {
+            if (publication == null)
+            {
+                throw new Common.Exceptions.AppException($"{nameof(publication)} cannot be null!");
+            }
+
+            try
+            {
+                using var DB = new SimpleLibraryContext();
+                DB.Publications.Remove(publication);
+                DB.SaveChanges();
+                return new ServiceResult<Publication>()
+                {
+                    Status = ServiceResultStatus.OK,
+                    Message = "Publication deleted successfully!",
+                    ImageBox = ImageBox.Information
                 };
 
-                DB.PublicationCopies.Add(newCopy);
+            } catch (Exception ex)
+            {
+                throw new Common.Exceptions.AppException($"Error during the deletion of a publication: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Add one or more copies of the publication in the database.
+        /// </summary>
+        /// <param name="publication"></param>
+        /// <param name="publicationState"></param>
+        /// <param name="number"></param>
+        public static void AddPublicationCopies(Publication publication, Enums.PublicationState publicationState, int number)
+        {
+            if (publication == null)
+            {
+                throw new ArgumentNullException("The publication to copy cannot be null.");
+            }
+
+            if (number > 0)
+            {
+                using var DB = new SimpleLibraryContext();
+                Publication publicationToCopy = GetPublication(publication.PublicationId);
+
+                int numberOfCopiesToAdd = number > 0 ? number : 0;
+
+                for (int i = 0; i < numberOfCopiesToAdd; i++)
+                {
+                    PublicationCopy newCopy = new PublicationCopy()
+                    {
+                        PublicationId = publication.PublicationId,
+                        PublicationState = (int)publicationState
+                    };
+
+                    DB.PublicationCopies.Add(newCopy);
+                }
+                DB.SaveChanges();
+            }
+        }
+
+        public static void ChangeCoverFilePath(Publication publication, string destination)
+        {
+            using var DB = new SimpleLibraryContext();
+            Publication publicationToEdit = GetPublication(publication.PublicationId);
+            publicationToEdit.CoverFilePath = destination;
             DB.SaveChanges();
         }
+        #endregion
     }
 }

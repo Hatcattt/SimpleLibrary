@@ -15,12 +15,19 @@ namespace WpfApp
     /// </summary>
     public partial class MainWindow : Window , IViewManager
     {
+        /// <summary>
+        /// Init the main windows and set the current view as Home.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             SetCurrentView(AppView.Home);
         }
 
+        /// <summary>
+        /// Set the current view by AppView enum.
+        /// </summary>
+        /// <param name="currentAppView">The view to set.</param>
         public void SetCurrentView(AppView currentAppView)
         {
             switch (currentAppView)
@@ -40,35 +47,57 @@ namespace WpfApp
             }
         }
 
-        private void AuthorViewButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Set the author view when user clic on the button.
+        /// </summary>
+        public void AuthorViewButton_Click(object sender, RoutedEventArgs e)
         {
             SetCurrentView(AppView.Author);
         }
 
+        /// <summary>
+        /// Set the publication view when user clic on the button.
+        /// </summary>
         private void PublicationViewButton_Click(object sender, RoutedEventArgs e)
         {
             SetCurrentView(AppView.Publication);
         }
+
+        /// <summary>
+        /// Set the home view when user clic on the button.
+        /// </summary>
         private void HomeView_Click(object sender, RoutedEventArgs e)
         {
             SetCurrentView(AppView.Home);
         }
 
+        /// <summary>
+        /// Set the shelf view when user clic on the button.
+        /// </summary>
         private void ShelfView_Click(object sender, RoutedEventArgs e)
         {
             SetCurrentView(AppView.Shelf);
         }
 
+        /// <summary>
+        /// Shutdown the application when user clic on the menu item.
+        /// </summary>
         private void MenuItemExit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
+        /// <summary>
+        /// Display a new about windows when user clic on the menu item.
+        /// </summary>
         private void MenuItemAbout_Click(object sender, RoutedEventArgs e)
         {
             _ = new AboutWindow();
         }
 
+        /// <summary>
+        /// Set the author view when user clic on the button.
+        /// </summary>
         public void SetCurrentView(UserControl currentView)
         {
             CurrentViewPlaceHolder.Content = currentView;

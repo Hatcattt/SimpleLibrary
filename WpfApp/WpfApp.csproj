@@ -45,6 +45,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BU\BU.csproj" />
+		<ProjectReference Include="..\Common\Common.csproj" />
 		<ProjectReference Include="..\DAL\DAL.csproj" />
 	</ItemGroup>
 
@@ -72,10 +73,6 @@
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Helpers\" />
 	</ItemGroup>
 
 </Project>

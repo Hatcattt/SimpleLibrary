@@ -24,11 +24,11 @@
                     <Button 
                         Style="{StaticResource AddButton}" 
                         Content="ADD NEW" 
-                        Click="CreateNewPublicationButton_Click"/>
+                        Click="CreateNewPublicationButton_Click" Cursor="Hand"/>
                     <Button 
                         Style="{StaticResource DeleteButton}" 
                         Content="CANCEL" 
-                        Click="CancelPublicationCreationButton_Click"/>
+                        Click="CancelPublicationCreationButton_Click" Cursor="Hand"/>
                 </StackPanel>
 
                 <StackPanel 
@@ -54,7 +54,7 @@
                         <Label 
                             Style="{StaticResource LabelInfo}" 
                             Content="ISBN"/>
-                        
+
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -62,7 +62,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox 
-                                Style="{StaticResource InputText}" 
+                                Style="{StaticResource placeHolder}" 
+                                Tag="ex: 9782331026324"
                                 x:Name="ISBNinputText"/>
                             <Button 
                                 Margin="5"
@@ -71,27 +72,90 @@
                                 Click="SearchPublicationWithAPIButton_Click"/>
                         </Grid>
 
-                        <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
-                        <TextBox x:Name="TitleInput" Grid.Column="1" Grid.Row="1" Style="{StaticResource InputText}"/>
+                        <Label 
+                            Grid.Row="1" 
+                            Style="{StaticResource LabelInfo}"
+                            Content="Title"/>
+                        <TextBox 
+                            x:Name="TitleInput" 
+                            Grid.Column="1"
+                            Grid.Row="1" 
+                            Style="{StaticResource placeHolder}" 
+                            Tag="ex: The adventure of ..."/>
 
-                        <Label Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Location"></Label>
-                        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-                            <ComboBox VerticalContentAlignment="Center" Width="100" Margin="5,0,10,0" x:Name="comboboxShelf" DisplayMemberPath="ShelfName" SelectionChanged="LoadThemeOfShelfSelected"/>
-                            <ComboBox VerticalContentAlignment="Center" Width="100" x:Name="comboboxTheme" DisplayMemberPath="ThemeName"/>
-                            <Label Margin="10,0,0,0" VerticalContentAlignment="Center" Content="[ Shelf - Theme ]"/>
+                        <Label 
+                            Grid.Row="2" 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="Location"/>
+                        <StackPanel 
+                            Grid.Column="1"
+                            Grid.Row="2" 
+                            Orientation="Horizontal">
+                            <ComboBox 
+                                VerticalContentAlignment="Center" 
+                                Width="100" 
+                                Margin="5,0,10,0" 
+                                x:Name="comboboxShelf" 
+                                DisplayMemberPath="ShelfName" 
+                                SelectionChanged="LoadThemeOfShelfSelected"/>
+                            <ComboBox 
+                                VerticalContentAlignment="Center" 
+                                Width="100" x:Name="comboboxTheme" 
+                                DisplayMemberPath="ThemeName"/>
+                            <Label 
+                                Margin="10,0,0,0" 
+                                VerticalContentAlignment="Center"
+                                Content="[ Shelf - Theme ]"/>
                         </StackPanel>
 
-                        <Label Grid.Row="3" Style="{StaticResource LabelInfo}" Content="Publisher"></Label>
-                        <TextBox x:Name="PublisherInput" Grid.Row="3" Grid.Column="1" Style="{StaticResource InputText}"/>
+                        <Label 
+                            Grid.Row="3" 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="Publisher"></Label>
+                        <TextBox 
+                            x:Name="PublisherInput" 
+                            Grid.Row="3" 
+                            Grid.Column="1" 
+                            Style="{StaticResource placeHolder}" 
+                            Tag="ex: Dupuis"/>
 
-                        <Label Grid.Row="4" Style="{StaticResource LabelInfo}" Content="Publisher Date"></Label>
-                        <DatePicker x:Name="DatePickerPublisher" VerticalContentAlignment="Center" Height="35" Margin="5" Grid.Row="4" Grid.Column="1"/>
+                        <Label 
+                            Grid.Row="4" 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="Publisher Date"/>
+                        <DatePicker 
+                            x:Name="DatePickerPublisher" 
+                            VerticalContentAlignment="Center" 
+                            Height="35" 
+                            Margin="5" 
+                            Grid.Row="4" 
+                            Grid.Column="1"/>
 
-                        <Label Grid.Row="5" Style="{StaticResource LabelInfo}" Content="Language"></Label>
-                        <TextBox x:Name="LanguageInput" Grid.Row="5" Grid.Column="1" Style="{StaticResource InputText}"/>
+                        <Label 
+                            Grid.Row="5" 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="Language"/>
+                        <TextBox 
+                            x:Name="LanguageInput" 
+                            Grid.Row="5" 
+                            Grid.Column="1" 
+                            Style="{StaticResource placeHolder}" 
+                            Tag="ex: FR, EN, BE, ..."/>
 
-                        <Label VerticalAlignment="Top" Grid.Row="6" Style="{StaticResource LabelInfo}" Content="Description"></Label>
-                        <TextBox TextWrapping="Wrap" Height="100" IsReadOnly="False" x:Name="DescriptionInput" Grid.Row="6" Grid.Column="1" Style="{StaticResource InputTextDescription}"/>
+                        <Label 
+                            VerticalAlignment="Top" 
+                            Grid.Row="6" 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="Description"/>
+                        <TextBox 
+                            TextWrapping="Wrap" 
+                            Height="100" 
+                            IsReadOnly="False" 
+                            x:Name="DescriptionInput" 
+                            Grid.Row="6" 
+                            Grid.Column="1" 
+                            Style="{StaticResource placeHolder}" 
+                            Tag="Enter un little description of the book ..."/>
 
                         <Label VerticalAlignment="Top" Grid.Row="7" Style="{StaticResource LabelInfo}" Content="Author(s)"></Label>
                         <StackPanel Grid.Row="7" Grid.Column="1" Margin="5">
@@ -117,14 +181,32 @@
                         <Label VerticalAlignment="Top" Grid.Row="8" Style="{StaticResource LabelInfo}" Content="Copies"></Label>
                         <Grid Grid.Row="8" Grid.Column="1" Margin="5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="140*"/>
+                                <ColumnDefinition Width="87*"/>
+                                <ColumnDefinition Width="113*"/>
                             </Grid.ColumnDefinitions>
 
-                            <local:CounterControl x:Name="goodCopy" GroupBoxHeader="Good" Value="0" />
+                            <CheckBox
+                                x:Name="CheckBoxCopy"
+                                VerticalAlignment="Center" 
+                                Content="Manage copy after" 
+                                Cursor="Help"/>
+
+                            <Button 
+                                Content="?" 
+                                Grid.Column="1"
+                                Click="CheckBoxHelp_Click" 
+                                Margin="0,0,65,0">
+                                <Button.ToolTip>
+                                    <DockPanel Width="50" Height="70" Background="LightGray">
+                                        <TextBlock>Useful information goes here.</TextBlock>
+                                    </DockPanel>
+                                </Button.ToolTip>
+
+                            </Button>
+                            <!--<local:CounterControl x:Name="goodCopy" GroupBoxHeader="Good" Value="0" />
                             <local:CounterControl x:Name="badCopy" Grid.Column="1" GroupBoxHeader="Bad" Value="0" />
-                            <local:CounterControl x:Name="unknownCopy" Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />
+                            <local:CounterControl x:Name="unknownCopy" Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />-->
                         </Grid>
                     </Grid>
                 </StackPanel>
@@ -141,8 +223,8 @@
                     <Button 
                         Style="{StaticResource ButtonBaseStyle}" 
                         Content="UPLOAD" 
-                        Click="UploadUserImage"/>
-                    
+                        Click="UploadUserImageButton_Click" Cursor="Hand"/>
+
                 </StackPanel>
             </DockPanel>
         </ScrollViewer>
