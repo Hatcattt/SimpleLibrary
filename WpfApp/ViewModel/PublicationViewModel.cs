@@ -11,6 +11,57 @@ namespace WpfApp.ViewModel
         public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
         public List<string> Languages { get; } = new List<string>() { "EN", "FR", "ES", "DE", "IT", "PT", "RU", "ZH", "JA", "KO" };
 
+        private int goodCopies;
+        public int GoodCopies
+        {
+            get
+            {
+                return goodCopies;
+            }
+            set
+            {
+                if (goodCopies != value)
+                {
+                    goodCopies = value;
+                    NotifyPropertyChanged(nameof(GoodCopies));
+                }
+            }
+        }
+
+        private int badCopies;
+        public int BadCopies
+        {
+            get
+            {
+                return badCopies;
+            }
+            set
+            {
+                if (badCopies != value)
+                {
+                    badCopies = value;
+                    NotifyPropertyChanged(nameof(BadCopies));
+                }
+            }
+        }
+
+        private int unknownCopies;
+        public int UnknownCopies
+        {
+            get
+            {
+                return unknownCopies;
+            }
+            set
+            {
+                if (unknownCopies != value)
+                {
+                    unknownCopies = value;
+                    NotifyPropertyChanged(nameof(UnknownCopies));
+                }
+            }
+        }
+
         private string coverImagePath;
         public string CoverImagePath
         {
@@ -28,7 +79,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string location = "";
+        private string location = string.Empty;
         public string Location
         {
             get { return location; }
@@ -42,7 +93,7 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private string fullTitle = "";
+        private string fullTitle = string.Empty;
         public string FullTitle
         {
             get { return fullTitle; }
@@ -84,8 +135,8 @@ namespace WpfApp.ViewModel
             }
         }
 
-        private ObservableCollection<DAL.DB.Author> authorPublications;
-        public ObservableCollection<DAL.DB.Author> AuthorPublications
+        private ObservableCollection<DAL.DB.AuthorPublication> authorPublications;
+        public ObservableCollection<DAL.DB.AuthorPublication> AuthorPublications
         {
             get { return authorPublications; }
             set
@@ -117,9 +168,10 @@ namespace WpfApp.ViewModel
         public PublicationViewModel()
         {
             publications = new ObservableCollection<DAL.DB.Publication>();
-            authorPublications = new ObservableCollection<DAL.DB.Author>();
+            authorPublications = new ObservableCollection<DAL.DB.AuthorPublication>();
             publicationCopies = new ObservableCollection<DAL.DB.PublicationCopy>();
             coverImagePath = BU.Entities.CoverConstants.DEFAUT_IMAGE_PATH;
+            goodCopies = 0; badCopies = 0;  unknownCopies = 0;
         }
 
         #region Methods

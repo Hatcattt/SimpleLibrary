@@ -1,7 +1,10 @@
-﻿using BU.Entities;
+﻿using static DAL.ModelValidation;
+using BU.Entities;
 using DAL.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using DAL;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BU.Services
 {
@@ -10,8 +13,6 @@ namespace BU.Services
     /// </summary>
     public class AuthorService
     {
-        static int minAuthorNameLenght = 2;
-
         /// <summary>
         /// Get all the authors from de datbase, with include publications.
         /// </summary>
@@ -25,126 +26,135 @@ namespace BU.Services
         }
 
         /// <summary>
-        /// Modifies an author in the database if found.
+        /// Modifies an author in the database if found. A verification is made to validate the paramaters.
         /// </summary>
         /// <param name="author">The author to modify</param>
         /// <param name="authorName">The new name for the author</param>
         /// <param name="nationality">The new nationality for the author</param>
-        /// <returns>ServiceResult with data if the operation succeeds, otherwise returns no data.</returns>
-        /// <exception cref="ArgumentNullException">If the author is null</exception>
-        public static BU.Entities.ServiceResult<Author> EditAuthor(Author author, string authorName, string nationality)
+        /// <returns>ServiceResult with toEdit if the operation succeeds, otherwise returns no toEdit.</returns>
+        /// <exception cref="Common.Exceptions.AppException">If author or authorName are null.</exception>
+        public static BU.Entities.ServiceResult<Author> EditAuthor(Author author, string authorName, string? nationality = null)
         {
-            if (authorName.Length >= minAuthorNameLenght && author != null)
+            if (author == null || authorName == null)
             {
-                using var DB = new SimpleLibraryContext();
-                var authorToEdit = DB.Authors.Find(author.AuthorId);
-                if (authorToEdit != null)
-                {
-                    authorToEdit.AuthorName = authorName;
-                    authorToEdit.Nationality = nationality ?? null;
-                    DB.SaveChanges();
-
-                    return new Entities.ServiceResult<Author>()
-                    {
-                        Status = Entities.ServiceResultStatus.OK,
-                        Message = nameof(author) + " modify successfully!",
-                        ImageBox = Entities.ImageBox.Information,
-                        Value = authorToEdit
-                    };
-                }
+                throw new Common.Exceptions.AppException("The author to modify or the authorName in parameter cannot be null!");
             }
-            return new Entities.ServiceResult<Author>()
-            {
-                ErrorCode = Entities.StandardErrorCode.BadInput,
-                Status = Entities.ServiceResultStatus.KO,
-                Message = "Please make sure to have a name for the author.",
-                ImageBox = Entities.ImageBox.Warning
-            };
-        }
 
-        /// <summary>
-        /// Add an new author in the database.
-        /// </summary>
-        /// <param name="newAuthor">The newest author to add</param>
-        /// <returns>ServiceResult with data if the operation succeeds, otherwise returns no data.</returns>
-        public static ServiceResult<Author> CreateAuthor(DAL.DB.Author newAuthor)
-        {
-            if (newAuthor != null && ! newAuthor.AuthorName.IsNullOrEmpty() && ! AuthorExist(newAuthor))
+            if (AuthorValidation.ValidationPass(authorName, nationality ?? "X"))
             {
                 using var DB = new SimpleLibraryContext();
-                DB.Authors.Add(newAuthor);
+                var toEdit = DB.Authors.Find(author.AuthorId);
+                if (toEdit == null)
+                {
+                    throw new Common.Exceptions.AppException("The author was not found!");
+                }
+                toEdit.AuthorName = authorName;
+                toEdit.Nationality = nationality;
                 DB.SaveChanges();
 
                 return new Entities.ServiceResult<Author>()
                 {
                     Status = Entities.ServiceResultStatus.OK,
-                    Message = nameof(newAuthor) + " create successfully!",
+                    Message = $"{authorName} modify successfully!",
                     ImageBox = Entities.ImageBox.Information,
-                    Value = newAuthor
+                    Value = toEdit
                 };
             }
             return new Entities.ServiceResult<Author>()
             {
                 ErrorCode = Entities.StandardErrorCode.BadInput,
                 Status = Entities.ServiceResultStatus.KO,
-                Message = "Please make sure to have a name for the new author.",
+                Message = "Bad inputs for the author!",
                 ImageBox = Entities.ImageBox.Warning
             };
         }
 
         /// <summary>
-        /// Delete an author from the database.
+        /// Add an new author in the database and check if exist before.
+        /// </summary>
+        /// <param name="author">The newest author to add</param>
+        /// <returns>ServiceResult with author as data if the operation succeeds, otherwise returns no data.</returns>
+        public static ServiceResult<Author> CreateAuthor(DAL.DB.Author author)
+        {
+            if (author == null)
+            {
+                throw new Common.Exceptions.AppException("The author in parameter cannot be null!");
+            }
+            var newAuthor = AuthorExist(author);
+            if (newAuthor == null && AuthorValidation.ValidationPass(author.AuthorName, author.Nationality ?? "X"))
+            {
+                using var DB = new SimpleLibraryContext();
+                DB.Authors.Add(author);
+                DB.SaveChanges();
+
+                return new Entities.ServiceResult<Author>()
+                {
+                    Status = Entities.ServiceResultStatus.OK,
+                    Message = $"{author.AuthorName} create successfully!",
+                    ImageBox = Entities.ImageBox.Information,
+                    Value = author
+                };
+            }
+            return new Entities.ServiceResult<Author>()
+            {
+                ErrorCode = Entities.StandardErrorCode.AlreadyExist,
+                Status = Entities.ServiceResultStatus.KO,
+                Message = "Bad inputs for the author or an author with the same name already exists!",
+                ImageBox = Entities.ImageBox.Warning
+            };
+        }
+
+        /// <summary>
+        /// Deletes an author from the database. All 
         /// </summary>
         /// <param name="author"></param>
         /// <returns>ServiceResult with status OK if the operation succeeds, otherwise returns status KO.</returns>
         public static ServiceResult<Author> DeleteAuthor(DAL.DB.Author author)
         {
-            if (author != null)
+            if (author == null)
             {
-                try
-                {
-                    using var DB = new SimpleLibraryContext();
-                    DB.Authors.Remove(author);
-                    DB.SaveChanges();
-
-                    return new Entities.ServiceResult<Author>()
-                    {
-                        Status = Entities.ServiceResultStatus.OK,
-                        Message = "Author deleted successfully!",
-                        ImageBox = Entities.ImageBox.Information
-                    };
-
-                } catch (Exception ex)
-                {
-                    return new Entities.ServiceResult<Author>()
-                    {
-                        Status = ServiceResultStatus.KO,
-                        Message = ex.Message,
-                        ErrorCode = StandardErrorCode.GenericError,
-                        ImageBox = ImageBox.Warning
-                    };
-                }
+                throw new Common.Exceptions.AppException("The author or in parameter cannot be null!");
             }
+            using var DB = new SimpleLibraryContext();
+            DB.Authors.Remove(author);
+            DB.SaveChanges();
 
             return new Entities.ServiceResult<Author>()
             {
-                ErrorCode = Entities.StandardErrorCode.BadInput,
-                Status = Entities.ServiceResultStatus.KO,
-                Message = "Please make sure to have a name for the new author.",
-                ImageBox = Entities.ImageBox.Warning
+                Status = Entities.ServiceResultStatus.OK,
+                Message = "Author deleted successfully!",
+                ImageBox = Entities.ImageBox.Information
             };
         }
 
-
         /// <summary>
-        /// Check if an exist in the database.
+        /// Return the author passed in parameter if found in the database.
         /// </summary>
-        /// <param name="author">The author to check.</param>
-        /// <returns>True if the author exist, false otherwise.</returns>
-        private static bool AuthorExist(Author author)
+        /// <param name="author">The author to search.</param>
+        /// <returns>The author founded, otherwise return null.</returns>
+        public static DAL.DB.Author? AuthorExist(Author author)
         {
             using var DB = new SimpleLibraryContext();
-            return DB.Authors.Find(author.AuthorId) != null;
+            return DB.Authors.Where(A => A.AuthorName == author.AuthorName || A.AuthorId == author.AuthorId).FirstOrDefault() ?? null;
+        }
+
+        /// <summary>
+        /// Return the author with the same name if exist, or null.
+        /// </summary>
+        /// <param name="author">The author name to search.</param>
+        /// <returns>The author founded, otherwise return null.</returns>
+        public static DAL.DB.Author? AuthorExist(string authorName)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Authors.Where(A => A.AuthorName == authorName).FirstOrDefault() ?? null;
+        }
+
+        public static IList<Author> GetAuthorsStartWith(string text)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Authors.Where(A => A.AuthorName.ToLower().StartsWith(text.ToLower()))
+                .Include("AuthorPublications.Publication")
+                .ToList();
         }
     }
     

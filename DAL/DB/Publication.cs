@@ -33,8 +33,6 @@ public partial class Publication
 
     public DateTime? UpdateAt { get; set; }
 
-    public bool? FromApi { get; set; }
-
     public virtual ICollection<AuthorPublication> AuthorPublications { get; } = new List<AuthorPublication>();
 
     public virtual ShelfComposition LocationNavigation { get; set; } = null!;

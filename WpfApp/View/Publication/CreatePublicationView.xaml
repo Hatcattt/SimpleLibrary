@@ -6,6 +6,14 @@
         Height="750" Width="800"
         WindowStartupLocation="CenterScreen"
         Title="New publication">
+
+    <Window.Resources>
+        <Style TargetType="ComboBox">
+            <Setter Property="IsEditable" Value="True"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <Border BorderThickness="4" BorderBrush="#4e6675" Style="{StaticResource PrimaryBorder}" Background="#FFEFEFEF">
         <ScrollViewer>
             <DockPanel>
@@ -48,7 +56,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Label 
@@ -62,6 +69,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox 
+                                Text="{Binding PublicationSelected.Isbn}"
                                 Style="{StaticResource placeHolder}" 
                                 Tag="ex: 9782331026324"
                                 x:Name="ISBNinputText"/>
@@ -87,26 +95,25 @@
                             Grid.Row="2" 
                             Style="{StaticResource LabelInfo}" 
                             Content="Location"/>
-                        <StackPanel 
+                        <Grid 
+                            Margin="5,0,5,0"
                             Grid.Column="1"
-                            Grid.Row="2" 
-                            Orientation="Horizontal">
+                            Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                             <ComboBox 
-                                VerticalContentAlignment="Center" 
-                                Width="100" 
-                                Margin="5,0,10,0" 
+                                Text="Choose a shelf"
                                 x:Name="comboboxShelf" 
                                 DisplayMemberPath="ShelfName" 
                                 SelectionChanged="LoadThemeOfShelfSelected"/>
                             <ComboBox 
-                                VerticalContentAlignment="Center" 
-                                Width="100" x:Name="comboboxTheme" 
+                                Text="Theme(s) of shelf"
+                                Grid.Column="1"
+                                x:Name="comboboxTheme" 
                                 DisplayMemberPath="ThemeName"/>
-                            <Label 
-                                Margin="10,0,0,0" 
-                                VerticalContentAlignment="Center"
-                                Content="[ Shelf - Theme ]"/>
-                        </StackPanel>
+                        </Grid>
 
                         <Label 
                             Grid.Row="3" 
@@ -154,78 +161,118 @@
                             x:Name="DescriptionInput" 
                             Grid.Row="6" 
                             Grid.Column="1" 
-                            Style="{StaticResource placeHolder}" 
+                            Style="{StaticResource InputTextDescription}" 
                             Tag="Enter un little description of the book ..."/>
 
-                        <Label VerticalAlignment="Top" Grid.Row="7" Style="{StaticResource LabelInfo}" Content="Author(s)"></Label>
-                        <StackPanel Grid.Row="7" Grid.Column="1" Margin="5">
-                            <ListView Height="100" x:Name="AuthorsLV">
+                        <Label 
+                            VerticalAlignment="Top" 
+                            Grid.Row="7" 
+                            Style="{StaticResource LabelInfo}" 
+                            Content="Author(s)"/>
+                        <StackPanel 
+                            Grid.Row="7" 
+                            Grid.Column="1" 
+                            Margin="5">
+                            <ListView
+                                Height="100"
+                                x:Name="AuthorsLV"
+                                SelectionChanged="AuthorsLV_SelectionChanged">
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn Width="150" Header="Name"/>
-                                        <GridViewColumn Header="Function"/>
-                                        <GridViewColumn Header="Nationality"/>
-                                        <GridViewColumn Header="Exist in Authors">
+                                        <GridViewColumn 
+                                            Width="100" 
+                                            Header="Name" 
+                                            DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
+                                        <GridViewColumn 
+                                            Header="Function" 
+                                            Width="100" 
+                                            DisplayMemberBinding="{Binding Path=AuthorFunction}"/>
+                                        <GridViewColumn Header="Del">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <RadioButton></RadioButton>
+                                                    <Button 
+                                                        x:Name="DelAuthorPublication"
+                                                        Height="20" 
+                                                        Width="20" 
+                                                        Content="X"
+                                                        Background="IndianRed"
+                                                        BorderThickness="0"
+                                                        Click="RemoveAuthorPublicationFromListButton_Click"></Button>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
+                            <ComboBox 
+                                Margin="0,5,0,0"
+                                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                Text="Choose an author" 
+                                x:Name="cbBoxAuthor" 
+                                DisplayMemberPath="AuthorName"/>
+
+                            <ComboBox
+                                SelectedIndex="0"
+                                Text="Function" 
+                                x:Name="FunctionCombobox"/>
+                            
+                            <StackPanel 
+                                Orientation="Horizontal" 
+                                Margin="0,5,0,0">
+                                <Button 
+                                    Click="AddAuthorPublicationInListButton_Click" 
+                                    Margin="0" 
+                                    Content="Add"
+                                    Height="20" 
+                                    Width="40"/>
+
+                                <Button 
+                                    Click="ChangeAuthorFunctionInListButton_Click"
+                                    Content="Change"
+                                    Height="20"/>
+                            </StackPanel>
                         </StackPanel>
-
-                        <!-- Copy Counter -->
-                        <Label VerticalAlignment="Top" Grid.Row="8" Style="{StaticResource LabelInfo}" Content="Copies"></Label>
-                        <Grid Grid.Row="8" Grid.Column="1" Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="140*"/>
-                                <ColumnDefinition Width="87*"/>
-                                <ColumnDefinition Width="113*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <CheckBox
-                                x:Name="CheckBoxCopy"
-                                VerticalAlignment="Center" 
-                                Content="Manage copy after" 
-                                Cursor="Help"/>
-
-                            <Button 
-                                Content="?" 
-                                Grid.Column="1"
-                                Click="CheckBoxHelp_Click" 
-                                Margin="0,0,65,0">
-                                <Button.ToolTip>
-                                    <DockPanel Width="50" Height="70" Background="LightGray">
-                                        <TextBlock>Useful information goes here.</TextBlock>
-                                    </DockPanel>
-                                </Button.ToolTip>
-
-                            </Button>
-                            <!--<local:CounterControl x:Name="goodCopy" GroupBoxHeader="Good" Value="0" />
-                            <local:CounterControl x:Name="badCopy" Grid.Column="1" GroupBoxHeader="Bad" Value="0" />
-                            <local:CounterControl x:Name="unknownCopy" Grid.Column="2" GroupBoxHeader="Unkown" Value="0" />-->
-                        </Grid>
                     </Grid>
                 </StackPanel>
 
-                <StackPanel DockPanel.Dock="Right">
-                    <GroupBox Header="Manage the cover">
-                        <Image 
+                <Grid DockPanel.Dock="Right">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <GroupBox Header="Manage the cover">
+                            <Image 
                             x:Name="CoverImageView" 
                             Margin="10"
                             Width="200" 
                             Height="200"/>
+                        </GroupBox>
+                        <Button 
+                            Style="{StaticResource ButtonBaseStyle}" 
+                            Content="UPLOAD" 
+                            Click="UploadUserImageButton_Click"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1">
 
-                    </GroupBox>
-                    <Button 
-                        Style="{StaticResource ButtonBaseStyle}" 
-                        Content="UPLOAD" 
-                        Click="UploadUserImageButton_Click" Cursor="Hand"/>
-
-                </StackPanel>
+                        <Label 
+                            Style="{StaticResource LabelHeaderLite}" 
+                            Content="Number of copy"/>
+                        <local:CounterControl 
+                            Margin="10,30,10,10"
+                            x:Name="goodCopy" 
+                            GroupBoxHeader="Good" 
+                            Value="0" />
+                        <local:CounterControl 
+                            Margin="10"
+                            x:Name="badCopy" 
+                            GroupBoxHeader="Bad" Value="0" />
+                        <local:CounterControl 
+                            Margin="10"
+                            x:Name="unknownCopy" 
+                            GroupBoxHeader="Unkown" Value="0" />
+                    </StackPanel>
+                </Grid>
             </DockPanel>
         </ScrollViewer>
 

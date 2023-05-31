@@ -9,7 +9,7 @@ namespace WpfApp.Interfaces
     /// <summary>
     /// Provide an unique default static method to upload an image from disk.
     /// </summary>
-    public class ICoverManager
+    public class ICoverManagerUpload
     {
         /// <summary>
         /// Open a file dialog that user can upload his image.

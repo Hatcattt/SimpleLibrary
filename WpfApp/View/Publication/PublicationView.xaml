@@ -151,20 +151,17 @@
 
                                 <GroupBox 
                                     Header="Good">
-                                    <TextBlock 
-                                        Text="4"></TextBlock>
+                                    <TextBlock Text="{Binding GoodCopies}"/>
                                 </GroupBox>
                                 <GroupBox 
                                     Header="Bad"
                                     Grid.Column="1">
-                                    <TextBlock 
-                                        Text="4"></TextBlock>
+                                    <TextBlock Text="{Binding BadCopies}"/>
                                 </GroupBox>
                                 <GroupBox 
                                     Header="?"
                                     Grid.Column="2">
-                                    <TextBlock 
-                                        Text="4"></TextBlock>
+                                    <TextBlock Text="{Binding UnknownCopies}"/>
                                 </GroupBox>
                             </Grid>
                         </Grid>
@@ -179,7 +176,7 @@
                         <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Language}"/>
 
                         <Label VerticalAlignment="Top" Grid.Row="6" Style="{StaticResource LabelInfo}" Content="Author(s)"></Label>
-                        <ListView Height="100" Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding PublicationSelected.AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
+                        <ListView Height="100" Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="150" Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>

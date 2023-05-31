@@ -10,6 +10,10 @@ namespace WpfApp.View.Publication
     /// </summary>
     public partial class UpdatePublicationView : Window
     {
+        /// <summary>
+        /// Indicate if this view has saved the datacontext successfully.
+        /// </summary>
+        public bool HaveSaved { get; set; }
         private ViewModel.PublicationViewModel publicationVM;
 
         public UpdatePublicationView(ViewModel.PublicationViewModel publicationVM)
@@ -44,7 +48,7 @@ namespace WpfApp.View.Publication
                 return;
             }
 
-            var imageUploaded = Interfaces.ICoverManager.UploadImageFromDisk();
+            var imageUploaded = Interfaces.ICoverManagerUpload.UploadImageFromDisk();
             if (imageUploaded != null)
             {
                 CoverImageView.Source = imageUploaded;
@@ -54,11 +58,12 @@ namespace WpfApp.View.Publication
         private void CancelPublicationEditionButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+            HaveSaved = false;
         }
 
         private void UpdatePublicationButton_Click(object sender, RoutedEventArgs e)
         {
-
+            HaveSaved = true;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DAL.DB;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,19 +38,21 @@ namespace WpfApp.View.Author
 
         private void CreateAuthorButton_Click(object sender, RoutedEventArgs e)
         {
-            _ = new CreateAuthorView();
-            authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
+            var createAuthorView = new CreateAuthorView();
+            if (createAuthorView.HaveCreate)
+            {
+                authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
+            }
         }
 
         private void EditAuthorButton_Click(object sender, RoutedEventArgs e)
         {
             if (authorVM.AuthorSelected != null)
             {
-                var test = new EditAuthorView(authorVM.AuthorSelected);
-                if (! test.IsActive)
+                var editView = new EditAuthorView(authorVM.AuthorSelected);
+                if (editView.HaveSaved == true)
                 {
                     authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
-
                 }
             }
         }
@@ -62,6 +65,21 @@ namespace WpfApp.View.Author
                 MessageBox.Show(deleteAuthor.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)deleteAuthor.ImageBox);
                 authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
             }
+        }
+
+        private void TextBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (textBoxSearch.Text.IsNullOrEmpty())
+            {
+                authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthors());
+                return;
+            }
+            authorVM.Authors = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorService.GetAuthorsStartWith(textBoxSearch.Text));
+        }
+
+        private void ResetSearchBarTextButton_Click(object sender, RoutedEventArgs e)
+        {
+            textBoxSearch.Text = string.Empty;
         }
     }
 }

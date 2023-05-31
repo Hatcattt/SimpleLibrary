@@ -40,11 +40,10 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Image Width="35" Margin="5" Source="\Images\icon\128\publication_search.png"/>
-                        <Label VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search By"/>
-                        <ComboBox SelectedIndex="1" VerticalContentAlignment="Center" ToolTip="Select one..." MaxHeight="35" MinWidth="100" Margin="0,0,10,0"/>
-                        <TextBox Style="{StaticResource InputText}" MinWidth="200"/>
-                        <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset">
-                            <Image Width="25" Source="\Images\icon\32\reset_icon.png"/>
+                        <Label VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#545550" FontSize="15" FontWeight="DemiBold" Content="Search by name"/>
+                        <TextBox x:Name="textBoxSearch" Style="{StaticResource InputText}" TextChanged="TextBoxSearch_TextChanged" MinWidth="200"/>
+                        <Button Style="{StaticResource ResetInputButton}" ToolTip="Reset" Click="ResetSearchBarTextButton_Click">
+                            <Image Width="25" Source="\Images\icon\32\reset_icon.png" />
                         </Button>
                     </StackPanel>
                 </Border>

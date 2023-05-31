@@ -1,13 +1,14 @@
 ﻿using BU.Entities;
-using DAL.Services;
-using Microsoft.Extensions.Configuration;
+using DAL.DB;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Win32;
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using WpfApp.ViewModel;
 
 namespace WpfApp.View.Publication
 {
@@ -16,13 +17,16 @@ namespace WpfApp.View.Publication
     /// </summary>
     public partial class CreatePublicationView : Window
     {
-
+        public bool HaveSaved { get; set; }
         private BU.Entities.GoogleBookPublication? gBook;
+        public static readonly List<string> Functions = new() { "Creator", "Writer", "Drawer", "Cover", "Preface", "Unknown" };
 
         public CreatePublicationView()
         {
             InitializeComponent();
             this.comboboxShelf.ItemsSource = BU.Services.ShelfService.GetShelves();
+            this.cbBoxAuthor.ItemsSource = BU.Services.AuthorService.GetAuthors();
+            FunctionCombobox.ItemsSource = Functions;
             CoverImageView.Source = new BitmapImage(new Uri(CoverConstants.DEFAUT_IMAGE_PATH, UriKind.Relative));
             this.ShowDialog();
         }
@@ -34,6 +38,7 @@ namespace WpfApp.View.Publication
 
         private async void SearchPublicationWithAPIButton_Click(object sender, RoutedEventArgs e)
         {
+            AuthorsLV.Items.Clear();
             string isbn = ISBNinputText.Text;
 
             var json = await DAL.Services.LibraryGoogleAgentService.GetJsonAsyncBy(isbn);
@@ -48,10 +53,14 @@ namespace WpfApp.View.Publication
                 DescriptionInput.Text = gBook.Description;
                 LanguageInput.Text = gBook.Language;
                 CoverImageView.Source = new BitmapImage(new Uri(gBook.CoverFilePath ?? CoverConstants.DEFAUT_IMAGE_PATH, UriKind.RelativeOrAbsolute));
-                AuthorsLV.ItemsSource = gBook.Authors;
+
+                foreach(var authorName in gBook.Authors)
+                {
+                    AuthorsLV.Items.Add(new AuthorPublication() { Author = new DAL.DB.Author() { AuthorName = authorName }, AuthorFunction = Functions.Last() });
+                }
             } else
             {
-                MessageBox.Show("Publication not found.\nMake sure your isbn is valid.", "Publication not found", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Publication not found!\nMake sure your isbn is valid.", "Publication not found", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -87,51 +96,111 @@ namespace WpfApp.View.Publication
                 var result = BU.Services.PublicationService.AddNewPublication(newPublication);
                 if (result.Status == BU.Entities.ServiceResultStatus.OK)
                 {
-                    //BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Readable, (int)goodCopy.Value);
-                    //BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unreadable, (int)badCopy.Value);
-                    //BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unknown, (int)unknownCopy.Value);
-                }
-                //if (! image.IsFromAPI())
-                //{
-                //    var destination = new ConfigurationBuilder()
-                //    .AddJsonFile("appsettings.json")
-                //    .Build()
-                //    .GetSection("AppSettings")["CoverFolderPath"] + image.ImageName;
+                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Readable, (int)goodCopy.Value);
+                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unreadable, (int)badCopy.Value);
+                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unknown, (int)unknownCopy.Value);
+                    HaveSaved = true;
 
-                //    Common.FileProcess.CopyImageToDisk(image.ImagePath, destination);
-                //    BU.Services.PublicationService.ChangeCoverFilePath(newPublication, destination);
-                //}
+                    int authorCreated = 0;
+                    foreach(DAL.DB.AuthorPublication authorP in AuthorsLV.Items)
+                    {
+                        var authorToCheck = BU.Services.AuthorService.AuthorExist(authorP.Author);
+                        if (authorToCheck == null)
+                        {
+                            authorToCheck = BU.Services.AuthorService.CreateAuthor(authorP.Author).Value;
+                            authorCreated++;
+                        }
+                        BU.Services.PublicationService.AddNewAuthorPublication(authorToCheck, newPublication, authorP.AuthorFunction);
+                    }
+                    if (authorCreated > 0)
+                    {
+                        MessageBox.Show($"{authorCreated} author(s) have been added automatically.", "Author added", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
                 MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
             } else
             {
-                MessageBox.Show("Your input that you whote seems to have bad value(s).\n", "Bad input", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Your collected entries appear to have one or more incorrect values.\n", "Wrong inputs", MessageBoxButton.OK, MessageBoxImage.Information);
+                HaveSaved = false;
             }
-        }
-
-        private void DatePickerDateToNow(object sender, RoutedEventArgs e)
-        {
-            DatePickerPublisher.SelectedDate = DateTime.Now;
         }
 
         private void UploadUserImageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ISBNinputText.Text.IsNullOrEmpty())
-            {
-                MessageBox.Show("Please wrote at least the ISBN of the book as it's used to generate image name.", "Wrong isbn", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
-            var imageUploaded = Interfaces.ICoverManager.UploadImageFromDisk();
+            var imageUploaded = Interfaces.ICoverManagerUpload.UploadImageFromDisk();
             if (imageUploaded != null)
             {
                 CoverImageView.Source = imageUploaded;
             }
         }
 
-        private void CheckBoxHelp_Click(object sender, RoutedEventArgs e)
+        private void AddAuthorPublicationInListButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Si vous selectionner cette option, vous serez rediriger vers le menu de Copy management après l'ajout de la publication.", "Manage publication copy after?", MessageBoxButton.OK, MessageBoxImage.Information);
+            var author = (DAL.DB.Author)cbBoxAuthor.SelectedItem;
+            string? authorFunction = FunctionCombobox.SelectedItem == null ? null : FunctionCombobox.SelectedItem.ToString();
 
+            if (author != null)
+            {
+                var newAuthorPublication = new DAL.DB.AuthorPublication() { Author = author, AuthorFunction = authorFunction };
+
+                if (!AuthorExistsInAuthorListView(newAuthorPublication.Author, newAuthorPublication.AuthorFunction))
+                {
+                    AuthorsLV.Items.Add(newAuthorPublication);
+                    return;
+                }
+                MessageBox.Show("An author with the same function already exists for this publication.", "Cannot add this author", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void RemoveAuthorPublicationFromListButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (AuthorsLV.SelectedItem == null)
+            {
+                MessageBox.Show("Selecte on the grid, then delete it.", "Select authorName", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            AuthorsLV.Items.Remove(AuthorsLV.SelectedItem);
+        }
+
+        private void ChangeAuthorFunctionInListButton_Click(object sender, RoutedEventArgs e)
+        {
+            DAL.DB.AuthorPublication selectedAuthorPublication = (DAL.DB.AuthorPublication)AuthorsLV.SelectedItem;
+            if (selectedAuthorPublication != null)
+            {
+                string? authorFunction = FunctionCombobox.SelectedItem == null ? null : FunctionCombobox.SelectedItem.ToString();
+                if (AuthorExistsInAuthorListView(selectedAuthorPublication.Author, authorFunction))
+                {
+                    MessageBox.Show("An author with the same function already exists for this publication.", "Cannot edit this author publication", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                selectedAuthorPublication.AuthorFunction = authorFunction;
+                AuthorsLV.Items.Refresh();
+                return;
+
+            }
+            MessageBox.Show("Select an author to edit his function.", "Select an author", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private bool AuthorExistsInAuthorListView(DAL.DB.Author author, string? authorFunction)
+        {
+            foreach (var item in AuthorsLV.Items)
+            {
+                var authorInListView = (DAL.DB.AuthorPublication)item;
+                if (authorInListView.Author.AuthorName == author.AuthorName && authorInListView.AuthorFunction == authorFunction)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AuthorsLV_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DAL.DB.AuthorPublication authorPublicationSelected = (DAL.DB.AuthorPublication)AuthorsLV.SelectedItem;
+            if (authorPublicationSelected != null)
+            {
+                FunctionCombobox.SelectedItem = authorPublicationSelected.AuthorFunction;
+            }
         }
     }
 }

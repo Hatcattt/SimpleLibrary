@@ -17,12 +17,6 @@
         
         <Label Style="{StaticResource MainLabelHeader}" Content="Home"></Label>
         <Label Grid.Row="1" Style="{StaticResource LabelHeaderLite}" Content="Last publication added"/>
-
-        <GroupBox Width="200" HorizontalAlignment="Left" Grid.Row="2" Header="Filter">
-            <StackPanel Margin="5">
-                <TextBox x:Name="inputFilter" VerticalContentAlignment="Center" TextChanged="inputFilter_TextChanged"></TextBox>
-            </StackPanel>
-        </GroupBox>
         <ListView
             Grid.Row="3"
             VerticalAlignment="Top"

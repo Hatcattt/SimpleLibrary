@@ -186,6 +186,7 @@
         <Setter Property="Foreground" Value="#4e6675"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
     <!-- Add Button Style -->
@@ -338,6 +339,7 @@
                             UpdateSourceTrigger=PropertyChanged}"
                                  x:Name="textSource" 
                                  VerticalContentAlignment="Center"
+                                 Foreground="#4e6675"
                                  Background="Transparent" 
                                  Panel.ZIndex="2" />
                         <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">

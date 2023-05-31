@@ -20,6 +20,7 @@ namespace WpfApp.View.Author
     /// </summary>
     public partial class CreateAuthorView : Window
     {
+        public bool HaveCreate{ get; set; }
         public CreateAuthorView()
         {
             InitializeComponent();
@@ -43,6 +44,14 @@ namespace WpfApp.View.Author
             };
             var createAuthor = BU.Services.AuthorService.CreateAuthor(newAuthor);
             MessageBox.Show(createAuthor.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)createAuthor.ImageBox);
+
+            if (createAuthor.Status == BU.Entities.ServiceResultStatus.OK)
+            {
+                HaveCreate = true;
+                this.Close();
+                return;
+            }
+            HaveCreate = false;
         }
     }
 }

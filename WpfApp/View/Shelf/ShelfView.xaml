@@ -40,11 +40,15 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Shelf name" Binding="{Binding Path=ShelfName}" Width="*"/>
                     <DataGridTextColumn Header="Theme count" Binding="{Binding Path=ShelfCompositions.Count}" Width="*"/>
-                    <!--<DataGridTextColumn Header="Total publication" Binding="{Binding Path=ShelfCompositions.Publications.Count}" Width="*"/>-->
-                    <DataGridTemplateColumn Header="Action" Width="Auto">
+                    <DataGridTemplateColumn Header="Del" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Width="35" Height="35" Content="X" Style="{StaticResource DeleteButton}" Click="DeleteShelfButton_Click"></Button>
+                                <Button 
+                                    Width="25" 
+                                    Content="X" 
+                                    Background="IndianRed" 
+                                    Click="DeleteShelfButton_Click"
+                                    BorderThickness="0"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -82,19 +86,15 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Theme name" Binding="{Binding Path=ThemeName}" Width="0.5*"/>
                     <DataGridTextColumn Header="Total publication" Width="*"></DataGridTextColumn>
-                    <DataGridCheckBoxColumn Width="0.5*" Header="Select">
-                        <DataGridCheckBoxColumn.ElementStyle>
-                            <Style TargetType="CheckBox">
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="Background" Value="#FFE6EBED"/>
-                            </Style>
-                        </DataGridCheckBoxColumn.ElementStyle>
-                    </DataGridCheckBoxColumn>
-                    <DataGridTemplateColumn Header="Action" Width="Auto">
+                    <DataGridTemplateColumn Header="Del" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Width="35" Height="35" Content="X" Style="{StaticResource DeleteButton}" Click="DeleteThemeButton_Click"></Button>
+                                <Button 
+                                    Width="25" 
+                                    Content="X" 
+                                    Background="IndianRed" 
+                                    Click="DeleteThemeButton_Click"
+                                    BorderThickness="0"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

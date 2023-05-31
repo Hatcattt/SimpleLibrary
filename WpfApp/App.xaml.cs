@@ -14,7 +14,6 @@ namespace WpfApp
         /// <summary>
         /// Performs on the startup of the application.
         /// </summary>
-        /// <param name="e"></param>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -26,8 +25,6 @@ namespace WpfApp
         /// <summary>
         /// Dispatch the handler exception.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
@@ -38,8 +35,19 @@ namespace WpfApp
             }
             catch { }
 
-            string errorMessage = $"An erreur occur in the application, and the application crash. See the exceptions Message :\n\n{e.Exception}";
-            MessageBox.Show(errorMessage, "Application crash.", MessageBoxButton.OK, MessageBoxImage.Error);
+            // Exception interceptée à chaque fois sur un PC portable (problème hardware -> non résolu).
+            if (e.Exception is Common.Exceptions.AppHttpException)
+            {
+                MessageBox.Show(
+                    "Please check your internet connection and try again.\nIf the error persists, please contact your IT department or wait for an update.", 
+                    "Error during the proccess", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Exclamation);
+                return;
+            }
+
+            string errorMessage = $"An error has occurred in the application, and the application has crashed. See exceptions Message :\n\n{e.Exception}";
+            MessageBox.Show(errorMessage, "Application crash!", MessageBoxButton.OK, MessageBoxImage.Error);
             Application.Current.Shutdown();
         }
 

@@ -34,15 +34,10 @@
                     Orientation="Horizontal"
                     Height="20">
                 <TextBlock 
+                    x:Name="AppInfo"
                     VerticalAlignment="Center" 
-                    Text="[ Simple Library : version "
-                    FontSize="11"
+                    FontSize="11" 
                     Margin="2,0,0,0"/>
-                <TextBlock 
-                    VerticalAlignment="Center" 
-                    FontSize="11"
-                    Margin="2,0,0,0"
-                    Text="{x:Static local:AppConstant.APP_VERSION}"/>
             </StackPanel>
 
             <Grid 

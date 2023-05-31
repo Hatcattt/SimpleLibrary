@@ -87,7 +87,6 @@ public partial class SimpleLibraryContext : DbContext
             entity.Property(e => e.PublicationId).HasColumnName("PublicationID");
             entity.Property(e => e.CoverFilePath).HasMaxLength(250);
             entity.Property(e => e.CreateAt).HasColumnType("date");
-            entity.Property(e => e.FromApi).HasColumnName("FromAPI");
             entity.Property(e => e.Isbn)
                 .HasMaxLength(20)
                 .HasColumnName("ISBN");

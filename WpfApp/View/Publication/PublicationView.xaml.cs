@@ -22,21 +22,18 @@ namespace WpfApp.View.Publication
             labelSearch.Content = "Search By";
         }
 
+        /// <summary>
+        /// Perform when the selection in the listView items change (load propreties).
+        /// </summary>
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (publicationVM.PublicationSelected != null)
-            {
-                publicationVM.Location = BU.Services.LocationService.GetLocation(publicationVM.PublicationSelected);
-                publicationVM.FullTitle = BU.Services.PublicationService.GetFullTitle(publicationVM.PublicationSelected);
-                publicationVM.CoverImagePath = publicationVM.PublicationSelected.CoverFilePath;
-                publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.Author>(BU.Services.AuthorPublicationService.GetAuthors(publicationVM.PublicationSelected));
-            }
-            else
-            {
-                publicationVM.FullTitle = "";
-                publicationVM.Location = "";
-                publicationVM.CoverImagePath = "";
-            }
+            publicationVM.GoodCopies = BU.Services.PublicationService.GetCopiesCount(publicationVM.PublicationSelected, BU.Enums.PublicationState.Readable);
+            publicationVM.BadCopies = BU.Services.PublicationService.GetCopiesCount(publicationVM.PublicationSelected, BU.Enums.PublicationState.Unreadable);
+            publicationVM.UnknownCopies = BU.Services.PublicationService.GetCopiesCount(publicationVM.PublicationSelected, BU.Enums.PublicationState.Unknown);
+            publicationVM.Location = BU.Services.PublicationService.GetLocation(publicationVM.PublicationSelected);
+            publicationVM.FullTitle = BU.Services.PublicationService.GetFullTitle(publicationVM.PublicationSelected);
+            publicationVM.CoverImagePath = BU.Services.PublicationService.GetCoverImagePath(publicationVM.PublicationSelected);
+            publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.AuthorPublication>(BU.Services.PublicationService.GetAuthorPublication(publicationVM.PublicationSelected));
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -44,6 +41,7 @@ namespace WpfApp.View.Publication
             if (InputSearch.Text.IsNullOrEmpty())
             {
                 publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+                return;
             }
             switch (cbBox.SelectedItem)
             {
@@ -68,8 +66,11 @@ namespace WpfApp.View.Publication
 
         private void AddNewPublicationButton_Click(object sender, RoutedEventArgs e)
         {
-            _ = new View.Publication.CreatePublicationView();
-            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+            var addPublicationView = new View.Publication.CreatePublicationView();
+            if (addPublicationView.HaveSaved)
+            {
+                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+            }
         }
 
         private void DeletePublicationButton_Click(object sender, RoutedEventArgs e)
@@ -121,8 +122,11 @@ namespace WpfApp.View.Publication
             {
                 return;
             }
-            _ = new View.Publication.UpdatePublicationView(publicationVM);
-            publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+            var updatePublicationView = new View.Publication.UpdatePublicationView(publicationVM);
+            if (updatePublicationView.HaveSaved)
+            {
+                publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());
+            }
         }
     }
 }

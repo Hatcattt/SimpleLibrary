@@ -17,13 +17,13 @@ namespace WpfApp
         /// <summary>
         /// Positionne la vue passée en paramètre comme vue courante
         /// </summary>
-        /// <param name="currentView"></param>
+        /// <param name="currentView">La vue à passer comme vue courante.</param>
         public void SetCurrentView(UserControl currentView);
 
         /// <summary>
         /// Positionne une des vues principales de l'application
         /// </summary>
-        /// <param name="currentAppView"></param>
+        /// <param name="currentAppView">Un enum représentant la vue.</param>
         public void SetCurrentView(Enums.AppView currentAppView);
     }
 }

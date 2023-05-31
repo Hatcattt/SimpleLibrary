@@ -56,6 +56,7 @@
                                     <Setter Property="Width" Value="100"/>
                                     <Setter Property="Margin" Value="5,0,10,0"/>
                                     <Setter Property="IsReadOnly" Value="True"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
                                 </Style>
                             </StackPanel.Resources>
                             <ComboBox 
@@ -107,7 +108,7 @@
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Right">
-                    <GroupBox Header="Cover Manager">
+                    <GroupBox Header="Manage the cover">
                         <Image 
                             x:Name="CoverImageView"
                             Margin="10" 
@@ -128,7 +129,6 @@
                             <GridView>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Author.AuthorName}" Width="150" Header="Name"/>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=AuthorFunction}" Header="Function"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Author.Nationality}" Header="Nationality"/>
                             </GridView>
                         </ListView.View>
                     </ListView>

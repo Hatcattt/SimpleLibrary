@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
+using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
 namespace DAL.Services
@@ -17,15 +18,21 @@ namespace DAL.Services
 
         public static async Task<string> GetJsonAsyncBy(string isbn)
         {
-            var url = IsbnIsValide(isbn) ? BASE_URL + isbn : DEFAULT_JSON;
-
-            using var response = await client.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadAsStringAsync();
+                var url = IsbnIsValide(isbn) ? BASE_URL + isbn : DEFAULT_JSON;
+
+                using var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                return DEFAULT_JSON;
+            } catch (Exception ex)
+            {
+                throw new Common.Exceptions.AppHttpException(ex.Message);
             }
-            return DEFAULT_JSON;
         }
 
         private static bool IsbnIsValide(string isbn)
@@ -73,7 +80,7 @@ namespace DAL.Services
             {
                 return (DateTime?)jToken?["publishedDate"] ?? null;
             }
-            catch (System.FormatException fex)
+            catch (System.FormatException)
             {
                 return null;
             }

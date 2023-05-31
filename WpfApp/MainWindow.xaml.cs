@@ -22,6 +22,15 @@ namespace WpfApp
         {
             InitializeComponent();
             SetCurrentView(AppView.Home);
+            var appName = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()
+                .GetSection("AppSettings")["AppName"];
+            var appVersion = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()
+                .GetSection("AppSettings")["AppVersion"];
+            AppInfo.Text = $"{appName} - Version : {appVersion}";
         }
 
         /// <summary>

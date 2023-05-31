@@ -9,7 +9,7 @@ namespace BU.Services
     public class TimeStampService
     {
         /// <summary>
-        /// Get a list of the latest publications added in the application.
+        /// Get a list of the latest publications with copies added in the application.
         /// The maxRecord parameter must be between 1 and int.MaxValue.
         /// </summary>
         /// <param name="maxRecord">The max record to add in the list.</param>
