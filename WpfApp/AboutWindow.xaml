@@ -34,9 +34,9 @@
                     Source="\Images\icon\simple_library.ico"/>
                 <Label Content="About" VerticalAlignment="Center"/>
                 <Label 
+                    x:Name="title"
                     VerticalAlignment="Center"
-                    FontWeight="DemiBold"
-                    Content="{x:Static local:AppConstant.APP_TITLE}"/>
+                    FontWeight="DemiBold"/>
             </StackPanel>
             <Separator 
                 Margin="0,5,0,20"

@@ -13,10 +13,15 @@ namespace WpfApp
                     .AddJsonFile("appsettings.json")
                     .Build()
                     .GetSection("AppSettings")["AppVersion"];
+        string? appTitle = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build()
+                    .GetSection("AppSettings")["AppName"];
         public AboutWindow()
         {
             InitializeComponent();
             AppVersion.Text = appVersion;
+            title.Content = appTitle;
             this.ShowDialog();
         }
 
