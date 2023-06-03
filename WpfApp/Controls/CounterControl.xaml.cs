@@ -44,6 +44,9 @@ namespace WpfApp.Controls
             set { SetValue(ValueProperty, value); }
         }
 
+        /// <summary>
+        /// Register the header as a proprety.
+        /// </summary>
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register("GroupBoxHeader", typeof(string), typeof(CounterControl), new PropertyMetadata(null));
 
@@ -55,8 +58,6 @@ namespace WpfApp.Controls
         /// <summary>
         /// Incremented the value.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PlusOneButton_Click(object sender, RoutedEventArgs e)
         {
             if (Value < int.MaxValue)
@@ -66,10 +67,8 @@ namespace WpfApp.Controls
         }
 
         /// <summary>
-        /// Decremented the Value.
+        /// Decremented the ItemSources.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MinusOneButton_Click(object sender, RoutedEventArgs e)
         {
             if (Value > 0)

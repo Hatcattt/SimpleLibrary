@@ -27,5 +27,25 @@ namespace BU.Services
             }
             return new List<DAL.DB.Publication>();
         }
+
+        /// <summary>
+        /// Get a list of the latest publications with copies updated in the application.
+        /// The maxRecord parameter must be between 1 and int.MaxValue.
+        /// </summary>
+        /// <param name="maxRecord">The max record to add in the list.</param>
+        /// <returns>A list with latest publications updated, or an empty list if maxRecord is incorrect.</returns>
+        public static IEnumerable<Publication> GetLastPublicationsUpdated(int maxRecord)
+        {
+            if (maxRecord >= 1 && maxRecord < int.MaxValue)
+            {
+                using var DB = new SimpleLibraryContext();
+                return DB.Publications
+                    .OrderByDescending(P => P.UpdateAt)
+                    .Take(maxRecord)
+                    .Include("PublicationCopies")
+                    .ToList();
+            }
+            return new List<DAL.DB.Publication>();
+        }
     }
 }

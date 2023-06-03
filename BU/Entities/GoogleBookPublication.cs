@@ -49,7 +49,7 @@ namespace BU.Entities
             {
                 Json = json;
                 jsonContent = JObject.Parse(Json);
-                if (JsonAsContent())
+                if (JsonHaveContent())
                 {
                     volumeInfo = jsonContent["items"]?[0]?["volumeInfo"];
                     LinkPropreties();
@@ -74,7 +74,11 @@ namespace BU.Entities
             LetterRow = Title[..1].Length >= 1 ? Title[..1] : "0"; // REVOIR
         }
 
-        public bool JsonAsContent()
+        /// <summary>
+        /// Check if the json have content.
+        /// </summary>
+        /// <returns>True if json have content, false otherwise.</returns>
+        public bool JsonHaveContent()
         {
             return (int?)jsonContent["totalItems"] > 0;
         }

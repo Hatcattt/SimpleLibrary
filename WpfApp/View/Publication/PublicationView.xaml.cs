@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using DAL.DB;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +12,7 @@ namespace WpfApp.View.Publication
     /// </summary>
     public partial class PublicationView : UserControl
     {
-        ViewModel.PublicationViewModel publicationVM = new ViewModel.PublicationViewModel();
+        ViewModel.PublicationViewModel publicationVM = new();
 
         public PublicationView()
         {
@@ -31,9 +33,8 @@ namespace WpfApp.View.Publication
             publicationVM.BadCopies = BU.Services.PublicationService.GetCopiesCount(publicationVM.PublicationSelected, BU.Enums.PublicationState.Unreadable);
             publicationVM.UnknownCopies = BU.Services.PublicationService.GetCopiesCount(publicationVM.PublicationSelected, BU.Enums.PublicationState.Unknown);
             publicationVM.Location = BU.Services.PublicationService.GetLocation(publicationVM.PublicationSelected);
-            publicationVM.FullTitle = BU.Services.PublicationService.GetFullTitle(publicationVM.PublicationSelected);
             publicationVM.CoverImagePath = BU.Services.PublicationService.GetCoverImagePath(publicationVM.PublicationSelected);
-            publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.AuthorPublication>(BU.Services.PublicationService.GetAuthorPublication(publicationVM.PublicationSelected));
+            publicationVM.AuthorPublications = new ObservableCollection<DAL.DB.AuthorPublication>(BU.Services.PublicationService.GetAuthorPublications(publicationVM.PublicationSelected));
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -46,11 +47,11 @@ namespace WpfApp.View.Publication
             switch (cbBox.SelectedItem)
             {
                 case "Isbn":
-                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithISBN(InputSearch.Text));
+                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithISBN(InputSearch.Text.Trim()));
                     break;
 
                 case "Title":
-                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithTitle(InputSearch.Text));
+                    publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationSearchingService.GetPublicationsStartWithTitle(InputSearch.Text.Trim()));
                     break;
 
                 case "Shelf":
@@ -118,11 +119,12 @@ namespace WpfApp.View.Publication
 
         private void EditPublicationButton_Click(object sender, RoutedEventArgs e)
         {
-            if (publicationVM.PublicationSelected == null)
+            if (this.publicationVM.PublicationSelected == null)
             {
                 return;
             }
-            var updatePublicationView = new View.Publication.UpdatePublicationView(publicationVM);
+            var updatePublicationView = new View.Publication.UpdatePublicationView(publicationVM.PublicationSelected);
+
             if (updatePublicationView.HaveSaved)
             {
                 publicationVM.Publications = new ObservableCollection<DAL.DB.Publication>(BU.Services.PublicationService.GetPublications());

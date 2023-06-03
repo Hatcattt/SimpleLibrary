@@ -4,12 +4,12 @@ using Microsoft.IdentityModel.Tokens;
 namespace BU.Entities
 {
     /// <summary>
-    /// Constants for the cover image of a publication.
+    /// Constants for the cover image management of a publication.
     /// </summary>
     public class CoverConstants
     {
         /// <summary>
-        /// The maximum size of an image in pixel.
+        /// The maximum size of the image in pixel.
         /// </summary>
         public const int IMAGE_MAX_SIZE = 1000;
         /// <summary>
@@ -52,10 +52,6 @@ namespace BU.Entities
             get { return imagePath; }
             set { imagePath = value; }
         }
-        /// <summary>
-        /// The Isbn code of the image, from the publication.
-        /// </summary>
-        public readonly string Isbn;
 
         /// <summary>
         /// Constructor of a coverimage associed with an isbn publication code.
@@ -64,15 +60,28 @@ namespace BU.Entities
         /// <param name="imagePath">The path of the image</param>
         /// <param name="isbn">The isbn code of a publication</param>
         /// <exception cref="ArgumentNullException">If the isbn is null or empty</exception>
-        public CoverImage(string imagePath, string isbn)
+        public CoverImage(string imagePath)
         {
-            if (isbn.IsNullOrEmpty())
+            if (imagePath.StartsWith("http"))
             {
-                throw new ArgumentNullException(nameof(isbn) + " isbn cannot be null or empty.");
+                this.imagePath = imagePath;
+            } else
+            {
+
             }
             this.imagePath = imagePath.IsNullOrEmpty() ? CoverConstants.DEFAUT_IMAGE_PATH : imagePath;
-            this.Isbn = isbn;
-            this.imageName = $"{isbn}{CoverConstants.IMAGE_EXTENTION}";
+            this.imageName = $"{Guid.NewGuid().ToString()}{CoverConstants.IMAGE_EXTENTION}";
         }
+
+        //public CoverImage(DAL.DB.Publication publication)
+        //{
+        //    if (publication == null)
+        //    {
+        //        throw new Common.Exceptions.AppNullArgException(nameof(publication) + " cannot be null!");
+        //    }
+        //    this.publication = publication;
+        //    this.imageName = Guid.NewGuid().ToString() + CoverConstants.IMAGE_EXTENTION;
+        //    this.imagePath = Path.Combine(CoverConstants.COVER_MAIN_FOLDER, this.imageName);
+        //}
     }
 }

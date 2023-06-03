@@ -12,11 +12,31 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <Label Style="{StaticResource MainLabelHeader}" Content="Home"></Label>
-        <Label Grid.Row="1" Style="{StaticResource LabelHeaderLite}" Content="Last publication added"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label 
+            Style="{StaticResource MainLabelHeader}" 
+            Content="Home" Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+            <Label 
+                Style="{StaticResource LabelHeaderLite}" 
+                Content="Total publication"/>
+            <Label 
+                Style="{StaticResource LabelInfo}"
+                Content="{Binding TotalPublication}"></Label>
+        </StackPanel>
+
+        <Label 
+            Grid.Row="2" 
+            Style="{StaticResource LabelHeaderLite}" 
+            Content="Last publication added"/>
         <ListView
             Grid.Row="3"
             VerticalAlignment="Top"
@@ -25,27 +45,58 @@
             ItemsSource="{Binding LastPublicationsCreate}"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             FontSize="14" d:ItemsSource="{d:SampleData ItemCount=5}">
-            
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Cover" Width="105">
+                    <GridViewColumn 
+                        Header="Cover" 
+                        Width="105">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Margin="5" Source="{Binding Path=CoverFilePath}"/>
+                                <Image 
+                                    Margin="5" 
+                                    Source="{Binding Path=CoverFilePath}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Path=Title}"/>
                     <GridViewColumn Header="ISBN" DisplayMemberBinding="{Binding Path=Isbn}"/>
                     <GridViewColumn Header="Copies" DisplayMemberBinding="{Binding Path=PublicationCopies.Count}"/>
-                    <GridViewColumn Header="Action">
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Label 
+            Grid.Row="2" 
+            Grid.Column="1"
+            Style="{StaticResource LabelHeaderLite}" 
+            Content="Last publication updated"/>
+        <ListView
+            Grid.Row="3"
+            Grid.Column="1"
+            VerticalAlignment="Top"
+            Height="400"
+            HorizontalAlignment="Left"
+            ItemsSource="{Binding LastPublicationsUpdate}"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            FontSize="14" d:ItemsSource="{d:SampleData ItemCount=5}">
+
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn 
+                        Header="Cover" 
+                        Width="105">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="View" Width="55"></Button>
+                                <Image 
+                                    Margin="5" 
+                                    Source="{Binding Path=CoverFilePath}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-
+                    <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Path=Title}"/>
+                    <GridViewColumn Header="ISBN" DisplayMemberBinding="{Binding Path=Isbn}"/>
+                    <GridViewColumn Header="Copies" DisplayMemberBinding="{Binding Path=PublicationCopies.Count}"/>
                 </GridView>
             </ListView.View>
         </ListView>

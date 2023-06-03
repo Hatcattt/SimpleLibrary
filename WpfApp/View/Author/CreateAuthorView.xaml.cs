@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace WpfApp.View.Author
 {
     /// <summary>
-    /// Interaction logic for CreateAuthorView.xaml
+    /// Interaction logic for CreateAuthorView.xaml. This windows is used to create an author.
     /// </summary>
     public partial class CreateAuthorView : Window
     {

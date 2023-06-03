@@ -17,7 +17,7 @@
             <Label Style="{StaticResource LabelHeaderLite}" Content="Edit author"></Label>
 
             <Label Style="{StaticResource LabelInfo}" Content="Name"></Label>
-            <TextBox x:Name="AuthorNameInput" Text="{Binding AuthorSelected.AuthorName, Mode=OneWay}" Style="{StaticResource InputText}"/>
+            <TextBox x:Name="AuthorNameInput" Text="{Binding AuthorSelected.AuthorName}" Style="{StaticResource InputText}"/>
             
             <Label Style="{StaticResource LabelInfo}" Content="Nationality"></Label>
             <TextBox x:Name="AuthorNationalityInput" Text="{Binding AuthorSelected.Nationality, Mode=OneWay}" Style="{StaticResource InputText}"/>

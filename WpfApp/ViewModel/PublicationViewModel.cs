@@ -8,8 +8,7 @@ namespace WpfApp.ViewModel
     {
         #region Propreties
         
-        public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Publisher", "Language", "Shelf", "Theme" };
-        public List<string> Languages { get; } = new List<string>() { "EN", "FR", "ES", "DE", "IT", "PT", "RU", "ZH", "JA", "KO" };
+        public List<string> PropertiesSearch { get; } = new List<string>() { "Isbn", "Title", "Shelf"};
 
         private int goodCopies;
         public int GoodCopies

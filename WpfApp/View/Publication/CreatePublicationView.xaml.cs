@@ -44,7 +44,7 @@ namespace WpfApp.View.Publication
             var json = await DAL.Services.LibraryGoogleAgentService.GetJsonAsyncBy(isbn);
             gBook = new BU.Entities.GoogleBookPublication(json);
 
-            if (gBook.JsonAsContent())
+            if (gBook.JsonHaveContent())
             {
                 ISBNinputText.Text = gBook.Isbn;
                 TitleInput.Text = (gBook.Title + " " + gBook.SubTitle).Trim();
@@ -66,7 +66,7 @@ namespace WpfApp.View.Publication
 
         private void LoadThemeOfShelfSelected(object sender, SelectionChangedEventArgs e)
         {
-            this.comboboxTheme.ItemsSource = BU.Services.ShelfCompositionService.GetThemesOf((DAL.DB.Shelf)comboboxShelf.SelectedItem);
+            this.comboboxTheme.ItemsSource = BU.Services.ShelfService.GetThemesOf((DAL.DB.Shelf)comboboxShelf.SelectedItem);
         }
 
         private void CreateNewPublicationButton_Click(object sender, RoutedEventArgs e)
@@ -74,70 +74,63 @@ namespace WpfApp.View.Publication
             var shelf = (DAL.DB.Shelf)comboboxShelf.SelectedValue;
             var theme = (DAL.DB.Theme)comboboxTheme.SelectedValue;
 
-            if (shelf != null && theme != null && TitleInput.Text.Length >= 1)
+            var image = new CoverImage(CoverImageView.Source.ToString());
+
+            var newPublication = new DAL.DB.Publication()
             {
-                var image = new CoverImage(CoverImageView.Source.ToString(), ISBNinputText.Text);
+                Isbn = ISBNinputText.Text.Trim(),
+                Title = TitleInput.Text.Trim(),
+                Publisher = PublisherInput.Text.Trim().IsNullOrEmpty() ? DAL.AuthorValidation.DEFAULT_PUBLISHER : PublisherInput.Text.Trim(),
+                PublishedDate = DatePickerPublisher.SelectedDate,
+                Description = DescriptionInput.Text.Trim(),
+                Location = BU.Services.ShelfService.GetLocationOf(shelf, theme),
+                Language = LanguageInput.Text.Trim(),
+                LetterRow = BU.Services.PublicationService.GetLetterRow(TitleInput.Text.Trim()),
+                CoverFilePath = image.ImagePath.Trim(),
+                CreateAt = DateTime.Now,
+            };
 
-                var newPublication = new DAL.DB.Publication()
+            var result = BU.Services.PublicationService.AddNewPublication(newPublication);
+            if (result.Status == BU.Entities.ServiceResultStatus.OK)
+            {
+                BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Readable, (int)goodCopy.Value);
+                BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unreadable, (int)badCopy.Value);
+                BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unknown, (int)unknownCopy.Value);
+                HaveSaved = true;
+
+                int authorCreated = 0;
+                foreach (DAL.DB.AuthorPublication authorP in AuthorsLV.Items)
                 {
-                    Isbn = ISBNinputText.Text,
-                    Title = TitleInput.Text,
-                    SubTitle = gBook?.SubTitle ?? string.Empty,
-                    Publisher = PublisherInput.Text,
-                    PublishedDate = DatePickerPublisher.SelectedDate,
-                    Description = DescriptionInput.Text,
-                    Location = BU.Services.ShelfService.GetLocationOf(shelf, theme),
-                    Language = LanguageInput.Text,
-                    LetterRow = TitleInput.Text[..1],
-                    CoverFilePath = image.ImagePath,
-                    CreateAt = DateTime.Now,
-                };
-
-                var result = BU.Services.PublicationService.AddNewPublication(newPublication);
-                if (result.Status == BU.Entities.ServiceResultStatus.OK)
-                {
-                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Readable, (int)goodCopy.Value);
-                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unreadable, (int)badCopy.Value);
-                    BU.Services.PublicationService.AddPublicationCopies(newPublication, BU.Enums.PublicationState.Unknown, (int)unknownCopy.Value);
-                    HaveSaved = true;
-
-                    int authorCreated = 0;
-                    foreach(DAL.DB.AuthorPublication authorP in AuthorsLV.Items)
+                    var authorToCreate = BU.Services.AuthorService.AuthorExist(authorP.Author);
+                    if (authorToCreate == null)
                     {
-                        var authorToCheck = BU.Services.AuthorService.AuthorExist(authorP.Author);
-                        if (authorToCheck == null)
-                        {
-                            authorToCheck = BU.Services.AuthorService.CreateAuthor(authorP.Author).Value;
-                            authorCreated++;
-                        }
-                        BU.Services.PublicationService.AddNewAuthorPublication(authorToCheck, newPublication, authorP.AuthorFunction);
+                        authorToCreate = BU.Services.AuthorService.CreateAuthor(authorP.Author).Value;
+                        authorCreated++;
                     }
-                    if (authorCreated > 0)
-                    {
-                        MessageBox.Show($"{authorCreated} author(s) have been added automatically.", "Author added", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    BU.Services.PublicationService.AddNewAuthorPublication(newPublication, authorToCreate, authorP.AuthorFunction);
                 }
-                MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
-            } else
-            {
-                MessageBox.Show("Your collected entries appear to have one or more incorrect values.\n", "Wrong inputs", MessageBoxButton.OK, MessageBoxImage.Information);
-                HaveSaved = false;
+                if (authorCreated > 0)
+                {
+                    MessageBox.Show($"{authorCreated} author(s) have been added automatically.", "Author added automatically", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
+            MessageBox.Show(result.Message, "A message from the system", MessageBoxButton.OK, (MessageBoxImage)result.ImageBox);
         }
 
         private void UploadUserImageButton_Click(object sender, RoutedEventArgs e)
         {
-            var imageUploaded = Interfaces.ICoverManagerUpload.UploadImageFromDisk();
-            if (imageUploaded != null)
-            {
-                CoverImageView.Source = imageUploaded;
-            }
+            MessageBox.Show("This feature has not yet been implemented! Please wait for an update...", "Not implemented", MessageBoxButton.OK, MessageBoxImage.Stop);
+            //var imageUploaded = Interfaces.ICoverManagerUpload.UploadImageFromDisk();
+            //if (imageUploaded != null)
+            //{
+            //    CoverImageView.Source = imageUploaded;
+            //}
         }
 
         private void AddAuthorPublicationInListButton_Click(object sender, RoutedEventArgs e)
         {
             var author = (DAL.DB.Author)cbBoxAuthor.SelectedItem;
-            string? authorFunction = FunctionCombobox.SelectedItem == null ? null : FunctionCombobox.SelectedItem.ToString();
+            string? authorFunction = FunctionCombobox.SelectedItem?.ToString();
 
             if (author != null)
             {

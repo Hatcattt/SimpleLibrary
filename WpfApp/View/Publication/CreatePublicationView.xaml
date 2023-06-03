@@ -5,7 +5,8 @@
         xmlns:local="clr-namespace:WpfApp.Controls"
         Height="750" Width="800"
         WindowStartupLocation="CenterScreen"
-        Title="New publication">
+        Title="New publication"
+        ResizeMode="NoResize">
 
     <Window.Resources>
         <Style TargetType="ComboBox">
@@ -14,7 +15,8 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    <Border BorderThickness="4" BorderBrush="#4e6675" Style="{StaticResource PrimaryBorder}" Background="#FFEFEFEF">
+    
+    <Border Style="{StaticResource PrimaryBorder}">
         <ScrollViewer>
             <DockPanel>
 
@@ -42,9 +44,12 @@
                 <StackPanel 
                     DockPanel.Dock="Left" 
                     Margin="10">
+                    <TextBlock 
+                        Text="* fields required"
+                        Foreground="Red"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="110"/>
                             <ColumnDefinition Width="350"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -57,10 +62,25 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="StackPanel" x:Key="input">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Orientation" Value="Horizontal"/>
+                                <Style.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </Style.Resources>
+                            </Style>
+                        </Grid.Resources>
 
-                        <Label 
-                            Style="{StaticResource LabelInfo}" 
-                            Content="ISBN"/>
+                        <StackPanel Style="{StaticResource input}">
+                            <TextBlock Text="*"/>
+                            <Label 
+                                Style="{StaticResource LabelInfo}" 
+                                Content="ISBN"/>
+                        </StackPanel>
 
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
@@ -69,9 +89,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox 
-                                Text="{Binding PublicationSelected.Isbn}"
                                 Style="{StaticResource placeHolder}" 
-                                Tag="ex: 9782331026324"
+                                Tag="ex : 9783214569871"
                                 x:Name="ISBNinputText"/>
                             <Button 
                                 Margin="5"
@@ -80,10 +99,14 @@
                                 Click="SearchPublicationWithAPIButton_Click"/>
                         </Grid>
 
-                        <Label 
-                            Grid.Row="1" 
-                            Style="{StaticResource LabelInfo}"
-                            Content="Title"/>
+                        <StackPanel 
+                            Style="{StaticResource input}"
+                            Grid.Row="1">
+                            <TextBlock Text="*"/>
+                            <Label 
+                                Style="{StaticResource LabelInfo}"
+                                Content="Title"/>
+                        </StackPanel>
                         <TextBox 
                             x:Name="TitleInput" 
                             Grid.Column="1"
@@ -91,10 +114,14 @@
                             Style="{StaticResource placeHolder}" 
                             Tag="ex: The adventure of ..."/>
 
-                        <Label 
-                            Grid.Row="2" 
-                            Style="{StaticResource LabelInfo}" 
-                            Content="Location"/>
+                        <StackPanel 
+                            Style="{StaticResource input}"
+                            Grid.Row="2">
+                            <TextBlock Text="*"/>
+                            <Label 
+                                Style="{StaticResource LabelInfo}" 
+                                Content="Location"/>
+                        </StackPanel>
                         <Grid 
                             Margin="5,0,5,0"
                             Grid.Column="1"
@@ -116,9 +143,10 @@
                         </Grid>
 
                         <Label 
-                            Grid.Row="3" 
+                            Margin="7,0,0,0"
+                            Grid.Row="3"
                             Style="{StaticResource LabelInfo}" 
-                            Content="Publisher"></Label>
+                            Content="Publisher"/>
                         <TextBox 
                             x:Name="PublisherInput" 
                             Grid.Row="3" 
@@ -127,6 +155,7 @@
                             Tag="ex: Dupuis"/>
 
                         <Label 
+                            Margin="7,0,0,0"
                             Grid.Row="4" 
                             Style="{StaticResource LabelInfo}" 
                             Content="Publisher Date"/>
@@ -139,6 +168,7 @@
                             Grid.Column="1"/>
 
                         <Label 
+                            Margin="7,0,0,0"
                             Grid.Row="5" 
                             Style="{StaticResource LabelInfo}" 
                             Content="Language"/>
@@ -150,6 +180,7 @@
                             Tag="ex: FR, EN, BE, ..."/>
 
                         <Label 
+                            Margin="7,0,0,0"
                             VerticalAlignment="Top" 
                             Grid.Row="6" 
                             Style="{StaticResource LabelInfo}" 
@@ -165,6 +196,7 @@
                             Tag="Enter un little description of the book ..."/>
 
                         <Label 
+                            Margin="7,0,0,0"
                             VerticalAlignment="Top" 
                             Grid.Row="7" 
                             Style="{StaticResource LabelInfo}" 

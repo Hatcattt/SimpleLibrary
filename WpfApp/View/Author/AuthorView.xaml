@@ -20,9 +20,14 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel>
-                
-                <!-- Search Bar -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Border Padding="5" BorderThickness="2">
                     <Border.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -49,16 +54,18 @@
                 </Border>
 
                 <DataGrid
+                    Grid.Row="1"
                     Style="{StaticResource DataGridStyle}"
                     SelectedItem="{Binding AuthorSelected}" 
-                    ItemsSource="{Binding Authors}">
+                    ItemsSource="{Binding Authors}"
+                    VerticalScrollBarVisibility="Visible" Cursor="Hand">
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Path=AuthorName}" Width="*"/>
                         <DataGridTextColumn Header="Nationality" Binding="{Binding Path=Nationality}" Width="2*"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-            </StackPanel>
+            </Grid>
 
             <StackPanel Grid.Column="1">
                 <Label Margin="0,0,0,10" Style="{StaticResource LabelHeaderLite}" Content="See details of the selected author"/>

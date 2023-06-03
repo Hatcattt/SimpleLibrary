@@ -73,13 +73,13 @@
                 
                 <WrapPanel>
                     <TextBlock 
-                            FontWeight="DemiBold"
-                            Text="VERSION " TextDecorations="None"/>
+                        FontWeight="DemiBold"
+                        Text="VERSION : " TextDecorations="None"/>
 
                     <TextBlock 
-                            Text="{x:Static local:AppConstant.APP_VERSION}"
-                            TextDecorations="None"
-                            FontWeight="Bold"/>
+                        x:Name="AppVersion"
+                        TextDecorations="None"
+                        FontWeight="Bold"/>
                 </WrapPanel>
 
             </StackPanel>

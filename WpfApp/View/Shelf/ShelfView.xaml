@@ -33,8 +33,8 @@
             <DataGrid Margin="5"
                 Grid.Row="1"
                 Style="{StaticResource DataGridStyle}"
-                SelectionChanged="ListView_SelectionChanged_1" 
                 SelectedItem="{Binding SelectedShelf}" 
+                SelectionChanged="DataGrid_SelectionChanged"
                 ItemsSource="{Binding Shelves}">
                 
                 <DataGrid.Columns>
@@ -59,9 +59,9 @@
             <Border Grid.Row="2" Style="{StaticResource BorderInput}" Margin="5">
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource LabelInfo}" Content="Shelf name"></Label>
-                    <TextBox Style="{StaticResource InputText}" Text="{Binding ShelfInputText}" Width="150"/>
-                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddShelfButton_Click"></Button>
-                    <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameShelfButton_Click"/>
+                    <TextBox Style="{StaticResource InputText}" Text="{Binding SelectedShelf.ShelfName, Mode=OneWay}" x:Name="shelfInputText" Width="150"/>
+                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddNewShelfButton_Click"></Button>
+                    <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="EditShelfButton_Click"/>
                 </StackPanel>
             </Border>
         </Grid>
@@ -80,7 +80,6 @@
                 Grid.Row="1"
                 Style="{StaticResource DataGridStyle}"
                 SelectedItem="{Binding SelectedTheme}"
-                SelectionChanged="ListView_SelectionChanged_2" 
                 ItemsSource="{Binding Themes}">
 
                 <DataGrid.Columns>
@@ -104,9 +103,9 @@
             <Border Grid.Row="2" Style="{StaticResource BorderInput}" Margin="5">
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource LabelInfo}" Content="Theme name"></Label>
-                    <TextBox Style="{StaticResource InputText}" Text="{Binding ThemeInputText}" Width="150"/>
-                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddThemeButton_Click"></Button>
-                    <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="RenameThemeButton_Click"/>
+                    <TextBox Style="{StaticResource InputText}" Text="{Binding SelectedTheme.ThemeName, Mode=OneWay}" x:Name="themeInput" Width="150"/>
+                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource AddButton}" Content="ADD" Click="AddNewThemeButton_Click"></Button>
+                    <Button Grid.Column="1" Style="{StaticResource ButtonBaseStyle}" Content="RENAME" Click="EditThemeButton_Click"/>
                 </StackPanel>
             </Border>
         </Grid>

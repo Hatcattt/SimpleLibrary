@@ -31,6 +31,7 @@ namespace WpfApp
                 .Build()
                 .GetSection("AppSettings")["AppVersion"];
             AppInfo.Text = $"{appName} - Version : {appVersion}";
+            Win.Title = appName;
         }
 
         /// <summary>

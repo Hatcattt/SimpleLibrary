@@ -9,14 +9,15 @@ namespace WpfApp.View
     /// </summary>
     public partial class HomeView : UserControl
     {
+        private const int MAX_VIEW = 15;
         private readonly HomeViewModel homeVM;
-        private readonly static int minPublicationDisplay = 5;
-        private readonly static int maxPublicationDisplay = 15;
         public HomeView()
         {
             InitializeComponent();
             homeVM = new HomeViewModel();
-            homeVM.LastPublicationsCreate = new ObservableCollection<DAL.DB.Publication>(BU.Services.TimeStampService.GetLastPublicationsAdded(maxPublicationDisplay));
+            homeVM.LastPublicationsCreate = new ObservableCollection<DAL.DB.Publication>(BU.Services.TimeStampService.GetLastPublicationsAdded(MAX_VIEW));
+            homeVM.LastPublicationsUpdate = new ObservableCollection<DAL.DB.Publication>(BU.Services.TimeStampService.GetLastPublicationsUpdated(MAX_VIEW));
+            homeVM.TotalPublication = BU.Services.PublicationService.GetNumberOfPublication();
             this.DataContext = homeVM;
         }
     }

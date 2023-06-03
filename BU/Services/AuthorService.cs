@@ -1,5 +1,4 @@
-﻿using static DAL.ModelValidation;
-using BU.Entities;
+﻿using BU.Entities;
 using DAL.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +12,8 @@ namespace BU.Services
     /// </summary>
     public class AuthorService
     {
+        #region Utilities Services Methods
+
         /// <summary>
         /// Get all the authors from de datbase, with include publications.
         /// </summary>
@@ -24,6 +25,35 @@ namespace BU.Services
                 .Include("AuthorPublications.Publication")
                 .ToList();
         }
+
+        /// <summary>
+        /// Return the author passed in parameter if found in the database.
+        /// </summary>
+        /// <param name="author">The author to search.</param>
+        /// <returns>The author founded, otherwise return null.</returns>
+        public static DAL.DB.Author? AuthorExist(Author author)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Authors
+                .Where(A => A.AuthorName == author.AuthorName || A.AuthorId == author.AuthorId)
+                .FirstOrDefault() ?? null;
+        }
+
+        /// <summary>
+        /// Get a list of authors whose names begin with the name in the parameter.
+        /// </summary>
+        /// <param name="name">The name of the author to get</param>
+        /// <returns>A list of authors</returns>
+        public static IList<Author> GetAuthorsStartWith(string name)
+        {
+            using var DB = new SimpleLibraryContext();
+            return DB.Authors
+                .Where(A => A.AuthorName.ToLower().StartsWith(name.ToLower()))
+                .Include("AuthorPublications.Publication")
+                .ToList();
+        }
+        #endregion
+        #region CRUD ServiceResult Methods
 
         /// <summary>
         /// Modifies an author in the database if found. A verification is made to validate the paramaters.
@@ -39,33 +69,34 @@ namespace BU.Services
             {
                 throw new Common.Exceptions.AppException("The author to modify or the authorName in parameter cannot be null!");
             }
+            using var DB = new SimpleLibraryContext();
+            var toEdit = DB.Authors.Find(author.AuthorId);
 
-            if (AuthorValidation.ValidationPass(authorName, nationality ?? "X"))
+            if (toEdit == null)
             {
-                using var DB = new SimpleLibraryContext();
-                var toEdit = DB.Authors.Find(author.AuthorId);
-                if (toEdit == null)
-                {
-                    throw new Common.Exceptions.AppException("The author was not found!");
-                }
-                toEdit.AuthorName = authorName;
-                toEdit.Nationality = nationality;
-                DB.SaveChanges();
+                throw new Common.Exceptions.AppException("The author was not found!");
+            }
+            toEdit.AuthorName = authorName;
+            toEdit.Nationality = nationality;
 
+            var validation = new DAL.AuthorValidation(toEdit);
+            if (validation.ContainError())
+            {
                 return new Entities.ServiceResult<Author>()
                 {
-                    Status = Entities.ServiceResultStatus.OK,
-                    Message = $"{authorName} modify successfully!",
-                    ImageBox = Entities.ImageBox.Information,
-                    Value = toEdit
+                    ErrorCode = Entities.StandardErrorCode.BadInput,
+                    Status = Entities.ServiceResultStatus.KO,
+                    Message = $"Wrong inputs for the author!\n\n{validation.Errors}",
+                    ImageBox = Entities.ImageBox.Warning
                 };
             }
+            DB.SaveChanges();
             return new Entities.ServiceResult<Author>()
             {
-                ErrorCode = Entities.StandardErrorCode.BadInput,
-                Status = Entities.ServiceResultStatus.KO,
-                Message = "Bad inputs for the author!",
-                ImageBox = Entities.ImageBox.Warning
+                Status = Entities.ServiceResultStatus.OK,
+                Message = $"{authorName} modify successfully!",
+                ImageBox = Entities.ImageBox.Information,
+                Value = toEdit
             };
         }
 
@@ -80,27 +111,38 @@ namespace BU.Services
             {
                 throw new Common.Exceptions.AppException("The author in parameter cannot be null!");
             }
-            var newAuthor = AuthorExist(author);
-            if (newAuthor == null && AuthorValidation.ValidationPass(author.AuthorName, author.Nationality ?? "X"))
-            {
-                using var DB = new SimpleLibraryContext();
-                DB.Authors.Add(author);
-                DB.SaveChanges();
 
+            if (AuthorExist(author) != null)
+            {
                 return new Entities.ServiceResult<Author>()
                 {
-                    Status = Entities.ServiceResultStatus.OK,
-                    Message = $"{author.AuthorName} create successfully!",
-                    ImageBox = Entities.ImageBox.Information,
-                    Value = author
+                    ErrorCode = Entities.StandardErrorCode.AlreadyExist,
+                    Status = Entities.ServiceResultStatus.KO,
+                    Message = "Cannot add this author, he already exists!",
+                    ImageBox = Entities.ImageBox.Warning
                 };
             }
+            var validation = new DAL.AuthorValidation(author);
+            if (validation.ContainError())
+            {
+                return new ServiceResult<Author>
+                {
+                    Status = ServiceResultStatus.KO,
+                    ErrorCode = StandardErrorCode.BadInput,
+                    Message = $"Wrong inputs for the author!\n\n{validation.Errors} ",
+                    ImageBox = ImageBox.Warning
+                };
+            }
+            using var DB = new SimpleLibraryContext();
+            DB.Authors.Add(author);
+            DB.SaveChanges();
+
             return new Entities.ServiceResult<Author>()
             {
-                ErrorCode = Entities.StandardErrorCode.AlreadyExist,
-                Status = Entities.ServiceResultStatus.KO,
-                Message = "Bad inputs for the author or an author with the same name already exists!",
-                ImageBox = Entities.ImageBox.Warning
+                Status = Entities.ServiceResultStatus.OK,
+                Message = $"{author.AuthorName} create successfully!",
+                ImageBox = Entities.ImageBox.Information,
+                Value = author
             };
         }
 
@@ -126,36 +168,7 @@ namespace BU.Services
                 ImageBox = Entities.ImageBox.Information
             };
         }
-
-        /// <summary>
-        /// Return the author passed in parameter if found in the database.
-        /// </summary>
-        /// <param name="author">The author to search.</param>
-        /// <returns>The author founded, otherwise return null.</returns>
-        public static DAL.DB.Author? AuthorExist(Author author)
-        {
-            using var DB = new SimpleLibraryContext();
-            return DB.Authors.Where(A => A.AuthorName == author.AuthorName || A.AuthorId == author.AuthorId).FirstOrDefault() ?? null;
-        }
-
-        /// <summary>
-        /// Return the author with the same name if exist, or null.
-        /// </summary>
-        /// <param name="author">The author name to search.</param>
-        /// <returns>The author founded, otherwise return null.</returns>
-        public static DAL.DB.Author? AuthorExist(string authorName)
-        {
-            using var DB = new SimpleLibraryContext();
-            return DB.Authors.Where(A => A.AuthorName == authorName).FirstOrDefault() ?? null;
-        }
-
-        public static IList<Author> GetAuthorsStartWith(string text)
-        {
-            using var DB = new SimpleLibraryContext();
-            return DB.Authors.Where(A => A.AuthorName.ToLower().StartsWith(text.ToLower()))
-                .Include("AuthorPublications.Publication")
-                .ToList();
-        }
+        #endregion
     }
-    
+
 }

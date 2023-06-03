@@ -17,6 +17,6 @@ namespace Common.Exceptions
         /// <param name="message">The message of the exception</param>
         /// <param name="errorData">The errorData of the exception</param>
         public AppNullArgException(string message, string errorData = null) 
-            : base("", errorData) { }
+            : base(message, errorData) { }
     }
 }

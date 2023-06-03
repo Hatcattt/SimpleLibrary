@@ -11,19 +11,15 @@ public partial class Publication
 
     public string Title { get; set; } = null!;
 
-    public string? SubTitle { get; set; }
-
     public int Location { get; set; }
 
-    public string? LetterRow { get; set; }
+    public string LetterRow { get; set; } = null!;
 
     public string Publisher { get; set; } = null!;
 
     public DateTime? PublishedDate { get; set; }
 
     public string? Language { get; set; }
-
-    public short? NumberOfPages { get; set; }
 
     public string? Description { get; set; }
 

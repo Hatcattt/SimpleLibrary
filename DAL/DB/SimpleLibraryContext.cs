@@ -85,7 +85,6 @@ public partial class SimpleLibraryContext : DbContext
             entity.HasIndex(e => e.Isbn, "IX_Unique_Publication_ISBN").IsUnique();
 
             entity.Property(e => e.PublicationId).HasColumnName("PublicationID");
-            entity.Property(e => e.CoverFilePath).HasMaxLength(250);
             entity.Property(e => e.CreateAt).HasColumnType("date");
             entity.Property(e => e.Isbn)
                 .HasMaxLength(20)
@@ -97,13 +96,11 @@ public partial class SimpleLibraryContext : DbContext
                 .IsFixedLength();
             entity.Property(e => e.PublishedDate).HasColumnType("date");
             entity.Property(e => e.Publisher).HasMaxLength(100);
-            entity.Property(e => e.SubTitle).HasMaxLength(100);
             entity.Property(e => e.Title).HasMaxLength(100);
             entity.Property(e => e.UpdateAt).HasColumnType("date");
 
             entity.HasOne(d => d.LocationNavigation).WithMany(p => p.Publications)
                 .HasForeignKey(d => d.Location)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Publication_ShelfComposition");
         });
 

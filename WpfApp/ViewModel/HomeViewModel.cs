@@ -25,6 +25,34 @@ namespace WpfApp.ViewModel
             }
         }
 
+        private ObservableCollection<DAL.DB.Publication> lastPublicationsUpdate;
+        public ObservableCollection<DAL.DB.Publication> LastPublicationsUpdate
+        {
+            get { return lastPublicationsUpdate; }
+            set
+            {
+                if (lastPublicationsUpdate != value)
+                {
+                    lastPublicationsUpdate = value;
+                    NotifyPropertyChanged(nameof(LastPublicationsUpdate));
+                }
+            }
+        }
+
+        private int totalPublication;
+        public int TotalPublication
+        {
+            get { return totalPublication; }
+            set
+            {
+                if (totalPublication != value)
+                {
+                    totalPublication = value;
+                    NotifyPropertyChanged(nameof(TotalPublication));
+                }
+            }
+        }
+
         #endregion
 
         public HomeViewModel()

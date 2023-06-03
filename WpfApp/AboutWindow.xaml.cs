@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace WpfApp
 {
@@ -7,9 +9,14 @@ namespace WpfApp
     /// </summary>
     public partial class AboutWindow : Window
     {
+        string? appVersion = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build()
+                    .GetSection("AppSettings")["AppVersion"];
         public AboutWindow()
         {
             InitializeComponent();
+            AppVersion.Text = appVersion;
             this.ShowDialog();
         }
 

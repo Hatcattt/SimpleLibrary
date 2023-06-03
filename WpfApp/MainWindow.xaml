@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Title="{x:Static local:AppConstant.APP_TITLE}" 
+        x:Name="Win" 
         Width="1080" 
         Height="720"
         Background="#FFEFEFEF">
@@ -74,12 +74,6 @@
                     Grid.Row="3" 
                     Style="{StaticResource MenuButton}" 
                     Content="Shelves" 
-                    Click="ShelfView_Click"/>
-
-                <Button 
-                    Grid.Row="4" 
-                    Style="{StaticResource MenuButton}" 
-                    Content="Copies"
                     Click="ShelfView_Click"/>
 
             </Grid>

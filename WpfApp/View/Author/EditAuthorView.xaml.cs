@@ -33,7 +33,7 @@ namespace WpfApp.View.Author
         {
             if (author == null)
             {
-                throw new Common.Exceptions.AppException("The author cannot be null!");
+                throw new Common.Exceptions.AppNullArgException("The author cannot be null!");
             }
             InitializeComponent();
             this.authorVM.AuthorSelected = author;

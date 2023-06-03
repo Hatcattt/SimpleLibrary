@@ -1,4 +1,4 @@
-﻿Scaffold-DbContext "Server=.\PGBDSQLSERVEUR;Database=SimpleLibrary;Trusted_Connection=True;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DB
+﻿Scaffold-DbContext "Server=.\\PGBDSQLSERVEUR;Database=SimpleLibrary;Trusted_Connection=True;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DB
 Scaffold-DbContext "Server=.\PGBDSQLSERVEUR;Database=SimpleLibrary;Trusted_Connection=True;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -Force -OutputDir DB
 
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 

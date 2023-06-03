@@ -1,20 +1,7 @@
 ﻿using DAL.DB;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfApp.ViewModel;
 
 namespace WpfApp.View.Shelf
@@ -28,112 +15,141 @@ namespace WpfApp.View.Shelf
 
         public ShelfView()
         {
-
             InitializeComponent();
-            PopulateAndBind();
-        }
-
-        private void PopulateAndBind()
-        {
             shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
             shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
-            shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
-            DataContext = shelfVM;
+            if (shelfVM.SelectedShelf != null)
+            {
+                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfService.GetThemesOf(shelfVM.SelectedShelf));
+            }
+            this.DataContext = shelfVM;
         }
 
-        private void AddShelfButton_Click(object sender, RoutedEventArgs e)
+        private void AddNewShelfButton_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.AddShelf())
+            var newShelf = new DAL.DB.Shelf()
             {
-                PopulateAndBind();
+                ShelfName = shelfInputText.Text
+            };
+            var createdShelf = BU.Services.ShelfService.AddNewShelf(newShelf);
+            MessageBox.Show(createdShelf.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)createdShelf.ImageBox);
+
+            if (createdShelf.Status == BU.Entities.ServiceResultStatus.OK)
+            {
+                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
             }
         }
 
-        /// <summary>
-        /// ATTENTION ici !
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        private void EditShelfButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (shelfVM.SelectedShelf != null)
+            {
+                var shelfEdited = BU.Services.ShelfService.EditShelf(shelfVM.SelectedShelf, shelfInputText.Text);
+                MessageBox.Show(shelfEdited.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)shelfEdited.ImageBox);
+                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+            }
+        }
+
         private void DeleteShelfButton_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.DeleteShelf())
+            if (shelfVM.SelectedShelf != null)
             {
-                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                var deleteChoice = MessageBox.Show("Are you sure? All related publications will also be deleted.", "Delete shelf?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (deleteChoice == MessageBoxResult.Yes)
+                {
+                    var deleteShelf = BU.Services.ShelfService.DeleteShelf(shelfVM.SelectedShelf);
+                    MessageBox.Show(deleteShelf.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)deleteShelf.ImageBox);
+                    shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                }
             }
         }
 
-        private void RenameShelfButton_Click(object sender, RoutedEventArgs e)
+        private void AddNewThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.RenameShelf())
+            var newTheme = new DAL.DB.Theme()
             {
-                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
-                shelfVM.ShelfInputText = string.Empty;
-            }
-        }
+                ThemeName = themeInput.Text
+            };
+            var createdTheme = BU.Services.ShelfService.AddNewTheme(newTheme);
+            MessageBox.Show(createdTheme.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)createdTheme.ImageBox);
 
-        private void RenameThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (shelfVM.RenameTheme())
+            if (createdTheme.Status == BU.Entities.ServiceResultStatus.OK)
             {
                 shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
-                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
             }
         }
 
-        private void AddThemeButton_Click(object sender, RoutedEventArgs e)
+        private void EditThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.AddTheme())
+            if (shelfVM.SelectedTheme != null)
             {
+                var themeEdited = BU.Services.ShelfService.EditTheme(shelfVM.SelectedTheme, themeInput.Text);
+                MessageBox.Show(themeEdited.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)themeEdited.ImageBox);
                 shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
             }
         }
 
         private void DeleteThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.DeleteTheme())
+            if (shelfVM.SelectedTheme!= null)
             {
-                shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
-            }
-        }
-
-        private void ListView_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
-        {
-            shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
-            if (shelfVM.SelectedShelf != null)
-            {
-                shelfVM.ShelfInputText = shelfVM.SelectedShelf.ShelfName;
-            }
-        }
-
-        private void ListView_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
-        {
-            shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
-            if (shelfVM.SelectedTheme != null)
-            {
-                shelfVM.ThemeInputText = shelfVM.SelectedTheme.ThemeName;
+                var deleteChoice = MessageBox.Show("Are you sure? All related publications will also be deleted.", "Delete theme?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (deleteChoice == MessageBoxResult.Yes)
+                {
+                    var deleteTheme = BU.Services.ShelfService.DeleteTheme(shelfVM.SelectedTheme);
+                    MessageBox.Show(deleteTheme.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)deleteTheme.ImageBox);
+                    shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
+                    shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                }
             }
         }
 
         private void AddShelfComposition_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.AddShelfComposition())
+            if (shelfVM.SelectedShelf != null && shelfVM.SelectedTheme != null)
             {
-                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
-                shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                var newComposition = new DAL.DB.ShelfComposition()
+                {
+                    Shelf = shelfVM.SelectedShelf,
+                    ShelfId = shelfVM.SelectedShelf.ShelfId,
+                    Theme = shelfVM.SelectedTheme,
+                    ThemeId = shelfVM.SelectedTheme.ThemeId,
+                };
+                var createdComposition = BU.Services.ShelfService.AddNewShelfComposition(newComposition);
+                MessageBox.Show(createdComposition.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)createdComposition.ImageBox);
+
+                if (createdComposition.Status == BU.Entities.ServiceResultStatus.OK)
+                {
+                    shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
+                    shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                }
             }
         }
 
         private void DeleteShelfComposition_Click(object sender, RoutedEventArgs e)
         {
-            if (shelfVM.DeleteShelfComposition())
+            if (shelfVM.SelectedShelf != null && shelfVM.SelectedTheme!= null)
             {
-                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfCompositionService.GetThemesOf(shelfVM.SelectedShelf));
+                var deleteChoice = MessageBox.Show("Are you sure? All related publications will also be deleted.", "Delete composition?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (deleteChoice == MessageBoxResult.Yes)
+                {
+                    var deleteCompo = BU.Services.ShelfService.DeleteShelfComposition(shelfVM.SelectedShelf, shelfVM.SelectedTheme);
+                    MessageBox.Show(deleteCompo.Message, "A message from the system.", MessageBoxButton.OK, (MessageBoxImage)deleteCompo.ImageBox);
+                    if (deleteCompo.Status == BU.Entities.ServiceResultStatus.OK)
+                    {
+                        shelfVM.Themes = new ObservableCollection<DAL.DB.Theme>(BU.Services.ShelfService.GetThemes());
+                        shelfVM.Shelves = new ObservableCollection<DAL.DB.Shelf>(BU.Services.ShelfService.GetShelves());
+                    }
+                }
             }
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (shelfVM.SelectedShelf != null)
+            {
+                shelfVM.ThemesOfShelf = new ObservableCollection<Theme>(BU.Services.ShelfService.GetThemesOf(shelfVM.SelectedShelf));
+            }
         }
     }
 }

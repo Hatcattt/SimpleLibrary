@@ -65,7 +65,6 @@
                         <DataGridTextColumn Header="Added" Binding="{Binding Path=CreateAt}" Width="65"></DataGridTextColumn>
                         <DataGridTextColumn Header="ISBN" Binding="{Binding Path=Isbn}" Width="*"/>
                         <DataGridTextColumn Header="Title" Width="1.5*" Binding="{Binding Path=Title}"/>
-                        <DataGridTextColumn Header="Subtitle" Width="*" Binding="{Binding Path=SubTitle}"/>
                         <DataGridTextColumn Header="Publisher" Binding="{Binding Path=Publisher}" Width="*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Lang" Binding="{Binding Path=Language}" Width="0.5*"></DataGridTextColumn>
                         <DataGridTextColumn Header="Shelf" Binding="{Binding Path=LocationNavigation.Shelf.ShelfName}" Width="0.6*"></DataGridTextColumn>
@@ -122,8 +121,8 @@
                             <Label Style="{StaticResource LabelInfo}" Content="ISBN"></Label>
                             <TextBox Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Isbn}"/>
 
-                            <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Full title"></Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding FullTitle}"/>
+                            <Label Grid.Row="1" Style="{StaticResource LabelInfo}" Content="Title"></Label>
+                            <TextBox Grid.Column="1" Grid.Row="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Title}"/>
 
                             <Label Grid.Row="2" Style="{StaticResource LabelInfo}" Content="Location"></Label>
                             <TextBox Grid.Column="1" Grid.Row="2" Style="{StaticResource InputTextReadOnly}" Text="{Binding Location}"/>
@@ -176,7 +175,7 @@
                         <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource InputTextReadOnly}" Text="{Binding PublicationSelected.Language}"/>
 
                         <Label VerticalAlignment="Top" Grid.Row="6" Style="{StaticResource LabelInfo}" Content="Author(s)"></Label>
-                        <ListView Height="100" Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding AuthorPublications}" d:ItemsSource="{d:SampleData ItemCount=2}">
+                        <ListView Height="100" Grid.Row="6" Grid.Column="1" Margin="5" ItemsSource="{Binding PublicationSelected.AuthorPublications}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="150" Header="Name" DisplayMemberBinding="{Binding Path=Author.AuthorName}"/>
