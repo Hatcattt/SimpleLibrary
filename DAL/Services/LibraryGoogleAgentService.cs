@@ -7,7 +7,6 @@ namespace DAL.Services
 {
     /// <summary>
     /// Service class utilisée pour charger un fichier JSON associé à un ISBN.
-    /// Une requête GET
     /// </summary>
     public class LibraryGoogleAgentService
     {

@@ -163,7 +163,7 @@ namespace DAL
     public class ShelfValidation : ValidationModel
     {
         /// <summary>
-        /// The maximum string lenght for the authorName.
+        /// The maximum string lenght for the shelfName.
         /// </summary>
         public const int MAX_SHELF_NAME_LENGHT = 50;
 
@@ -186,7 +186,7 @@ namespace DAL
     public class ThemeValidation : ValidationModel
     {
         /// <summary>
-        /// The maximum string lenght for the authorName.
+        /// The maximum string lenght for the themeName.
         /// </summary>
         public const int MAX_THEME_NAME_LENGHT = 50;
 

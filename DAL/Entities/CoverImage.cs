@@ -54,34 +54,15 @@ namespace BU.Entities
         }
 
         /// <summary>
-        /// Constructor of a coverimage associed with an isbn publication code.
-        /// Generate the name of the file with the isbn + an image extention.
+        /// Constructor of a coverimage by a image path.
+        /// Generate the name of the file with a GUID.
         /// </summary>
         /// <param name="imagePath">The path of the image</param>
-        /// <param name="isbn">The isbn code of a publication</param>
         /// <exception cref="ArgumentNullException">If the isbn is null or empty</exception>
         public CoverImage(string imagePath)
         {
-            if (imagePath.StartsWith("http"))
-            {
-                this.imagePath = imagePath;
-            } else
-            {
-
-            }
             this.imagePath = imagePath.IsNullOrEmpty() ? CoverConstants.DEFAUT_IMAGE_PATH : imagePath;
             this.imageName = $"{Guid.NewGuid().ToString()}{CoverConstants.IMAGE_EXTENTION}";
         }
-
-        //public CoverImage(DAL.DB.Publication publication)
-        //{
-        //    if (publication == null)
-        //    {
-        //        throw new Common.Exceptions.AppNullArgException(nameof(publication) + " cannot be null!");
-        //    }
-        //    this.publication = publication;
-        //    this.imageName = Guid.NewGuid().ToString() + CoverConstants.IMAGE_EXTENTION;
-        //    this.imagePath = Path.Combine(CoverConstants.COVER_MAIN_FOLDER, this.imageName);
-        //}
     }
 }
